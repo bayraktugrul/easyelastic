@@ -2,7 +2,6 @@ class ESMonitor {
     constructor() {
         this.esUrl = '';
         this.initializeEventListeners();
-        this.updateInterval = null;
     }
 
     initializeEventListeners() {
@@ -17,23 +16,39 @@ class ESMonitor {
         }
 
         try {
-            await this.checkConnection();
-            document.getElementById('dashboard').classList.remove('hidden');
-            this.startMonitoring();
+            const isConnected = await this.checkConnection();
+            if (isConnected) {
+                document.getElementById('dashboard').classList.remove('hidden');
+                await this.updateData();
+            } else {
+                alert('Failed to connect to Elasticsearch');
+            }
         } catch (error) {
             alert('Failed to connect to Elasticsearch: ' + error.message);
         }
     }
 
     async checkConnection() {
-        const response = await fetch(`${this.esUrl}/_cluster/health`);
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-        return await response.json();
-    }
-
-    startMonitoring() {
-        this.updateData();
-        this.updateInterval = setInterval(() => this.updateData(), 10000); // Update every 10 seconds
+        try {
+            const response = await fetch(this.esUrl, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                mode: 'cors'
+            });
+            
+            if (response.ok) {
+                console.log('Elasticsearch bağlantısı başarılı');
+                return true;
+            } else {
+                console.error('Elasticsearch bağlantı hatası:', response.statusText);
+                return false;
+            }
+        } catch (error) {
+            console.error('Bağlantı hatası:', error);
+            return false;
+        }
     }
 
     async updateData() {
@@ -92,7 +107,13 @@ class ESMonitor {
     }
 
     async fetchJSON(endpoint) {
-        const response = await fetch(this.esUrl + endpoint);
+        const response = await fetch(this.esUrl + endpoint, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            mode: 'cors'
+        });
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         return await response.json();
     }
