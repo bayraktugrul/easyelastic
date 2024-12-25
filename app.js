@@ -1,6 +1,13 @@
+import ElasticsearchService from './src/services/ElasticsearchService.js';
+import ClusterHealth from './src/components/ClusterHealth.js';
+import { formatBytes, formatNumber } from './src/utils/formatters.js';
+
 class ESMonitor {
     constructor() {
-        this.esUrl = '';
+        this.service = null;
+        this.components = {
+            clusterHealth: new ClusterHealth('clusterHealth')
+        };
         this.initializeEventListeners();
     }
 
@@ -9,127 +16,83 @@ class ESMonitor {
     }
 
     async connect() {
-        this.esUrl = document.getElementById('esUrl').value.trim();
-        if (!this.esUrl) {
-            alert('Please enter Elasticsearch URL');
+        const url = document.getElementById('esUrl').value.trim();
+        if (!url) {
+            this.showError('Please enter Elasticsearch URL');
             return;
         }
 
         try {
-            const isConnected = await this.checkConnection();
+            this.service = new ElasticsearchService(url);
+            const isConnected = await this.service.checkConnection();
+            
             if (isConnected) {
                 document.getElementById('dashboard').classList.remove('hidden');
-                await this.updateData();
+                await this.updateDashboard();
             } else {
-                alert('Failed to connect to Elasticsearch');
+                this.showError('Failed to connect to Elasticsearch');
             }
         } catch (error) {
-            alert('Failed to connect to Elasticsearch: ' + error.message);
+            this.showError(`Connection error: ${error.message}`);
         }
     }
 
-    async checkConnection() {
+    async updateDashboard() {
         try {
-            const response = await fetch(this.esUrl, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                mode: 'cors'
-            });
-            
-            if (response.ok) {
-                console.log('Elasticsearch bağlantısı başarılı');
-                return true;
-            } else {
-                console.error('Elasticsearch bağlantı hatası:', response.statusText);
-                return false;
-            }
-        } catch (error) {
-            console.error('Bağlantı hatası:', error);
-            return false;
-        }
-    }
-
-    async updateData() {
-        try {
-            await Promise.all([
-                this.updateClusterHealth(),
-                this.updateClusterStats(),
-                this.updateIndicesInfo()
+            const [health, stats, indices] = await Promise.all([
+                this.service.getClusterHealth(),
+                this.service.getClusterStats(),
+                this.service.getIndicesInfo()
             ]);
+
+            this.components.clusterHealth.render(health);
+            this.updateMetrics(stats);
+            this.updateIndices(indices);
         } catch (error) {
-            console.error('Error updating data:', error);
+            this.showError(`Failed to update dashboard: ${error.message}`);
         }
     }
 
-    async updateClusterHealth() {
-        const health = await this.fetchJSON('/_cluster/health');
-        const healthDiv = document.getElementById('clusterHealth');
-        healthDiv.innerHTML = `
-            <div class="health-${health.status}">
-                <p><i class="fas fa-circle"></i> Status: ${health.status.toUpperCase()}</p>
-                <p><i class="fas fa-server"></i> Nodes: ${health.number_of_nodes}</p>
-                <p><i class="fas fa-puzzle-piece"></i> Active Shards: ${health.active_shards}</p>
-                <p><i class="fas fa-clock"></i> Response Time: ${health.timed_out ? 'Timed Out' : 'Normal'}</p>
-            </div>
-        `;
-    }
-
-    async updateClusterStats() {
-        const stats = await this.fetchJSON('/_cluster/stats');
-        
+    updateMetrics(stats) {
         document.getElementById('indicesCount').textContent = stats.indices.count;
-        document.getElementById('totalSize').textContent = this.formatBytes(stats.indices.store.size_in_bytes);
-        document.getElementById('docCount').textContent = this.formatNumber(stats.indices.docs.count);
+        document.getElementById('totalSize').textContent = formatBytes(stats.indices.store.size_in_bytes);
+        document.getElementById('docCount').textContent = formatNumber(stats.indices.docs.count);
     }
 
-    async updateIndicesInfo() {
-        const stats = await this.fetchJSON('/_cat/indices?format=json');
+    updateIndices(indices) {
         const indicesList = document.getElementById('indicesList');
-        
-        indicesList.innerHTML = `
-            <div class="index-item">
+        indicesList.innerHTML = this.generateIndicesTable(indices);
+    }
+
+    generateIndicesTable(indices) {
+        return `
+            <div class="index-item header">
                 <strong>Index</strong>
                 <strong>Docs</strong>
                 <strong>Size</strong>
                 <strong>Health</strong>
             </div>
-            ${stats.map(index => `
-                <div class="index-item">
-                    <span>${index.index}</span>
-                    <span>${this.formatNumber(index.docs?.count || 0)}</span>
-                    <span>${index.store?.size || '0b'}</span>
-                    <span class="health-${index.health}">${index.health}</span>
-                </div>
-            `).join('')}
+            ${indices.map(index => this.generateIndexRow(index)).join('')}
         `;
     }
 
-    async fetchJSON(endpoint) {
-        const response = await fetch(this.esUrl + endpoint, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            mode: 'cors'
-        });
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-        return await response.json();
+    generateIndexRow(index) {
+        return `
+            <div class="index-item">
+                <span>${index.index}</span>
+                <span>${formatNumber(index.docs?.count || 0)}</span>
+                <span>${index.store?.size || '0b'}</span>
+                <span class="health-${index.health}">${index.health}</span>
+            </div>
+        `;
     }
 
-    formatBytes(bytes) {
-        if (bytes === 0) return '0 Bytes';
-        const k = 1024;
-        const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-        const i = Math.floor(Math.log(bytes) / Math.log(k));
-        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-    }
-
-    formatNumber(num) {
-        return new Intl.NumberFormat().format(num);
+    showError(message) {
+        alert(message);
+        console.error(message);
     }
 }
 
-// Initialize the monitor
-const monitor = new ESMonitor(); 
+document.addEventListener('DOMContentLoaded', () => {
+    window.esMonitor = new ESMonitor();
+}); 
