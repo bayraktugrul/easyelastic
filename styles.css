@@ -1,3 +1,21 @@
+:root {
+    --primary-color: #6366f1;
+    --primary-hover: #4f46e5;
+    --secondary-color: #64748b;
+    --secondary-hover: #475569;
+    --success-color: #22c55e;
+    --warning-color: #eab308;
+    --error-color: #ef4444;
+    --background-color: #f8fafc;
+    --card-background: #ffffff;
+    --text-primary: #1e293b;
+    --text-secondary: #64748b;
+    --border-color: #e2e8f0;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+    --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -106,16 +124,16 @@ h2 i {
 }
 
 .health-card {
-    background: white;
+    background: var(--card-background);
     border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
     transition: all 0.3s ease;
 }
 
 .health-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    box-shadow: var(--shadow-md);
 }
 
 .health-header {
@@ -137,7 +155,6 @@ h2 i {
     text-transform: uppercase;
 }
 
-/* Health Status Colors */
 .health-green .status-icon {
     color: #2ecc71;
 }
@@ -150,7 +167,6 @@ h2 i {
     color: #e74c3c;
 }
 
-/* Metrics Grid */
 .health-metrics {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -204,7 +220,6 @@ h2 i {
     color: #2d3436;
 }
 
-/* Response Status Colors */
 .success {
     color: #2ecc71;
 }
@@ -213,7 +228,6 @@ h2 i {
     color: #f1c40f;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
     .health-metrics {
         grid-template-columns: 1fr;
@@ -306,7 +320,6 @@ h2 i {
     font-weight: 500;
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
     .connection-panel {
         flex-direction: column;
@@ -317,7 +330,6 @@ h2 i {
     }
 }
 
-/* Animation for dashboard appearance */
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
@@ -340,7 +352,6 @@ button.secondary:hover {
     background-color: #475569;
 }
 
-/* Toastify özelleştirmeleri */
 .toastify {
     font-family: 'Inter', sans-serif;
     padding: 12px 20px;
@@ -353,7 +364,6 @@ button.secondary:hover {
     transform: translateY(-2px);
 }
 
-/* Toastify özelleştirmeleri */
 .toastify-custom {
     font-family: 'Inter', sans-serif;
     font-size: 14px;
@@ -364,4 +374,209 @@ button.secondary:hover {
 .toastify-custom:hover {
     transform: translateY(-2px);
     transition: transform 0.2s ease;
+}
+
+/* Logo stili */
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.logo i {
+    font-size: 28px;
+    color: var(--primary-color);
+}
+
+.logo h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.input-group {
+    position: relative;
+    flex: 1;
+}
+
+.input-group i {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+}
+
+#esUrl {
+    width: 100%;
+    padding: 12px 16px 12px 44px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+#esUrl:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+button {
+    padding: 12px 24px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+button:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
+
+button.secondary {
+    background-color: var(--secondary-color);
+}
+
+button.secondary:hover {
+    background-color: var(--secondary-hover);
+}
+
+.metric-box {
+    background: var(--card-background);
+    border: 1px solid var(--border-color);
+    padding: 24px;
+    border-radius: 12px;
+    text-align: center;
+    transition: all 0.3s;
+}
+
+.metric-box:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* Status Section */
+.health-status {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.status-icon {
+    font-size: 32px;
+}
+
+.status-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.status-label {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+}
+
+.status-value {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+/* Health Grid */
+.health-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.health-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    background: var(--background-color);
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.health-item:hover {
+    background: #f1f5f9;
+}
+
+.health-item i {
+    font-size: 20px;
+    color: var(--text-secondary);
+}
+
+.health-item-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.health-item-label {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+}
+
+.health-item-value {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+/* Status Colors */
+.health-green .status-icon {
+    color: var(--success-color);
+}
+
+.health-yellow .status-icon {
+    color: var(--warning-color);
+}
+
+.health-red .status-icon {
+    color: var(--error-color);
+}
+
+/* Response Status Colors */
+.success {
+    color: var(--success-color) !important;
+}
+
+.warning {
+    color: var(--warning-color) !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .health-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .health-item {
+        padding: 12px;
+    }
+
+    .status-icon {
+        font-size: 28px;
+    }
+
+    .status-value {
+        font-size: 18px;
+    }
 } 

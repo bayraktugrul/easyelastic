@@ -3,19 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ES Monitor</title>
+    <title>Esight | Elasticsearch Cluster Monitoring</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1><i class="fas fa-database"></i> ES Monitor</h1>
+            <div class="logo">
+                <i class="fas fa-eye"></i>
+                <h1>esight</h1>
+            </div>
             <div class="connection-panel">
-                <input type="text" id="esUrl" placeholder="Elasticsearch URL (e.g. http://localhost:9200)">
+                <div class="input-group">
+                    <i class="fas fa-link"></i>
+                    <input type="text" id="esUrl" placeholder="Elasticsearch URL (e.g. http://localhost:9200)">
+                </div>
                 <div class="button-group">
                     <button id="testBtn" class="secondary">
                         <i class="fas fa-vial"></i> Test Connection
@@ -37,17 +43,17 @@
                 <div class="metric-box">
                     <i class="fas fa-layer-group metric-icon"></i>
                     <h3>Indices</h3>
-                    <div id="indicesCount" class="metric-value"></div>
+                    <div id="indicesCount" class="metric-value">-</div>
                 </div>
                 <div class="metric-box">
                     <i class="fas fa-database metric-icon"></i>
                     <h3>Total Size</h3>
-                    <div id="totalSize" class="metric-value"></div>
+                    <div id="totalSize" class="metric-value">-</div>
                 </div>
                 <div class="metric-box">
                     <i class="fas fa-file-alt metric-icon"></i>
                     <h3>Documents</h3>
-                    <div id="docCount" class="metric-value"></div>
+                    <div id="docCount" class="metric-value">-</div>
                 </div>
             </div>
 

@@ -6,44 +6,40 @@ class ClusterHealth {
 
     render(health) {
         const statusIcon = this.getStatusIcon(health.status);
-        const responseIcon = health.timed_out ? 'fa-exclamation-triangle' : 'fa-check-circle';
         const responseClass = health.timed_out ? 'warning' : 'success';
 
         this.container.innerHTML = `
             <div class="health-card health-${health.status}">
-                <div class="health-header">
-                    ${statusIcon} 
-                    <span class="status-text">${health.status.toUpperCase()}</span>
+                <div class="health-status">
+                    ${statusIcon}
+                    <div class="status-details">
+                        <span class="status-label">Cluster Status</span>
+                        <span class="status-value">${health.status.toUpperCase()}</span>
+                    </div>
                 </div>
                 
-                <div class="health-metrics">
-                    <div class="metric">
-                        <div class="metric-icon">
-                            <i class="fas fa-server"></i>
-                        </div>
-                        <div class="metric-info">
-                            <span class="metric-label">Nodes</span>
-                            <span class="metric-value">${health.number_of_nodes}</span>
+                <div class="health-grid">
+                    <div class="health-item">
+                        <i class="fas fa-server"></i>
+                        <div class="health-item-details">
+                            <span class="health-item-label">Nodes</span>
+                            <span class="health-item-value">${health.number_of_nodes}</span>
                         </div>
                     </div>
 
-                    <div class="metric">
-                        <div class="metric-icon">
-                            <i class="fas fa-puzzle-piece"></i>
-                        </div>
-                        <div class="metric-info">
-                            <span class="metric-label">Active Shards</span>
-                            <span class="metric-value">${health.active_shards}</span>
+                    <div class="health-item">
+                        <i class="fas fa-puzzle-piece"></i>
+                        <div class="health-item-details">
+                            <span class="health-item-label">Active Shards</span>
+                            <span class="health-item-value">${health.active_shards}</span>
                         </div>
                     </div>
 
-                    <div class="metric">
-                        <div class="metric-icon">
-                            <i class="fas ${responseIcon} ${responseClass}"></i>
-                        </div>
-                        <div class="metric-info">
-                            <span class="metric-label">Response Time</span>
-                            <span class="metric-value ${responseClass}">
+                    <div class="health-item">
+                        <i class="fas fa-clock ${responseClass}"></i>
+                        <div class="health-item-details">
+                            <span class="health-item-label">Response Time</span>
+                            <span class="health-item-value ${responseClass}">
                                 ${health.timed_out ? 'Timed Out' : 'Normal'}
                             </span>
                         </div>
