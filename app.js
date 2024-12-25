@@ -1,6 +1,7 @@
 import ElasticsearchService from './src/services/ElasticsearchService.js';
 import ClusterHealth from './src/components/ClusterHealth.js';
 import { formatBytes, formatNumber } from './src/utils/formatters.js';
+import Toast from './src/utils/Toast.js';
 
 class ESMonitor {
     constructor() {
@@ -13,12 +14,34 @@ class ESMonitor {
 
     initializeEventListeners() {
         document.getElementById('connectBtn').addEventListener('click', () => this.connect());
+        document.getElementById('testBtn').addEventListener('click', () => this.testConnection());
+    }
+
+    async testConnection() {
+        const url = document.getElementById('esUrl').value.trim();
+        if (!url) {
+            Toast.show('Please enter Elasticsearch URL', 'error');
+            return;
+        }
+
+        try {
+            const service = new ElasticsearchService(url);
+            const isConnected = await service.checkConnection();
+            
+            if (isConnected) {
+                Toast.show('Successfully connected to Elasticsearch', 'success');
+            } else {
+                Toast.show('Failed to connect to Elasticsearch', 'error');
+            }
+        } catch (error) {
+            Toast.show(`Connection error: ${error.message}`, 'error');
+        }
     }
 
     async connect() {
         const url = document.getElementById('esUrl').value.trim();
         if (!url) {
-            this.showError('Please enter Elasticsearch URL');
+            Toast.show('Please enter Elasticsearch URL', 'error');
             return;
         }
 
@@ -29,11 +52,12 @@ class ESMonitor {
             if (isConnected) {
                 document.getElementById('dashboard').classList.remove('hidden');
                 await this.updateDashboard();
+                Toast.show('Connected and data loaded successfully', 'success');
             } else {
-                this.showError('Failed to connect to Elasticsearch');
+                Toast.show('Failed to connect to Elasticsearch', 'error');
             }
         } catch (error) {
-            this.showError(`Connection error: ${error.message}`);
+            Toast.show(`Connection error: ${error.message}`, 'error');
         }
     }
 

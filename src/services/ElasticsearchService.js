@@ -1,4 +1,5 @@
 class ElasticsearchService {
+    
     constructor(baseUrl) {
         this.baseUrl = baseUrl;
     }

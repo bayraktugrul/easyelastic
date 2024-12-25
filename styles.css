@@ -106,9 +106,130 @@ h2 i {
 }
 
 .health-card {
-    padding: 16px;
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.health-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.health-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.status-icon {
+    font-size: 24px;
+    margin-right: 12px;
+}
+
+.status-text {
+    font-size: 18px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+/* Health Status Colors */
+.health-green .status-icon {
+    color: #2ecc71;
+}
+
+.health-yellow .status-icon {
+    color: #f1c40f;
+}
+
+.health-red .status-icon {
+    color: #e74c3c;
+}
+
+/* Metrics Grid */
+.health-metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.metric {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    background: #f8f9fa;
     border-radius: 8px;
-    background: #f8fafc;
+    transition: background-color 0.2s ease;
+}
+
+.metric:hover {
+    background: #f1f3f5;
+}
+
+.metric-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border-radius: 8px;
+    margin-right: 12px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.metric-icon i {
+    font-size: 18px;
+    color: #6c757d;
+}
+
+.metric-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.metric-label {
+    font-size: 12px;
+    color: #6c757d;
+    margin-bottom: 4px;
+}
+
+.metric-value {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2d3436;
+}
+
+/* Response Status Colors */
+.success {
+    color: #2ecc71;
+}
+
+.warning {
+    color: #f1c40f;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .health-metrics {
+        grid-template-columns: 1fr;
+    }
+
+    .metric {
+        padding: 10px;
+    }
+
+    .status-icon {
+        font-size: 20px;
+    }
+
+    .status-text {
+        font-size: 16px;
+    }
 }
 
 .metrics-panel {
@@ -204,4 +325,43 @@ h2 i {
 
 .dashboard:not(.hidden) {
     animation: fadeIn 0.3s ease-out;
+}
+
+.button-group {
+    display: flex;
+    gap: 8px;
+}
+
+button.secondary {
+    background-color: #64748b;
+}
+
+button.secondary:hover {
+    background-color: #475569;
+}
+
+/* Toastify özelleştirmeleri */
+.toastify {
+    font-family: 'Inter', sans-serif;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.toastify:hover {
+    transform: translateY(-2px);
+}
+
+/* Toastify özelleştirmeleri */
+.toastify-custom {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+.toastify-custom:hover {
+    transform: translateY(-2px);
+    transition: transform 0.2s ease;
 } 
