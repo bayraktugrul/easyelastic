@@ -37,7 +37,7 @@ body {
 }
 
 .header {
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 
 .header h1 {
@@ -52,7 +52,7 @@ body {
 }
 
 .connection-panel {
-    margin-bottom: 20px;
+    margin-bottom: 0;
     display: flex;
     gap: 12px;
     background: linear-gradient(to right, rgba(255,255,255,0.9), rgba(255,255,255,0.95));
@@ -392,26 +392,9 @@ button.secondary:hover {
     transition: transform 0.2s ease;
 }
 
-/* Logo stili */
+/* Logo ile ilgili stilleri kaldır */
 .logo {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 32px;
-}
-
-.logo i {
-    font-size: 32px;
-    background: linear-gradient(45deg, var(--primary-color), var(--primary-hover));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.logo h1 {
-    font-size: 36px;
-    background: linear-gradient(45deg, var(--text-primary), var(--primary-color));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    display: none;
 }
 
 .input-group {
