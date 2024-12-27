@@ -45,6 +45,29 @@ class ElasticsearchService {
     async getIndicesInfo() {
         return await this.makeRequest('/_cat/indices?format=json');
     }
+
+    async createIndex(indexName, settings = {}) {
+        try {
+            const response = await fetch(`${this.baseUrl}/${indexName}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                mode: 'cors',
+                body: JSON.stringify(settings)
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error.reason || 'Failed to create index');
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error('Error creating index:', error);
+            throw error;
+        }
+    }
 }
 
 export default ElasticsearchService; 

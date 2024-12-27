@@ -58,8 +58,40 @@
             </div>
 
             <div class="indices-panel">
-                <h2><i class="fas fa-table"></i> Indices Overview</h2>
+                <div class="panel-header">
+                    <h2><i class="fas fa-table"></i> Indices Overview</h2>
+                    <button id="createIndexBtn" class="secondary">
+                        <i class="fas fa-plus"></i> Create Index
+                    </button>
+                </div>
                 <div id="indicesList" class="indices-table"></div>
+            </div>
+        </div>
+
+        <div id="createIndexModal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-plus"></i> Create New Index</h3>
+                    <button class="close-modal">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="indexName">Index Name</label>
+                        <input type="text" id="indexName" placeholder="Enter index name">
+                    </div>
+                    <div class="form-group">
+                        <label for="shardCount">Number of Shards</label>
+                        <input type="number" id="shardCount" value="1" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="replicaCount">Number of Replicas</label>
+                        <input type="number" id="replicaCount" value="1" min="0">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="cancelCreateIndex" class="secondary">Cancel</button>
+                    <button id="confirmCreateIndex">Create</button>
+                </div>
             </div>
         </div>
     </div>

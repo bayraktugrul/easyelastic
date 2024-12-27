@@ -10,11 +10,69 @@ class ESMonitor {
             clusterHealth: new ClusterHealth('clusterHealth')
         };
         this.initializeEventListeners();
+        this.initializeModalHandlers();
     }
 
     initializeEventListeners() {
         document.getElementById('connectBtn').addEventListener('click', () => this.connect());
         document.getElementById('testBtn').addEventListener('click', () => this.testConnection());
+    }
+
+    initializeModalHandlers() {
+        const modal = document.getElementById('createIndexModal');
+        const createBtn = document.getElementById('createIndexBtn');
+        const closeBtn = modal.querySelector('.close-modal');
+        const cancelBtn = document.getElementById('cancelCreateIndex');
+        const confirmBtn = document.getElementById('confirmCreateIndex');
+
+        createBtn.addEventListener('click', () => {
+            modal.classList.remove('hidden');
+        });
+
+        [closeBtn, cancelBtn].forEach(btn => {
+            btn.addEventListener('click', () => {
+                modal.classList.add('hidden');
+                this.resetIndexForm();
+            });
+        });
+
+        confirmBtn.addEventListener('click', () => this.handleCreateIndex());
+    }
+
+    resetIndexForm() {
+        document.getElementById('indexName').value = '';
+        document.getElementById('shardCount').value = '1';
+        document.getElementById('replicaCount').value = '1';
+    }
+
+    async handleCreateIndex() {
+        const indexName = document.getElementById('indexName').value.trim();
+        const shards = document.getElementById('shardCount').value;
+        const replicas = document.getElementById('replicaCount').value;
+
+        if (!indexName) {
+            Toast.show('Please enter an index name', 'error');
+            return;
+        }
+
+        try {
+            const settings = {
+                settings: {
+                    index: {
+                        number_of_shards: parseInt(shards),
+                        number_of_replicas: parseInt(replicas)
+                    }
+                }
+            };
+
+            await this.service.createIndex(indexName, settings);
+            Toast.show(`Index "${indexName}" created successfully`, 'success');
+            document.getElementById('createIndexModal').classList.add('hidden');
+            this.resetIndexForm();
+            await this.updateDashboard();
+        } catch (error) {
+            Toast.show(`Failed to create index: ${error.message}`, 'error');
+        }
     }
 
     async testConnection() {
