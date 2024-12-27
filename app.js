@@ -39,6 +39,26 @@ class ESMonitor {
         });
 
         confirmBtn.addEventListener('click', () => this.handleCreateIndex());
+
+        const deleteModal = document.getElementById('deleteIndexModal');
+        const closeDeleteBtn = deleteModal.querySelector('.close-modal');
+        const cancelDeleteBtn = document.getElementById('cancelDeleteIndex');
+        const confirmDeleteBtn = document.getElementById('confirmDeleteIndex');
+
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.delete-index')) {
+                const indexName = e.target.closest('.delete-index').dataset.index;
+                this.showDeleteConfirmation(indexName);
+            }
+        });
+
+        [closeDeleteBtn, cancelDeleteBtn].forEach(btn => {
+            btn.addEventListener('click', () => {
+                deleteModal.classList.add('hidden');
+            });
+        });
+
+        confirmDeleteBtn.addEventListener('click', () => this.handleDeleteIndex());
     }
 
     resetIndexForm() {
@@ -195,10 +215,7 @@ class ESMonitor {
                         render: function(data) {
                             return `
                                 <div class="action-buttons">
-                                    <button class="action-button" title="Refresh" onclick="refreshIndex('${data.index}')">
-                                        <i class="fas fa-sync-alt"></i>
-                                    </button>
-                                    <button class="action-button" title="Delete" onclick="deleteIndex('${data.index}')">
+                                    <button class="action-button delete-index" title="Delete" data-index="${data.index}">
                                         <i class="fas fa-trash-alt"></i>
                                     </button>
                                 </div>`;
@@ -247,6 +264,27 @@ class ESMonitor {
         document.getElementById('dashboard').classList.add('hidden');
         this.service = null;
         Toast.show('Connection cleared', 'info');
+    }
+
+    showDeleteConfirmation(indexName) {
+        const modal = document.getElementById('deleteIndexModal');
+        document.getElementById('deleteIndexName').textContent = indexName;
+        modal.dataset.indexName = indexName;
+        modal.classList.remove('hidden');
+    }
+
+    async handleDeleteIndex() {
+        const modal = document.getElementById('deleteIndexModal');
+        const indexName = modal.dataset.indexName;
+
+        try {
+            await this.service.deleteIndex(indexName);
+            Toast.show(`Index "${indexName}" deleted successfully`, 'success');
+            modal.classList.add('hidden');
+            await this.updateDashboard();
+        } catch (error) {
+            Toast.show(`Failed to delete index: ${error.message}`, 'error');
+        }
     }
 }
 

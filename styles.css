@@ -896,4 +896,34 @@ button.danger:hover {
     .indices-table tbody td {
         padding: 0.75rem 1rem !important;
     }
+}
+
+.text-danger {
+    color: var(--error-color);
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+}
+
+.delete-index {
+    color: var(--error-color);
+}
+
+.delete-index:hover {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--error-color);
+}
+
+#deleteIndexModal .modal-body {
+    text-align: center;
+    padding: 2rem;
+}
+
+#deleteIndexModal .modal-body p:first-child {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+#deleteIndexName {
+    font-weight: 600;
+    color: var(--text-primary);
 } 
