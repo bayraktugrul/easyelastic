@@ -1,18 +1,18 @@
 :root {
-    --primary-color: #6366f1;
-    --primary-hover: #4f46e5;
-    --secondary-color: #64748b;
-    --secondary-hover: #475569;
-    --success-color: #22c55e;
-    --warning-color: #eab308;
+    --primary-color: #4f46e5;
+    --primary-hover: #4338ca;
+    --secondary-color: #475569;
+    --secondary-hover: #334155;
+    --success-color: #10b981;
+    --warning-color: #f59e0b;
     --error-color: #ef4444;
     --background-color: #f8fafc;
     --card-background: #ffffff;
     --text-primary: #1e293b;
     --text-secondary: #64748b;
     --border-color: #e2e8f0;
-    --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
-    --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+    --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
     --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
 }
 
@@ -31,8 +31,9 @@ body {
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 1280px;
     margin: 0 auto;
+    padding: 2rem;
 }
 
 .header {
@@ -54,19 +55,22 @@ body {
     margin-bottom: 20px;
     display: flex;
     gap: 12px;
-    background: white;
+    background: linear-gradient(to right, rgba(255,255,255,0.9), rgba(255,255,255,0.95));
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: var(--shadow-md);
     padding: 20px;
     border-radius: 12px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
 #esUrl {
     flex: 1;
-    padding: 12px 16px;
-    border: 2px solid #e2e8f0;
+    padding: 14px 18px 14px 48px;
+    border: 1px solid var(--border-color);
     border-radius: 8px;
     font-size: 14px;
     transition: all 0.2s;
+    background: rgba(255,255,255,0.9);
 }
 
 #esUrl:focus {
@@ -76,14 +80,14 @@ body {
 }
 
 button {
-    padding: 12px 24px;
+    padding: 14px 28px;
     background-color: #3b82f6;
     color: white;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     cursor: pointer;
-    font-weight: 500;
-    transition: all 0.2s;
+    font-weight: 600;
+    transition: all 0.3s ease;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -91,7 +95,8 @@ button {
 
 button:hover {
     background-color: #2563eb;
-    transform: translateY(-1px);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
 }
 
 .hidden {
@@ -111,7 +116,9 @@ button:hover {
 }
 
 h2 {
-    font-size: 18px;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
     margin-bottom: 20px;
     color: #1e293b;
     display: flex;
@@ -253,22 +260,27 @@ h2 i {
 }
 
 .metric-box {
-    padding: 24px;
-    border-radius: 8px;
-    background: #f8fafc;
+    background: linear-gradient(145deg, #ffffff, #f8fafc);
+    border: 1px solid rgba(255,255,255,0.7);
+    box-shadow: var(--shadow-sm);
+    border-radius: 16px;
+    padding: 28px;
     text-align: center;
-    transition: all 0.2s;
+    transition: all 0.3s;
 }
 
 .metric-box:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+    background: linear-gradient(145deg, #ffffff, #f1f5f9);
 }
 
 .metric-icon {
-    font-size: 24px;
-    color: #3b82f6;
-    margin-bottom: 12px;
+    font-size: 28px;
+    margin-bottom: 16px;
+    background: linear-gradient(45deg, var(--primary-color), var(--primary-hover));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .metric-box h3 {
@@ -284,40 +296,44 @@ h2 i {
 }
 
 .indices-table {
-    border-radius: 8px;
+    border: none;
+    background: white;
+    border-radius: 16px;
     overflow: hidden;
-    border: 1px solid #e2e8f0;
+    box-shadow: var(--shadow-sm);
 }
 
 .index-item {
     display: grid;
     grid-template-columns: 2fr 1fr 1fr 1fr;
-    padding: 12px 16px;
+    padding: 16px 24px;
     align-items: center;
+    transition: all 0.2s ease;
 }
 
-.index-item:first-child {
-    background: #f8fafc;
-    font-weight: 500;
+.index-item:hover:not(.header) {
+    background: linear-gradient(to right, #f8fafc, #f1f5f9);
 }
 
-.index-item:not(:last-child) {
-    border-bottom: 1px solid #e2e8f0;
+.index-item.header {
+    background: linear-gradient(to right, #f8fafc, #f1f5f9);
+    font-weight: 600;
+    letter-spacing: 0.5px;
 }
 
 .health-green {
-    color: #22c55e;
-    font-weight: 500;
+    color: var(--success-color);
+    font-weight: 600;
 }
 
 .health-yellow {
-    color: #eab308;
-    font-weight: 500;
+    color: var(--warning-color);
+    font-weight: 600;
 }
 
 .health-red {
-    color: #ef4444;
-    font-weight: 500;
+    color: var(--error-color);
+    font-weight: 600;
 }
 
 @media (max-width: 768px) {
@@ -380,20 +396,22 @@ button.secondary:hover {
 .logo {
     display: flex;
     align-items: center;
-    gap: 12px;
-    margin-bottom: 24px;
+    gap: 16px;
+    margin-bottom: 32px;
 }
 
 .logo i {
-    font-size: 28px;
-    color: var(--primary-color);
+    font-size: 32px;
+    background: linear-gradient(45deg, var(--primary-color), var(--primary-hover));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .logo h1 {
-    font-size: 32px;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin: 0;
+    font-size: 36px;
+    background: linear-gradient(45deg, var(--text-primary), var(--primary-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .input-group {
@@ -603,14 +621,16 @@ button.secondary:hover {
 
 .modal-content {
     background: white;
-    border-radius: 12px;
+    border-radius: 20px;
     width: 100%;
     max-width: 500px;
-    box-shadow: var(--shadow-lg);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    background: linear-gradient(145deg, #ffffff, #f8fafc);
 }
 
 .modal-header {
-    padding: 20px;
+    padding: 24px 32px;
     border-bottom: 1px solid var(--border-color);
     display: flex;
     justify-content: space-between;
@@ -635,7 +655,7 @@ button.secondary:hover {
 }
 
 .modal-body {
-    padding: 20px;
+    padding: 32px;
 }
 
 .modal-footer {
@@ -659,17 +679,17 @@ button.secondary:hover {
 
 .form-group input {
     width: 100%;
-    padding: 10px 12px;
+    padding: 14px 16px;
     border: 2px solid var(--border-color);
-    border-radius: 6px;
+    border-radius: 10px;
     font-size: 14px;
-    transition: all 0.2s;
+    transition: all 0.3s ease;
 }
 
 .form-group input:focus {
     outline: none;
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
 }
 
 button.danger {
@@ -678,4 +698,18 @@ button.danger {
 
 button.danger:hover {
     background-color: #dc2626;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+    
+    .metric-box {
+        padding: 20px;
+    }
+    
+    .index-item {
+        padding: 12px 16px;
+    }
 } 
