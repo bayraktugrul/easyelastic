@@ -712,4 +712,205 @@ button.danger:hover {
     .index-item {
         padding: 12px 16px;
     }
+}
+
+.dataTables_wrapper {
+    background: var(--card-background);
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: var(--shadow-sm);
+    margin-top: 1rem;
+}
+
+.indices-table {
+    width: 100% !important;
+    border-collapse: separate !important;
+    border-spacing: 0 8px !important;
+    margin-top: 1rem !important;
+}
+
+.indices-table thead th {
+    background: linear-gradient(to right, rgba(99, 102, 241, 0.05), rgba(99, 102, 241, 0.02));
+    color: var(--text-primary);
+    font-weight: 600;
+    padding: 1rem 1.5rem !important;
+    border: none !important;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+}
+
+.indices-table tbody tr {
+    background: white;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.2s ease;
+}
+
+.indices-table tbody tr:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+    background: linear-gradient(to right, white, rgba(99, 102, 241, 0.02));
+}
+
+.indices-table tbody td {
+    padding: 1rem 1.5rem !important;
+    border: none !important;
+    vertical-align: middle;
+}
+
+.dataTables_filter {
+    margin-bottom: 1.5rem;
+}
+
+.dataTables_filter label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.dataTables_filter input {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    width: 250px;
+    transition: all 0.2s;
+    background: white;
+}
+
+.dataTables_filter input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.dataTables_paginate {
+    margin-top: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.25rem;
+}
+
+.dataTables_paginate .paginate_button {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid transparent;
+    background: transparent !important;
+    color: var(--text-secondary) !important;
+}
+
+.dataTables_paginate .paginate_button.current {
+    background: var(--primary-color) !important;
+    color: white !important;
+    border: none !important;
+    font-weight: 500;
+}
+
+.dataTables_paginate .paginate_button:hover:not(.current) {
+    background: rgba(99, 102, 241, 0.1) !important;
+    color: var(--primary-color) !important;
+    border-color: transparent !important;
+}
+
+.dataTables_length {
+    margin-bottom: 1.5rem;
+}
+
+.dataTables_length label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.dataTables_length select {
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 0.5rem 2rem 0.5rem 1rem;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.dataTables_length select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.dataTables_info {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    margin-top: 1.5rem;
+}
+
+.health-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    font-weight: 500;
+    font-size: 0.875rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.health-badge.green {
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--success-color);
+}
+
+.health-badge.yellow {
+    background: rgba(245, 158, 11, 0.1);
+    color: var(--warning-color);
+}
+
+.health-badge.red {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--error-color);
+}
+
+.action-buttons {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+}
+
+.action-button {
+    padding: 0.5rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--text-secondary);
+    background: transparent;
+    border: none;
+}
+
+.action-button:hover {
+    color: var(--primary-color);
+    background: rgba(99, 102, 241, 0.1);
+}
+
+@media (max-width: 768px) {
+    .dataTables_filter input {
+        width: 100%;
+    }
+    
+    .dataTables_length, 
+    .dataTables_filter {
+        margin-bottom: 1rem;
+    }
+    
+    .dataTables_paginate {
+        justify-content: center;
+    }
+    
+    .indices-table tbody td {
+        padding: 0.75rem 1rem !important;
+    }
 } 

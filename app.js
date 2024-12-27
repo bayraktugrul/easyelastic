@@ -147,31 +147,83 @@ class ESMonitor {
     }
 
     updateIndices(indices) {
-        const indicesList = document.getElementById('indicesList');
-        indicesList.innerHTML = this.generateIndicesTable(indices);
-    }
+        const flattenedIndices = indices.map(index => ({
+            index: index.index,
+            docs_count: index.docs?.count || 0,
+            store_size: index.store?.size || '0b',
+            health: index.health
+        }));
 
-    generateIndicesTable(indices) {
-        return `
-            <div class="index-item header">
-                <strong>Index</strong>
-                <strong>Docs</strong>
-                <strong>Size</strong>
-                <strong>Health</strong>
-            </div>
-            ${indices.map(index => this.generateIndexRow(index)).join('')}
-        `;
-    }
-
-    generateIndexRow(index) {
-        return `
-            <div class="index-item">
-                <span>${index.index}</span>
-                <span>${formatNumber(index.docs?.count || 0)}</span>
-                <span>${index.store?.size || '0b'}</span>
-                <span class="health-${index.health}">${index.health}</span>
-            </div>
-        `;
+        if (!$.fn.DataTable.isDataTable('#indicesTable')) {
+            $('#indicesTable').DataTable({
+                data: flattenedIndices,
+                responsive: true,
+                columns: [
+                    { 
+                        data: 'index',
+                        render: function(data) {
+                            return `<span class="font-medium">${data}</span>`;
+                        }
+                    },
+                    { 
+                        data: 'docs_count',
+                        render: function(data) {
+                            return formatNumber(data);
+                        }
+                    },
+                    { 
+                        data: 'store_size',
+                        render: function(data) {
+                            return data;
+                        }
+                    },
+                    { 
+                        data: 'health',
+                        render: function(data) {
+                            const healthClass = `health-badge ${data.toLowerCase()}`;
+                            const icon = data === 'green' ? 'check-circle' : 
+                                       data === 'yellow' ? 'exclamation-circle' : 'times-circle';
+                            return `
+                                <span class="${healthClass}">
+                                    <i class="fas fa-${icon}"></i>
+                                    ${data}
+                                </span>`;
+                        }
+                    },
+                    {
+                        data: null,
+                        render: function(data) {
+                            return `
+                                <div class="action-buttons">
+                                    <button class="action-button" title="Refresh" onclick="refreshIndex('${data.index}')">
+                                        <i class="fas fa-sync-alt"></i>
+                                    </button>
+                                    <button class="action-button" title="Delete" onclick="deleteIndex('${data.index}')">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </div>`;
+                        }
+                    }
+                ],
+                language: {
+                    search: "Search:",
+                    lengthMenu: "Show _MENU_ entries",
+                    info: "Showing _START_ to _END_ of _TOTAL_ entries",
+                    infoEmpty: "No entries available",
+                    infoFiltered: "(filtered from _MAX_ total entries)",
+                    paginate: {
+                        first: "First",
+                        last: "Last",
+                        next: "Next",
+                        previous: "Previous"
+                    }
+                },
+                order: [[1, 'desc']]
+            });
+        } else {
+            const table = $('#indicesTable').DataTable();
+            table.clear().rows.add(flattenedIndices).draw();
+        }
     }
 
     showError(message) {
