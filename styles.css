@@ -539,7 +539,6 @@ button.secondary:hover {
     color: var(--text-primary);
 }
 
-/* Status Colors */
 .health-green .status-icon {
     color: var(--success-color);
 }
@@ -926,4 +925,101 @@ button.danger:hover {
 #deleteIndexName {
     font-weight: 600;
     color: var(--text-primary);
+}
+
+.dataTables_wrapper .dt-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    gap: 1rem;
+}
+
+.dataTables_length,
+.dataTables_filter {
+    margin: 0 !important;
+    flex: 1;
+}
+
+.dataTables_filter {
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* Search input stili */
+.dataTables_filter input {
+    max-width: 250px;
+    background: white;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 0.875rem;
+    transition: all 0.2s;
+}
+
+.dataTables_filter input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.dataTables_length select {
+    background: white;
+    padding: 0.75rem 2.5rem 0.75rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 0.875rem;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236B7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1rem;
+}
+
+.dataTables_length select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.dataTables_length label,
+.dataTables_filter label {
+    font-weight: 500;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+@media (max-width: 768px) {
+    .dataTables_wrapper .dt-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .dataTables_filter {
+        justify-content: stretch;
+    }
+
+    .dataTables_filter input {
+        max-width: none;
+        width: 100%;
+    }
+
+    .dataTables_length,
+    .dataTables_filter {
+        margin-bottom: 1rem !important;
+    }
+
+    .dataTables_length label,
+    .dataTables_filter label {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .dataTables_length select {
+        width: 100%;
+    }
 } 

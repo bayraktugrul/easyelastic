@@ -235,7 +235,10 @@ class ESMonitor {
                         previous: "Previous"
                     }
                 },
-                order: [[1, 'desc']]
+                order: [[1, 'desc']],
+                dom: "<'dt-controls'<'dataTables_length'l><'dataTables_filter'f>>" +
+                     "rt" +
+                     "<'dt-bottom'<'dataTables_info'i><'dataTables_paginate'p>>"
             });
         } else {
             const table = $('#indicesTable').DataTable();
