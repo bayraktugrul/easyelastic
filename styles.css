@@ -896,16 +896,52 @@ button.danger:hover {
 .action-button {
     padding: 0.5rem;
     border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s;
+    cursor: default;
     color: var(--text-secondary);
     background: transparent;
     border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+    min-height: 32px;
+}
+
+.action-button i {
+    font-size: 1rem;
 }
 
 .action-button:hover {
+    background: var(--info-bg);
+}
+
+.action-button.manage-aliases:hover {
     color: var(--primary-color);
-    background: rgba(99, 102, 241, 0.1);
+}
+
+.action-button.delete-index:hover {
+    color: var(--error-color);
+    background: var(--error-bg);
+}
+
+/* Tooltip stili */
+.action-button {
+    position: relative;
+}
+
+.action-button:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 4px 8px;
+    background: var(--text-primary);
+    color: white;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    margin-bottom: 8px;
 }
 
 @media (max-width: 768px) {
@@ -1080,6 +1116,120 @@ button.danger:hover {
     position: absolute;
     bottom: calc(100% + 4px);
     left: 15px;
+    border: 6px solid transparent;
+    border-top-color: var(--text-primary);
+}
+
+/* Alias badge ve remove button stilleri */
+.alias-badge {
+    display: inline-flex;
+    align-items: center;
+    background: var(--info-bg);
+    color: var(--primary-color);
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    margin: 2px;
+}
+
+/* Modal içindeki alias badge'ler için silme butonu stili */
+.aliases-list .alias-badge {
+    gap: 8px;
+}
+
+.aliases-list .alias-badge .remove-alias {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    width: 20px;
+    height: 20px;
+}
+
+.aliases-list .alias-badge .remove-alias:hover {
+    color: var(--error-color);
+    background: var(--error-bg);
+}
+
+.aliases-list .alias-badge .remove-alias i {
+    font-size: 12px;
+}
+
+/* Aliases list styles */
+.aliases-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin: 8px 0;
+    min-height: 36px;
+    padding: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--background-color);
+}
+
+.alias-input-group {
+    display: flex;
+    gap: 8px;
+}
+
+.alias-input-group input {
+    flex: 1;
+}
+
+.alias-input-group button {
+    padding: 8px 16px;
+}
+
+.current-aliases {
+    margin-bottom: 1.5rem;
+}
+
+.current-aliases label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+/* Empty state */
+.no-aliases {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    font-style: italic;
+}
+
+/* Action button tooltip stilleri */
+.action-button i[title] {
+    cursor: default;
+    position: relative;
+}
+
+.action-button i[title]:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 4px 8px;
+    background: var(--text-primary);
+    color: white;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    margin-bottom: 8px;
+}
+
+.action-button i[title]:hover::before {
+    content: '';
+    position: absolute;
+    bottom: calc(100% + 4px);
+    left: 50%;
+    transform: translateX(-50%);
     border: 6px solid transparent;
     border-top-color: var(--text-primary);
 } 

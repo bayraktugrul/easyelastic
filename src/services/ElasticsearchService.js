@@ -83,6 +83,64 @@ class ElasticsearchService {
 
         return await response.json();
     }
+
+    async getAliases(indexName) {
+        try {
+            const response = await fetch(`${this.baseUrl}/${indexName}/_alias`);
+            
+            if (!response.ok) {
+                throw new Error('Failed to fetch aliases');
+            }
+
+            const data = await response.json();
+            return Object.keys(data[indexName].aliases || {});
+        } catch (error) {
+            console.error('Error fetching aliases:', error);
+            throw new Error('Failed to fetch aliases');
+        }
+    }
+
+    async addAlias(indexName, aliasName) {
+        const response = await fetch(`${this.baseUrl}/_aliases`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                "actions": [
+                    { "add": { "index": indexName, "alias": aliasName } }
+                ]
+            })
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error?.reason || 'Failed to add alias');
+        }
+
+        return await response.json();
+    }
+
+    async removeAlias(indexName, aliasName) {
+        const response = await fetch(`${this.baseUrl}/_aliases`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                "actions": [
+                    { "remove": { "index": indexName, "alias": aliasName } }
+                ]
+            })
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error?.reason || 'Failed to remove alias');
+        }
+
+        return await response.json();
+    }
 }
 
 export default ElasticsearchService; 

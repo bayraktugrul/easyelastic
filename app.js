@@ -59,6 +59,27 @@ class ESMonitor {
         });
 
         confirmDeleteBtn.addEventListener('click', () => this.handleDeleteIndex());
+
+        const aliasModal = document.getElementById('aliasModal');
+        const closeAliasBtn = document.getElementById('closeAliasModal');
+        const addAliasBtn = document.getElementById('addAliasBtn');
+
+        document.addEventListener('click', async (e) => {
+            if (e.target.closest('.manage-aliases')) {
+                const indexName = e.target.closest('.manage-aliases').dataset.index;
+                await this.showAliasManager(indexName);
+            }
+            if (e.target.closest('.remove-alias')) {
+                const { index, alias } = e.target.closest('.remove-alias').dataset;
+                await this.removeAlias(index, alias);
+            }
+        });
+
+        closeAliasBtn.addEventListener('click', () => {
+            aliasModal.classList.add('hidden');
+        });
+
+        addAliasBtn.addEventListener('click', () => this.handleAddAlias());
     }
 
     resetIndexForm() {
@@ -171,84 +192,116 @@ class ESMonitor {
             index: index.index,
             docs_count: index.docs?.count || 0,
             store_size: index.store?.size || '0b',
-            health: index.health
+            health: index.health,
+            aliases: []
         }));
 
-        if (!$.fn.DataTable.isDataTable('#indicesTable')) {
-            $('#indicesTable').DataTable({
-                data: flattenedIndices,
-                responsive: true,
-                columns: [
-                    { 
-                        data: 'index',
-                        render: function(data) {
-                            if (data.length > 30) {
-                                return `<span class="font-medium" title="${data}">
-                                    ${data.substring(0, 30)}...
-                                </span>`;
+        const loadAliases = async () => {
+            for (let index of flattenedIndices) {
+                try {
+                    const aliases = await this.service.getAliases(index.index);
+                    index.aliases = aliases;
+                } catch (error) {
+                    console.error(`Failed to fetch aliases for ${index.index}:`, error);
+                    index.aliases = [];
+                }
+            }
+            return flattenedIndices;
+        };
+
+        loadAliases().then(indicesWithAliases => {
+            if (!$.fn.DataTable.isDataTable('#indicesTable')) {
+                $('#indicesTable').DataTable({
+                    data: indicesWithAliases,
+                    responsive: true,
+                    columns: [
+                        { 
+                            data: 'index',
+                            render: function(data) {
+                                if (data.length > 30) {
+                                    return `<span class="font-medium" title="${data}">
+                                        ${data.substring(0, 30)}...
+                                    </span>`;
+                                }
+                                return `<span class="font-medium">${data}</span>`;
                             }
-                            return `<span class="font-medium">${data}</span>`;
+                        },
+                        { 
+                            data: 'docs_count',
+                            render: function(data) {
+                                return formatNumber(data);
+                            }
+                        },
+                        { 
+                            data: 'store_size',
+                            render: function(data) {
+                                return data;
+                            }
+                        },
+                        { 
+                            data: 'health',
+                            render: function(data) {
+                                const healthClass = `health-badge ${data.toLowerCase()}`;
+                                const icon = data === 'green' ? 'check-circle' : 
+                                           data === 'yellow' ? 'exclamation-circle' : 'times-circle';
+                                return `
+                                    <span class="${healthClass}">
+                                        <i class="fas fa-${icon}"></i>
+                                        ${data}
+                                    </span>`;
+                            }
+                        },
+                        { 
+                            data: 'aliases',
+                            render: function(data, type, row) {
+                                if (!data || data.length === 0) {
+                                    return '<span class="no-aliases">No aliases</span>';
+                                }
+                                return data.map(alias => `
+                                    <span class="alias-badge">
+                                        ${alias}
+                                    </span>
+                                `).join('');
+                            }
+                        },
+                        {
+                            data: null,
+                            render: function(data) {
+                                return `
+                                    <div class="action-buttons">
+                                        <button class="action-button manage-aliases" title="Manage Aliases" data-index="${data.index}">
+                                            <i class="fas fa-tags"></i>
+                                        </button>
+                                        <button class="action-button delete-index" title="Delete Index" data-index="${data.index}">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </div>`;
+                            }
+                        }
+                    ],
+                    language: {
+                        search: "Search:",
+                        lengthMenu: "Show _MENU_ entries",
+                        info: "Showing _START_ to _END_ of _TOTAL_ entries",
+                        infoEmpty: "No entries available",
+                        infoFiltered: "(filtered from _MAX_ total entries)",
+                        paginate: {
+                            first: "First",
+                            last: "Last",
+                            next: "Next",
+                            previous: "Previous"
                         }
                     },
-                    { 
-                        data: 'docs_count',
-                        render: function(data) {
-                            return formatNumber(data);
-                        }
-                    },
-                    { 
-                        data: 'store_size',
-                        render: function(data) {
-                            return data;
-                        }
-                    },
-                    { 
-                        data: 'health',
-                        render: function(data) {
-                            const healthClass = `health-badge ${data.toLowerCase()}`;
-                            const icon = data === 'green' ? 'check-circle' : 
-                                       data === 'yellow' ? 'exclamation-circle' : 'times-circle';
-                            return `
-                                <span class="${healthClass}">
-                                    <i class="fas fa-${icon}"></i>
-                                    ${data}
-                                </span>`;
-                        }
-                    },
-                    {
-                        data: null,
-                        render: function(data) {
-                            return `
-                                <div class="action-buttons">
-                                    <button class="action-button delete-index" title="Delete" data-index="${data.index}">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </button>
-                                </div>`;
-                        }
-                    }
-                ],
-                language: {
-                    search: "Search:",
-                    lengthMenu: "Show _MENU_ entries",
-                    info: "Showing _START_ to _END_ of _TOTAL_ entries",
-                    infoEmpty: "No entries available",
-                    infoFiltered: "(filtered from _MAX_ total entries)",
-                    paginate: {
-                        first: "First",
-                        last: "Last",
-                        next: "Next",
-                        previous: "Previous"
-                    }
-                },
-                order: [[1, 'desc']],
-                dom: "<'dt-controls'<'dataTables_length'l><'dataTables_filter'f>>" +
-                     "rt" +
-                     "<'dt-bottom'<'dataTables_info'i><'dataTables_paginate'p>>"
-            });
-        } else {
-            const table = $('#indicesTable').DataTable();
-            table.clear().rows.add(flattenedIndices).draw();
-        }
+                    order: [[1, 'desc']],
+                    dom: "<'dt-controls'<'dataTables_length'l><'dataTables_filter'f>>" +
+                         "rt" +
+                         "<'dt-bottom'<'dataTables_info'i><'dataTables_paginate'p>>"
+                });
+            } else {
+                const table = $('#indicesTable').DataTable();
+                table.clear().rows.add(indicesWithAliases).draw();
+            }
+        });
     }
 
     showError(message) {
@@ -292,6 +345,117 @@ class ESMonitor {
             await this.updateDashboard();
         } catch (error) {
             Toast.show(`Failed to delete index: ${error.message}`, 'error');
+        }
+    }
+
+    async showAliasManager(indexName) {
+        const modal = document.getElementById('aliasModal');
+        document.getElementById('aliasIndexName').textContent = indexName;
+        modal.dataset.indexName = indexName;
+        
+        await this.refreshAliasesList(indexName);
+        modal.classList.remove('hidden');
+    }
+
+    async refreshAliasesList(indexName) {
+        try {
+            const aliases = await this.service.getAliases(indexName);
+            const aliasesList = document.getElementById('currentAliasesList');
+            
+            if (aliases.length === 0) {
+                aliasesList.innerHTML = '<span class="no-aliases">No aliases defined</span>';
+                return;
+            }
+
+            aliasesList.innerHTML = aliases.map(alias => `
+                <span class="alias-badge">
+                    ${alias}
+                    <button class="remove-alias" data-index="${indexName}" data-alias="${alias}" type="button">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </span>
+            `).join('');
+        } catch (error) {
+            Toast.show(`Failed to fetch aliases: ${error.message}`, 'error');
+        }
+    }
+
+    async handleAddAlias() {
+        const modal = document.getElementById('aliasModal');
+        const indexName = modal.dataset.indexName;
+        const aliasInput = document.getElementById('newAlias');
+        const aliasName = aliasInput.value.trim();
+
+        if (!aliasName) {
+            Toast.show('Please enter an alias name', 'error');
+            return;
+        }
+
+        try {
+            await this.service.addAlias(indexName, aliasName);
+            Toast.show(`Alias "${aliasName}" added successfully`, 'success');
+            aliasInput.value = '';
+            
+            await this.refreshAliasesList(indexName);
+            
+            const indices = await this.service.getIndicesInfo();
+            const flattenedIndices = indices.map(index => ({
+                index: index.index,
+                docs_count: index.docs?.count || 0,
+                store_size: index.store?.size || '0b',
+                health: index.health,
+                aliases: []
+            }));
+
+            for (let index of flattenedIndices) {
+                try {
+                    const aliases = await this.service.getAliases(index.index);
+                    index.aliases = aliases;
+                } catch (error) {
+                    console.error(`Failed to fetch aliases for ${index.index}:`, error);
+                    index.aliases = [];
+                }
+            }
+
+            const table = $('#indicesTable').DataTable();
+            table.clear().rows.add(flattenedIndices).draw();
+
+        } catch (error) {
+            Toast.show(`Failed to add alias: ${error.message}`, 'error');
+        }
+    }
+
+    async removeAlias(indexName, aliasName) {
+        try {
+            await this.service.removeAlias(indexName, aliasName);
+            Toast.show(`Alias "${aliasName}" removed successfully`, 'success');
+            
+            await this.refreshAliasesList(indexName);
+            
+            const indices = await this.service.getIndicesInfo();
+            const flattenedIndices = indices.map(index => ({
+                index: index.index,
+                docs_count: index.docs?.count || 0,
+                store_size: index.store?.size || '0b',
+                health: index.health,
+                aliases: []
+            }));
+
+            for (let index of flattenedIndices) {
+                try {
+                    const aliases = await this.service.getAliases(index.index);
+                    index.aliases = aliases;
+                } catch (error) {
+                    console.error(`Failed to fetch aliases for ${index.index}:`, error);
+                    index.aliases = [];
+                }
+            }
+
+            const table = $('#indicesTable').DataTable();
+            table.clear().rows.add(flattenedIndices).draw();
+
+        } catch (error) {
+            Toast.show(`Failed to remove alias: ${error.message}`, 'error');
         }
     }
 }
