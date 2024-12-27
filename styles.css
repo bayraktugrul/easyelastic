@@ -1022,4 +1022,34 @@ button.danger:hover {
     .dataTables_length select {
         width: 100%;
     }
+}
+
+.indices-table [title] {
+    cursor: help;
+    position: relative;
+}
+
+.indices-table [title]:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 0;
+    transform: translateX(0);
+    padding: 8px 12px;
+    background: var(--text-primary);
+    color: white;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    white-space: nowrap;
+    z-index: 10;
+    box-shadow: var(--shadow-md);
+}
+
+.indices-table [title]:hover::before {
+    content: '';
+    position: absolute;
+    bottom: calc(100% + 4px);
+    left: 15px;
+    border: 6px solid transparent;
+    border-top-color: var(--text-primary);
 } 
