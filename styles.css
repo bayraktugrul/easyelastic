@@ -1,19 +1,40 @@
 :root {
-    --primary-color: #4f46e5;
-    --primary-hover: #4338ca;
-    --secondary-color: #475569;
-    --secondary-hover: #334155;
-    --success-color: #10b981;
-    --warning-color: #f59e0b;
-    --error-color: #ef4444;
-    --background-color: #f8fafc;
-    --card-background: #ffffff;
-    --text-primary: #1e293b;
-    --text-secondary: #64748b;
-    --border-color: #e2e8f0;
-    --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
-    --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
-    --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+    /* Modern Color Palette */
+    --primary-color: #6366f1;      /* A vibrant indigo */
+    --primary-hover: #4f46e5;      
+    --secondary-color: #64748b;    /* Neutral slate */
+    --secondary-hover: #475569;    
+    
+    /* Status Colors */
+    --success-color: #10b981;      /* Emerald */
+    --warning-color: #f59e0b;      /* Amber */
+    --error-color: #ef4444;        /* Red */
+    
+    /* Neutral Colors */
+    --background-color: #f9fafb;   /* Lighter background */
+    --card-background: #ffffff;    
+    --text-primary: #111827;       /* Darker for better contrast */
+    --text-secondary: #4b5563;     
+    --text-tertiary: #9ca3af;     
+    
+    /* Borders & Dividers */
+    --border-color: #e5e7eb;      
+    --border-hover: #d1d5db;    
+    
+    /* Enhanced Shadows */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, #6366f1, #4f46e5);
+    --gradient-secondary: linear-gradient(135deg, #64748b, #475569);
+    
+    /* Status Backgrounds */
+    --success-bg: rgba(16, 185, 129, 0.1);
+    --warning-bg: rgba(245, 158, 11, 0.1);
+    --error-bg: rgba(239, 68, 68, 0.1);
+    --info-bg: rgba(99, 102, 241, 0.1);
 }
 
 * {
@@ -109,10 +130,16 @@ button:hover {
 }
 
 .status-panel, .metrics-panel, .indices-panel {
-    background-color: white;
+    background-color: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
     padding: 24px;
-    border-radius: 12px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.3s ease;
+}
+
+.status-panel:hover, .metrics-panel:hover, .indices-panel:hover {
+    box-shadow: var(--shadow-md);
 }
 
 h2 {
@@ -260,19 +287,28 @@ h2 i {
 }
 
 .metric-box {
-    background: linear-gradient(145deg, #ffffff, #f8fafc);
-    border: 1px solid rgba(255,255,255,0.7);
-    box-shadow: var(--shadow-sm);
-    border-radius: 16px;
-    padding: 28px;
-    text-align: center;
-    transition: all 0.3s;
+    background: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
 }
 
-.metric-box:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-md);
-    background: linear-gradient(145deg, #ffffff, #f1f5f9);
+.metric-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--gradient-primary);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.metric-box:hover::before {
+    opacity: 1;
 }
 
 .metric-icon {
@@ -603,16 +639,16 @@ button.secondary:hover {
 
 .modal-content {
     background: white;
-    border-radius: 20px;
+    border-radius: 16px;
     width: 100%;
     max-width: 500px;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: var(--shadow-lg);
+    border: none;
     background: linear-gradient(145deg, #ffffff, #f8fafc);
 }
 
 .modal-header {
-    padding: 24px 32px;
+    padding: 20px 24px;
     border-bottom: 1px solid var(--border-color);
     display: flex;
     justify-content: space-between;
@@ -637,7 +673,7 @@ button.secondary:hover {
 }
 
 .modal-body {
-    padding: 32px;
+    padding: 24px;
 }
 
 .modal-footer {
@@ -661,17 +697,17 @@ button.secondary:hover {
 
 .form-group input {
     width: 100%;
-    padding: 14px 16px;
-    border: 2px solid var(--border-color);
-    border-radius: 10px;
-    font-size: 14px;
-    transition: all 0.3s ease;
+    padding: 10px 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
 }
 
 .form-group input:focus {
     outline: none;
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+    box-shadow: 0 0 0 3px var(--info-bg);
 }
 
 button.danger {
@@ -712,26 +748,22 @@ button.danger:hover {
 }
 
 .indices-table thead th {
-    background: linear-gradient(to right, rgba(99, 102, 241, 0.05), rgba(99, 102, 241, 0.02));
-    color: var(--text-primary);
-    font-weight: 600;
-    padding: 1rem 1.5rem !important;
-    border: none !important;
-    text-transform: uppercase;
+    background: var(--background-color);
     font-size: 0.75rem;
+    text-transform: uppercase;
     letter-spacing: 0.05em;
+    color: var(--text-secondary);
+    padding: 12px 24px;
+    border-bottom: 2px solid var(--border-color);
 }
 
 .indices-table tbody tr {
-    background: white;
-    box-shadow: var(--shadow-sm);
+    border-bottom: 1px solid var(--border-color);
     transition: all 0.2s ease;
 }
 
 .indices-table tbody tr:hover {
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-md);
-    background: linear-gradient(to right, white, rgba(99, 102, 241, 0.02));
+    background: var(--info-bg);
 }
 
 .indices-table tbody td {
@@ -755,16 +787,15 @@ button.danger:hover {
 .dataTables_filter input {
     border: 1px solid var(--border-color);
     border-radius: 8px;
-    padding: 0.75rem 1rem;
+    padding: 8px 16px;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
     width: 250px;
-    transition: all 0.2s;
-    background: white;
 }
 
 .dataTables_filter input:focus {
-    outline: none;
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    box-shadow: 0 0 0 3px var(--info-bg);
 }
 
 .dataTables_paginate {
@@ -776,19 +807,15 @@ button.danger:hover {
 }
 
 .dataTables_paginate .paginate_button {
-    padding: 0.5rem 1rem;
+    padding: 6px 12px;
     border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s;
-    border: 1px solid transparent;
-    background: transparent !important;
-    color: var(--text-secondary) !important;
+    margin: 0 2px;
+    transition: all 0.2s ease;
 }
 
 .dataTables_paginate .paginate_button.current {
     background: var(--primary-color) !important;
-    color: white !important;
-    border: none !important;
+    border: none;
     font-weight: 500;
 }
 
@@ -832,14 +859,17 @@ button.danger:hover {
 }
 
 .health-badge {
-    padding: 0.5rem 1rem;
-    border-radius: 999px;
-    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: 9999px;
     font-size: 0.875rem;
+    font-weight: 500;
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    transition: all 0.2s ease;
+    gap: 6px;
+}
+
+.health-badge i {
+    font-size: 0.75rem;
 }
 
 .health-badge.green {
