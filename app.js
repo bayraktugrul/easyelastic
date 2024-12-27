@@ -11,11 +11,13 @@ class ESMonitor {
         };
         this.initializeEventListeners();
         this.initializeModalHandlers();
+        this.loadSavedConnection();
     }
 
     initializeEventListeners() {
         document.getElementById('connectBtn').addEventListener('click', () => this.connect());
         document.getElementById('testBtn').addEventListener('click', () => this.testConnection());
+        document.getElementById('disconnectBtn').addEventListener('click', () => this.clearConnection());
     }
 
     initializeModalHandlers() {
@@ -87,6 +89,7 @@ class ESMonitor {
             const isConnected = await service.checkConnection();
             
             if (isConnected) {
+                localStorage.setItem('esUrl', url);
                 Toast.show('Successfully connected to Elasticsearch', 'success');
             } else {
                 Toast.show('Failed to connect to Elasticsearch', 'error');
@@ -108,6 +111,8 @@ class ESMonitor {
             const isConnected = await this.service.checkConnection();
             
             if (isConnected) {
+                localStorage.setItem('esUrl', url);
+                
                 document.getElementById('dashboard').classList.remove('hidden');
                 await this.updateDashboard();
                 Toast.show('Connected and data loaded successfully', 'success');
@@ -172,6 +177,24 @@ class ESMonitor {
     showError(message) {
         alert(message);
         console.error(message);
+    }
+
+    async loadSavedConnection() {
+        const savedUrl = localStorage.getItem('esUrl');
+        if (savedUrl) {
+            const urlInput = document.getElementById('esUrl');
+            urlInput.value = savedUrl;
+            
+            await this.connect();
+        }
+    }
+
+    clearConnection() {
+        localStorage.removeItem('esUrl');
+        document.getElementById('esUrl').value = '';
+        document.getElementById('dashboard').classList.add('hidden');
+        this.service = null;
+        Toast.show('Connection cleared', 'info');
     }
 }
 
