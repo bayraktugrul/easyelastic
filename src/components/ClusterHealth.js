@@ -1,61 +1,25 @@
 class ClusterHealth {
-    
-    constructor(containerId) {
-        this.container = document.getElementById(containerId);
+    constructor(elementId) {
+        this.element = document.getElementById(elementId);
     }
 
     render(health) {
-        const statusIcon = this.getStatusIcon(health.status);
-        const responseClass = health.timed_out ? 'warning' : 'success';
+        const statusClass = `health-${health.status.toLowerCase()}`;
+        const statusIcon = health.status === 'green' ? 'check-circle' : 
+                          health.status === 'yellow' ? 'exclamation-circle' : 'times-circle';
 
-        this.container.innerHTML = `
-            <div class="health-card health-${health.status}">
-                <div class="health-status">
-                    ${statusIcon}
-                    <div class="status-details">
-                        <span class="status-label">Cluster Status</span>
-                        <span class="status-value">${health.status.toUpperCase()}</span>
-                    </div>
+        this.element.innerHTML = `
+            <div class="health-status ${statusClass}">
+                <div class="status-icon">
+                    <i class="fas fa-${statusIcon}"></i>
                 </div>
-                
-                <div class="health-grid">
-                    <div class="health-item">
-                        <i class="fas fa-server"></i>
-                        <div class="health-item-details">
-                            <span class="health-item-label">Nodes</span>
-                            <span class="health-item-value">${health.number_of_nodes}</span>
-                        </div>
-                    </div>
-
-                    <div class="health-item">
-                        <i class="fas fa-puzzle-piece"></i>
-                        <div class="health-item-details">
-                            <span class="health-item-label">Active Shards</span>
-                            <span class="health-item-value">${health.active_shards}</span>
-                        </div>
-                    </div>
-
-                    <div class="health-item">
-                        <i class="fas fa-clock ${responseClass}"></i>
-                        <div class="health-item-details">
-                            <span class="health-item-label">Response Time</span>
-                            <span class="health-item-value ${responseClass}">
-                                ${health.timed_out ? 'Timed Out' : 'Normal'}
-                            </span>
-                        </div>
-                    </div>
+                <div class="status-details">
+                    <div class="status-label">Cluster Status</div>
+                    <div class="status-value">${health.cluster_name}</div>
+                    <div class="status-info">${health.status.toUpperCase()}</div>
                 </div>
             </div>
         `;
-    }
-
-    getStatusIcon(status) {
-        const icons = {
-            green: '<i class="fas fa-circle-check status-icon"></i>',
-            yellow: '<i class="fas fa-triangle-exclamation status-icon"></i>',
-            red: '<i class="fas fa-circle-xmark status-icon"></i>'
-        };
-        return icons[status] || icons.red;
     }
 }
 

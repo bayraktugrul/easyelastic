@@ -160,14 +160,12 @@ h2 i {
 .health-card {
     background: var(--card-background);
     border-radius: 12px;
-    padding: 24px;
-    box-shadow: var(--shadow-sm);
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
 }
 
 .health-card:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
+    transform: none;
+    box-shadow: none;
 }
 
 .health-header {
@@ -506,31 +504,69 @@ button.secondary:hover {
 .health-status {
     display: flex;
     align-items: center;
-    gap: 16px;
-    padding-bottom: 20px;
-    margin-bottom: 20px;
-    border-bottom: 1px solid var(--border-color);
+    gap: 1.5rem;
+    padding: 1rem;
+    border-radius: 12px;
+    background: var(--card-background);
 }
 
-.status-icon {
-    font-size: 32px;
-}
-
-.status-details {
+.health-status .status-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
 }
 
-.status-label {
-    font-size: 14px;
+.health-status .status-details {
+    flex: 1;
+}
+
+.health-status .status-label {
+    font-size: 0.875rem;
     color: var(--text-secondary);
-    margin-bottom: 4px;
+    margin-bottom: 0.25rem;
 }
 
-.status-value {
-    font-size: 20px;
+.health-status .status-value {
+    font-size: 1.5rem;
     font-weight: 600;
     color: var(--text-primary);
+    margin-bottom: 0.25rem;
+}
+
+.health-status .status-info {
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.health-status.health-green .status-icon {
+    background: var(--success-bg);
+    color: var(--success-color);
+}
+
+.health-status.health-yellow .status-icon {
+    background: var(--warning-bg);
+    color: var(--warning-color);
+}
+
+.health-status.health-red .status-icon {
+    background: var(--error-bg);
+    color: var(--error-color);
+}
+
+.health-status.health-green .status-info {
+    color: var(--success-color);
+}
+
+.health-status.health-yellow .status-info {
+    color: var(--warning-color);
+}
+
+.health-status.health-red .status-info {
+    color: var(--error-color);
 }
 
 .health-grid {
@@ -1120,7 +1156,6 @@ button.danger:hover {
     border-top-color: var(--text-primary);
 }
 
-/* Alias badge ve remove button stilleri */
 .alias-badge {
     display: inline-flex;
     align-items: center;
@@ -1132,7 +1167,6 @@ button.danger:hover {
     margin: 2px;
 }
 
-/* Modal içindeki alias badge'ler için silme butonu stili */
 .aliases-list .alias-badge {
     gap: 8px;
 }
@@ -1232,4 +1266,98 @@ button.danger:hover {
     transform: translateX(-50%);
     border: 6px solid transparent;
     border-top-color: var(--text-primary);
+}
+
+.cluster-overview {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.cluster-status {
+    background: var(--card-background);
+    border-radius: 12px;
+    padding: 1.5rem;
+    border: 1px solid var(--border-color);
+    margin-bottom: 1.5rem;
+}
+
+.cluster-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+}
+
+.stat-card {
+    background: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1.25rem;
+    transition: all 0.2s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.stat-icon {
+    background: var(--info-bg);
+    color: var(--primary-color);
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.stat-content {
+    flex: 1;
+}
+
+.stat-label {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+}
+
+.stat-value {
+    color: var(--text-primary);
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+}
+
+.stat-details {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+    .cluster-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .stat-card {
+        padding: 1.25rem;
+    }
+    
+    .stat-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1.25rem;
+    }
+    
+    .stat-value {
+        font-size: 1.5rem;
+    }
 } 

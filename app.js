@@ -182,9 +182,37 @@ class ESMonitor {
     }
 
     updateMetrics(stats) {
-        document.getElementById('indicesCount').textContent = stats.indices.count;
-        document.getElementById('totalSize').textContent = formatBytes(stats.indices.store.size_in_bytes);
-        document.getElementById('docCount').textContent = formatNumber(stats.indices.docs.count);
+        const updateElement = (id, value) => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.textContent = value;
+            }
+        };
+
+        // Indices & Documents
+        updateElement('indicesCount', stats.indices.count);
+        updateElement('docCount', formatNumber(stats.indices.docs.count));
+        updateElement('usedStorage', formatBytes(stats.nodes.storage.used_bytes));
+        updateElement('totalStorage', formatBytes(stats.nodes.storage.total_bytes));
+        updateElement('storagePercent', `${stats.nodes.storage.percent}%`);
+        
+        // Nodes
+        updateElement('nodeCount', stats.nodes.total);
+        updateElement('masterNodes', stats.nodes.master);
+        updateElement('dataNodes', stats.nodes.data);
+        
+        // Shards
+        updateElement('shardCount', stats.shards.total);
+        updateElement('activeShards', stats.shards.active);
+        updateElement('relocatingShards', stats.shards.relocating);
+        
+        // System
+        updateElement('cpuUsage', `${stats.nodes.cpu_percent}%`);
+        updateElement('memoryUsage', formatBytes(stats.nodes.memory.used_bytes));
+        updateElement('heapUsage', formatBytes(stats.nodes.memory.total_bytes));
+        updateElement('systemMemoryUsed', formatBytes(stats.nodes.memory.system_used_bytes));
+        updateElement('systemMemory', formatBytes(stats.nodes.memory.system_total_bytes));
+        updateElement('systemMemoryPercent', `${stats.nodes.memory.system_percent}%`);
     }
 
     updateIndices(indices) {
