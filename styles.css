@@ -43,9 +43,9 @@ body {
 }
 
 .container {
-    max-width: 1280px;
+    max-width: 1600px;
     margin: 0 auto;
-    padding: 2rem;
+    padding: 1rem;
 }
 
 .header {
@@ -125,7 +125,7 @@ button:hover {
     background-color: var(--card-background);
     border: 1px solid var(--border-color);
     border-radius: 16px;
-    padding: 24px;
+    padding: 1.25rem;
     box-shadow: var(--shadow-sm);
     transition: box-shadow 0.3s ease;
 }
@@ -750,11 +750,11 @@ button.danger:hover {
 
 @media (max-width: 768px) {
     .container {
-        padding: 1rem;
+        padding: 0.5rem;
     }
     
     .metric-box {
-        padding: 20px;
+        padding: 1rem;
     }
     
     .index-item {
@@ -765,7 +765,7 @@ button.danger:hover {
 .dataTables_wrapper {
     background: var(--card-background);
     border-radius: 16px;
-    padding: 1.5rem;
+    padding: 1rem;
     box-shadow: var(--shadow-sm);
     margin-top: 1rem;
 }
@@ -783,7 +783,7 @@ button.danger:hover {
     font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    padding: 1.25rem 1.5rem;
+    padding: 1rem;
 }
 
 .indices-table tbody tr {
@@ -796,7 +796,7 @@ button.danger:hover {
 }
 
 .indices-table tbody td {
-    padding: 1rem 1.5rem !important;
+    padding: 0.75rem 1rem !important;
     border: none !important;
     vertical-align: middle;
 }
