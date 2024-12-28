@@ -1,39 +1,30 @@
 :root {
-    /* Modern Color Palette */
-    --primary-color: #6366f1;      /* A vibrant indigo */
-    --primary-hover: #4f46e5;      
-    --secondary-color: #64748b;    /* Neutral slate */
-    --secondary-hover: #475569;    
+    /* Modern ve Futuristik Renk Paleti */
+    --primary-color: #6366f1;
+    --primary-hover: #4f46e5;
+    --secondary-color: #0f172a;
+    --secondary-hover: #1e293b;
     
-    /* Status Colors */
-    --success-color: #10b981;      /* Emerald */
-    --warning-color: #f59e0b;      /* Amber */
-    --error-color: #ef4444;        /* Red */
+    /* Durum Renkleri */
+    --success-color: #059669;
+    --warning-color: #d97706;
+    --error-color: #dc2626;
     
-    /* Neutral Colors */
-    --background-color: #f9fafb;   /* Lighter background */
-    --card-background: #ffffff;    
-    --text-primary: #111827;       /* Darker for better contrast */
-    --text-secondary: #4b5563;     
-    --text-tertiary: #9ca3af;     
+    /* Nötr Renkler */
+    --background-color: #f8fafc;
+    --card-background: #ffffff;
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
     
-    /* Borders & Dividers */
-    --border-color: #e5e7eb;      
-    --border-hover: #d1d5db;    
+    /* Gölgeler */
+    --shadow-sm: 0 2px 4px rgba(15, 23, 42, 0.06);
+    --shadow-md: 0 4px 6px rgba(15, 23, 42, 0.08);
+    --shadow-lg: 0 8px 16px rgba(15, 23, 42, 0.1);
     
-    /* Enhanced Shadows */
-    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-    
-    /* Gradients */
-    --gradient-primary: linear-gradient(135deg, #6366f1, #4f46e5);
-    --gradient-secondary: linear-gradient(135deg, #64748b, #475569);
-    
-    /* Status Backgrounds */
-    --success-bg: rgba(16, 185, 129, 0.1);
-    --warning-bg: rgba(245, 158, 11, 0.1);
-    --error-bg: rgba(239, 68, 68, 0.1);
+    /* Durum Arka Planları */
+    --success-bg: rgba(5, 150, 105, 0.1);
+    --warning-bg: rgba(217, 119, 6, 0.1);
+    --error-bg: rgba(220, 38, 38, 0.1);
     --info-bg: rgba(99, 102, 241, 0.1);
 }
 
@@ -76,28 +67,29 @@ body {
     margin-bottom: 0;
     display: flex;
     gap: 12px;
-    background: linear-gradient(to right, rgba(255,255,255,0.9), rgba(255,255,255,0.95));
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.1);
-    box-shadow: var(--shadow-md);
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: var(--shadow-lg);
     padding: 20px;
-    border-radius: 12px;
+    border-radius: 16px;
 }
 
 #esUrl {
     flex: 1;
     padding: 14px 18px 14px 48px;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    border-radius: 12px;
     font-size: 14px;
-    transition: all 0.2s;
-    background: rgba(255,255,255,0.9);
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.8);
 }
 
 #esUrl:focus {
     outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    background: white;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
 }
 
 button {
@@ -674,18 +666,18 @@ button.secondary:hover {
 }
 
 .modal-content {
-    background: white;
-    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    box-shadow: var(--shadow-lg);
     width: 100%;
     max-width: 500px;
-    box-shadow: var(--shadow-lg);
-    border: none;
-    background: linear-gradient(145deg, #ffffff, #f8fafc);
 }
 
 .modal-header {
     padding: 20px 24px;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid rgba(148, 163, 184, 0.1);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -733,17 +725,19 @@ button.secondary:hover {
 
 .form-group input {
     width: 100%;
-    padding: 10px 16px;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
+    padding: 0.875rem 1.25rem;
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    border-radius: 12px;
     font-size: 0.875rem;
-    transition: all 0.2s ease;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.8);
 }
 
 .form-group input:focus {
     outline: none;
+    background: white;
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px var(--info-bg);
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
 }
 
 button.danger {
@@ -784,22 +778,21 @@ button.danger:hover {
 }
 
 .indices-table thead th {
-    background: var(--background-color);
+    background: var(--secondary-color);
+    color: white;
     font-size: 0.75rem;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--text-secondary);
-    padding: 12px 24px;
-    border-bottom: 2px solid var(--border-color);
+    letter-spacing: 0.1em;
+    padding: 1.25rem 1.5rem;
 }
 
 .indices-table tbody tr {
-    border-bottom: 1px solid var(--border-color);
-    transition: all 0.2s ease;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+    transition: all 0.3s ease;
 }
 
 .indices-table tbody tr:hover {
-    background: var(--info-bg);
+    background: rgba(99, 102, 241, 0.05);
 }
 
 .indices-table tbody td {
@@ -821,17 +814,19 @@ button.danger:hover {
 }
 
 .dataTables_filter input {
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    border-radius: 12px;
+    padding: 0.875rem 1.25rem;
     font-size: 0.875rem;
-    transition: all 0.2s ease;
+    transition: all 0.3s ease;
     width: 250px;
 }
 
 .dataTables_filter input:focus {
+    background: white;
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px var(--info-bg);
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
 }
 
 .dataTables_paginate {
@@ -895,13 +890,12 @@ button.danger:hover {
 }
 
 .health-badge {
-    padding: 6px 12px;
+    padding: 0.5rem 1rem;
     border-radius: 9999px;
-    font-size: 0.875rem;
-    font-weight: 500;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
+    font-weight: 600;
+    font-size: 0.75rem;
+    letter-spacing: 0.025em;
+    box-shadow: var(--shadow-sm);
 }
 
 .health-badge i {
@@ -931,9 +925,8 @@ button.danger:hover {
 
 .action-button {
     padding: 0.5rem;
-    border-radius: 6px;
+    border-radius: 10px;
     cursor: default !important;
-    color: var(--text-secondary);
     background: transparent;
     border: none;
     display: flex;
@@ -941,11 +934,25 @@ button.danger:hover {
     justify-content: center;
     min-width: 32px;
     min-height: 32px;
+    transition: background-color 0.2s ease;
 }
 
 .action-button i {
     font-size: 1rem;
     cursor: default !important;
+    color: var(--text-secondary);
+}
+
+.action-button.show-details i {
+    color: var(--primary-color);
+}
+
+.action-button.manage-aliases i {
+    color: var(--secondary-color);
+}
+
+.action-button.delete-index i {
+    color: var(--error-color);
 }
 
 .action-button:hover {
