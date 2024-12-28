@@ -1,14 +1,19 @@
 import ElasticsearchService from './src/services/ElasticsearchService.js';
+import MetricsService from './src/services/MetricsService.js';
+import IndicesService from './src/services/IndicesService.js';
 import ClusterHealth from './src/components/ClusterHealth.js';
-import { formatBytes, formatNumber } from './src/utils/formatters.js';
 import Toast from './src/utils/Toast.js';
+import { formatNumber } from './src/utils/formatters.js';
 
 class ESMonitor {
     constructor() {
-        this.service = null;
+        this.esService = null;
+        this.metricsService = new MetricsService();
+        this.indicesService = null;
         this.components = {
             clusterHealth: new ClusterHealth('clusterHealth')
         };
+        
         this.initializeEventListeners();
         this.initializeModalHandlers();
         this.loadSavedConnection();
@@ -108,7 +113,7 @@ class ESMonitor {
                 }
             };
 
-            await this.service.createIndex(indexName, settings);
+            await this.esService.createIndex(indexName, settings);
             Toast.show(`Index "${indexName}" created successfully`, 'success');
             document.getElementById('createIndexModal').classList.add('hidden');
             this.resetIndexForm();
@@ -148,12 +153,12 @@ class ESMonitor {
         }
 
         try {
-            this.service = new ElasticsearchService(url);
-            const isConnected = await this.service.checkConnection();
+            this.esService = new ElasticsearchService(url);
+            this.indicesService = new IndicesService(this.esService);
             
+            const isConnected = await this.esService.checkConnection();
             if (isConnected) {
                 localStorage.setItem('esUrl', url);
-                
                 document.getElementById('dashboard').classList.remove('hidden');
                 await this.updateDashboard();
                 Toast.show('Connected and data loaded successfully', 'success');
@@ -168,168 +173,113 @@ class ESMonitor {
     async updateDashboard() {
         try {
             const [health, stats, indices] = await Promise.all([
-                this.service.getClusterHealth(),
-                this.service.getClusterStats(),
-                this.service.getIndicesInfo()
+                this.esService.getClusterHealth(),
+                this.esService.getClusterStats(),
+                this.esService.getIndicesInfo()
             ]);
 
             this.components.clusterHealth.render(health);
-            this.updateMetrics(stats);
-            this.updateIndices(indices);
+            this.metricsService.updateClusterMetrics(stats);
+            await this.updateIndicesTable(indices);
         } catch (error) {
-            this.showError(`Failed to update dashboard: ${error.message}`);
+            Toast.show(`Failed to update dashboard: ${error.message}`, 'error');
         }
     }
 
-    updateMetrics(stats) {
-        const updateElement = (id, value) => {
-            const element = document.getElementById(id);
-            if (element) {
-                element.textContent = value;
-            }
-        };
+    async updateIndicesTable(indices) {
+        const formattedIndices = await this.indicesService.getIndicesWithAliases(indices);
 
-        // Indices & Documents
-        updateElement('indicesCount', stats.indices.count);
-        updateElement('docCount', formatNumber(stats.indices.docs.count));
-        updateElement('usedStorage', formatBytes(stats.nodes.storage.used_bytes));
-        updateElement('totalStorage', formatBytes(stats.nodes.storage.total_bytes));
-        updateElement('storagePercent', `${stats.nodes.storage.percent}%`);
-        
-        // Nodes
-        updateElement('nodeCount', stats.nodes.total);
-        updateElement('masterNodes', stats.nodes.master);
-        updateElement('dataNodes', stats.nodes.data);
-        
-        // Shards
-        updateElement('shardCount', stats.shards.total);
-        updateElement('activeShards', stats.shards.active);
-        updateElement('relocatingShards', stats.shards.relocating);
-        
-        // System
-        updateElement('cpuUsage', `${stats.nodes.cpu_percent}%`);
-        updateElement('memoryUsage', formatBytes(stats.nodes.memory.used_bytes));
-        updateElement('heapUsage', formatBytes(stats.nodes.memory.total_bytes));
-        updateElement('systemMemoryUsed', formatBytes(stats.nodes.memory.system_used_bytes));
-        updateElement('systemMemory', formatBytes(stats.nodes.memory.system_total_bytes));
-        updateElement('systemMemoryPercent', `${stats.nodes.memory.system_percent}%`);
-    }
-
-    updateIndices(indices) {
-        const flattenedIndices = indices.map(index => ({
-            index: index.index,
-            docs_count: index.docs?.count || 0,
-            store_size: index.store?.size || '0b',
-            health: index.health,
-            aliases: []
-        }));
-
-        const loadAliases = async () => {
-            for (let index of flattenedIndices) {
-                try {
-                    const aliases = await this.service.getAliases(index.index);
-                    index.aliases = aliases;
-                } catch (error) {
-                    console.error(`Failed to fetch aliases for ${index.index}:`, error);
-                    index.aliases = [];
-                }
-            }
-            return flattenedIndices;
-        };
-
-        loadAliases().then(indicesWithAliases => {
-            if (!$.fn.DataTable.isDataTable('#indicesTable')) {
-                $('#indicesTable').DataTable({
-                    data: indicesWithAliases,
-                    responsive: true,
-                    columns: [
-                        { 
-                            data: 'index',
-                            render: function(data) {
-                                if (data.length > 30) {
-                                    return `<span class="font-medium" title="${data}">
-                                        ${data.substring(0, 30)}...
-                                    </span>`;
-                                }
-                                return `<span class="font-medium">${data}</span>`;
+        if (!$.fn.DataTable.isDataTable('#indicesTable')) {
+            $('#indicesTable').DataTable({
+                data: formattedIndices,
+                responsive: true,
+                columns: [
+                    { 
+                        data: 'index',
+                        render: function(data) {
+                            if (data.length > 30) {
+                                return `<span class="font-medium" title="${data}">
+                                    ${data.substring(0, 30)}...
+                                </span>`;
                             }
-                        },
-                        { 
-                            data: 'docs_count',
-                            render: function(data) {
-                                return formatNumber(data);
-                            }
-                        },
-                        { 
-                            data: 'store_size',
-                            render: function(data) {
-                                return data;
-                            }
-                        },
-                        { 
-                            data: 'health',
-                            render: function(data) {
-                                const healthClass = `health-badge ${data.toLowerCase()}`;
-                                const icon = data === 'green' ? 'check-circle' : 
-                                           data === 'yellow' ? 'exclamation-circle' : 'times-circle';
-                                return `
-                                    <span class="${healthClass}">
-                                        <i class="fas fa-${icon}"></i>
-                                        ${data}
-                                    </span>`;
-                            }
-                        },
-                        { 
-                            data: 'aliases',
-                            render: function(data, type, row) {
-                                if (!data || data.length === 0) {
-                                    return '<span class="no-aliases">No aliases</span>';
-                                }
-                                return data.map(alias => `
-                                    <span class="alias-badge">
-                                        ${alias}
-                                    </span>
-                                `).join('');
-                            }
-                        },
-                        {
-                            data: null,
-                            render: function(data) {
-                                return `
-                                    <div class="action-buttons">
-                                        <button class="action-button manage-aliases" title="Manage Aliases" data-index="${data.index}">
-                                            <i class="fas fa-tags"></i>
-                                        </button>
-                                        <button class="action-button delete-index" title="Delete Index" data-index="${data.index}">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </button>
-                                    </div>`;
-                            }
-                        }
-                    ],
-                    language: {
-                        search: "Search:",
-                        lengthMenu: "Show _MENU_ entries",
-                        info: "Showing _START_ to _END_ of _TOTAL_ entries",
-                        infoEmpty: "No entries available",
-                        infoFiltered: "(filtered from _MAX_ total entries)",
-                        paginate: {
-                            first: "First",
-                            last: "Last",
-                            next: "Next",
-                            previous: "Previous"
+                            return `<span class="font-medium">${data}</span>`;
                         }
                     },
-                    order: [[1, 'desc']],
-                    dom: "<'dt-controls'<'dataTables_length'l><'dataTables_filter'f>>" +
-                         "rt" +
-                         "<'dt-bottom'<'dataTables_info'i><'dataTables_paginate'p>>"
-                });
-            } else {
-                const table = $('#indicesTable').DataTable();
-                table.clear().rows.add(indicesWithAliases).draw();
-            }
-        });
+                    { 
+                        data: 'docs_count',
+                        render: function(data) {
+                            return formatNumber(data);
+                        }
+                    },
+                    { 
+                        data: 'store_size',
+                        render: function(data) {
+                            return data;
+                        }
+                    },
+                    { 
+                        data: 'health',
+                        render: function(data) {
+                            const healthClass = `health-badge ${data.toLowerCase()}`;
+                            const icon = data === 'green' ? 'check-circle' : 
+                                       data === 'yellow' ? 'exclamation-circle' : 'times-circle';
+                            return `
+                                <span class="${healthClass}">
+                                    <i class="fas fa-${icon}"></i>
+                                    ${data}
+                                </span>`;
+                        }
+                    },
+                    { 
+                        data: 'aliases',
+                        render: function(data) {
+                            if (!data || data.length === 0) {
+                                return '<span class="no-aliases">No aliases</span>';
+                            }
+                            return data.map(alias => `
+                                <span class="alias-badge">
+                                    ${alias}
+                                </span>
+                            `).join('');
+                        }
+                    },
+                    {
+                        data: null,
+                        render: function(data) {
+                            return `
+                                <div class="action-buttons">
+                                    <button class="action-button manage-aliases" title="Manage Aliases" data-index="${data.index}">
+                                        <i class="fas fa-tags"></i>
+                                    </button>
+                                    <button class="action-button delete-index" title="Delete Index" data-index="${data.index}">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </div>`;
+                        }
+                    }
+                ],
+                language: {
+                    search: "Search:",
+                    lengthMenu: "Show _MENU_ entries",
+                    info: "Showing _START_ to _END_ of _TOTAL_ entries",
+                    infoEmpty: "No entries available",
+                    infoFiltered: "(filtered from _MAX_ total entries)",
+                    paginate: {
+                        first: "First",
+                        last: "Last",
+                        next: "Next",
+                        previous: "Previous"
+                    }
+                },
+                order: [[1, 'desc']],
+                dom: "<'dt-controls'<'dataTables_length'l><'dataTables_filter'f>>" +
+                     "rt" +
+                     "<'dt-bottom'<'dataTables_info'i><'dataTables_paginate'p>>"
+            });
+        } else {
+            const table = $('#indicesTable').DataTable();
+            table.clear().rows.add(formattedIndices).draw();
+        }
     }
 
     showError(message) {
@@ -351,7 +301,7 @@ class ESMonitor {
         localStorage.removeItem('esUrl');
         document.getElementById('esUrl').value = '';
         document.getElementById('dashboard').classList.add('hidden');
-        this.service = null;
+        this.esService = null;
         Toast.show('Connection cleared', 'info');
     }
 
@@ -367,7 +317,7 @@ class ESMonitor {
         const indexName = modal.dataset.indexName;
 
         try {
-            await this.service.deleteIndex(indexName);
+            await this.esService.deleteIndex(indexName);
             Toast.show(`Index "${indexName}" deleted successfully`, 'success');
             modal.classList.add('hidden');
             await this.updateDashboard();
@@ -387,7 +337,7 @@ class ESMonitor {
 
     async refreshAliasesList(indexName) {
         try {
-            const aliases = await this.service.getAliases(indexName);
+            const aliases = await this.esService.getAliases(indexName);
             const aliasesList = document.getElementById('currentAliasesList');
             
             if (aliases.length === 0) {
@@ -420,13 +370,13 @@ class ESMonitor {
         }
 
         try {
-            await this.service.addAlias(indexName, aliasName);
+            await this.esService.addAlias(indexName, aliasName);
             Toast.show(`Alias "${aliasName}" added successfully`, 'success');
             aliasInput.value = '';
             
             await this.refreshAliasesList(indexName);
             
-            const indices = await this.service.getIndicesInfo();
+            const indices = await this.esService.getIndicesInfo();
             const flattenedIndices = indices.map(index => ({
                 index: index.index,
                 docs_count: index.docs?.count || 0,
@@ -437,7 +387,7 @@ class ESMonitor {
 
             for (let index of flattenedIndices) {
                 try {
-                    const aliases = await this.service.getAliases(index.index);
+                    const aliases = await this.esService.getAliases(index.index);
                     index.aliases = aliases;
                 } catch (error) {
                     console.error(`Failed to fetch aliases for ${index.index}:`, error);
@@ -455,12 +405,12 @@ class ESMonitor {
 
     async removeAlias(indexName, aliasName) {
         try {
-            await this.service.removeAlias(indexName, aliasName);
+            await this.esService.removeAlias(indexName, aliasName);
             Toast.show(`Alias "${aliasName}" removed successfully`, 'success');
             
             await this.refreshAliasesList(indexName);
             
-            const indices = await this.service.getIndicesInfo();
+            const indices = await this.esService.getIndicesInfo();
             const flattenedIndices = indices.map(index => ({
                 index: index.index,
                 docs_count: index.docs?.count || 0,
@@ -471,7 +421,7 @@ class ESMonitor {
 
             for (let index of flattenedIndices) {
                 try {
-                    const aliases = await this.service.getAliases(index.index);
+                    const aliases = await this.esService.getAliases(index.index);
                     index.aliases = aliases;
                 } catch (error) {
                     console.error(`Failed to fetch aliases for ${index.index}:`, error);
