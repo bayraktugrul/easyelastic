@@ -1,4 +1,8 @@
 import ElasticsearchService from './src/services/ElasticsearchService.js';
+import EventBus from './src/utils/EventBus.js';
+import MetricsFactory from './src/factories/MetricsFactory.js';
+import IndicesRepository from './src/repositories/IndicesRepository.js';
+import { CreateIndexOperation, DeleteIndexOperation } from './src/strategies/IndexOperationStrategy.js';
 import MetricsService from './src/services/MetricsService.js';
 import IndicesService from './src/services/IndicesService.js';
 import ClusterHealth from './src/components/ClusterHealth.js';
@@ -9,14 +13,23 @@ class ESMonitor {
     constructor() {
         this.esService = null;
         this.metricsService = new MetricsService();
-        this.indicesService = null;
+        this.indicesRepository = null;
+        this.eventBus = EventBus;
         this.components = {
             clusterHealth: new ClusterHealth('clusterHealth')
         };
         
         this.initializeEventListeners();
         this.initializeModalHandlers();
+        this.subscribeToEvents();
         this.loadSavedConnection();
+    }
+
+    subscribeToEvents() {
+        this.eventBus.subscribe('index:created', () => this.updateDashboard());
+        this.eventBus.subscribe('index:deleted', () => this.updateDashboard());
+        this.eventBus.subscribe('alias:added', () => this.updateDashboard());
+        this.eventBus.subscribe('alias:removed', () => this.updateDashboard());
     }
 
     initializeEventListeners() {
@@ -94,32 +107,18 @@ class ESMonitor {
     }
 
     async handleCreateIndex() {
-        const indexName = document.getElementById('indexName').value.trim();
-        const shards = document.getElementById('shardCount').value;
-        const replicas = document.getElementById('replicaCount').value;
-
-        if (!indexName) {
-            Toast.show('Please enter an index name', 'error');
-            return;
-        }
-
+        const operation = new CreateIndexOperation(
+            this.esService,
+            document.getElementById('indexName').value.trim(),
+            this.getIndexSettings()
+        );
+        
         try {
-            const settings = {
-                settings: {
-                    index: {
-                        number_of_shards: parseInt(shards),
-                        number_of_replicas: parseInt(replicas)
-                    }
-                }
-            };
-
-            await this.esService.createIndex(indexName, settings);
-            Toast.show(`Index "${indexName}" created successfully`, 'success');
-            document.getElementById('createIndexModal').classList.add('hidden');
-            this.resetIndexForm();
-            await this.updateDashboard();
+            await operation.execute();
+            this.eventBus.publish('index:created');
+            Toast.show('Index created successfully', 'success');
         } catch (error) {
-            Toast.show(`Failed to create index: ${error.message}`, 'error');
+            Toast.show(error.message, 'error');
         }
     }
 
@@ -131,7 +130,7 @@ class ESMonitor {
         }
 
         try {
-            const service = new ElasticsearchService(url);
+            const service = ElasticsearchService.getInstance(url);
             const isConnected = await service.checkConnection();
             
             if (isConnected) {
@@ -153,8 +152,8 @@ class ESMonitor {
         }
 
         try {
-            this.esService = new ElasticsearchService(url);
-            this.indicesService = new IndicesService(this.esService);
+            this.esService = ElasticsearchService.getInstance(url);
+            this.indicesRepository = new IndicesRepository(this.esService);
             
             const isConnected = await this.esService.checkConnection();
             if (isConnected) {
@@ -187,7 +186,7 @@ class ESMonitor {
     }
 
     async updateIndicesTable(indices) {
-        const formattedIndices = await this.indicesService.getIndicesWithAliases(indices);
+        const formattedIndices = await this.indicesRepository.getAllIndices();
 
         if (!$.fn.DataTable.isDataTable('#indicesTable')) {
             $('#indicesTable').DataTable({

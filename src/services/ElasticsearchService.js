@@ -1,7 +1,19 @@
 class ElasticsearchService {
+    static instance = null;
+    
+    static getInstance(baseUrl) {
+        if (!ElasticsearchService.instance) {
+            ElasticsearchService.instance = new ElasticsearchService(baseUrl);
+        }
+        return ElasticsearchService.instance;
+    }
     
     constructor(baseUrl) {
+        if (ElasticsearchService.instance) {
+            return ElasticsearchService.instance;
+        }
         this.baseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
+        ElasticsearchService.instance = this;
     }
 
     async makeRequest(endpoint) {
@@ -60,14 +72,10 @@ class ElasticsearchService {
             let usedDiskSpace = 0;
 
             Object.values(nodes.nodes).forEach(node => {
-                // JVM Memory
                 totalMemory += node.jvm.mem.heap_max_in_bytes;
                 usedMemory += node.jvm.mem.heap_used_in_bytes;
-                
-                // CPU
                 cpuPercent += node.process?.cpu?.percent || 0;
                 
-                // System Memory
                 if (node.os && node.os.mem) {
                     const systemTotal = node.os.mem.total_in_bytes || 0;
                     const systemFree = node.os.mem.free_in_bytes || 0;
@@ -77,7 +85,6 @@ class ElasticsearchService {
                     usedSystemMemory += systemUsed;
                 }
 
-                // Disk Space
                 if (node.fs && node.fs.total) {
                     totalDiskSpace += node.fs.total.total_in_bytes || 0;
                     usedDiskSpace += node.fs.total.total_in_bytes - (node.fs.total.free_in_bytes || 0);
@@ -86,7 +93,6 @@ class ElasticsearchService {
                 nodeCount++;
             });
 
-            // Yüzde hesaplamaları
             const jvmPercent = totalMemory > 0 ? ((usedMemory / totalMemory) * 100).toFixed(1) : "0.0";
             const systemPercent = totalSystemMemory > 0 ? ((usedSystemMemory / totalSystemMemory) * 100).toFixed(1) : "0.0";
             const diskPercent = totalDiskSpace > 0 ? ((usedDiskSpace / totalDiskSpace) * 100).toFixed(1) : "0.0";
