@@ -932,7 +932,7 @@ button.danger:hover {
 .action-button {
     padding: 0.5rem;
     border-radius: 6px;
-    cursor: default;
+    cursor: default !important;
     color: var(--text-secondary);
     background: transparent;
     border: none;
@@ -945,6 +945,7 @@ button.danger:hover {
 
 .action-button i {
     font-size: 1rem;
+    cursor: default !important;
 }
 
 .action-button:hover {
@@ -1414,4 +1415,10 @@ button.danger:hover {
     font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
     font-size: 0.875rem;
     line-height: 1.5;
+}
+
+/* Delete butonu için özel stil */
+.action-button.delete-index i {
+    color: var(--error-color);
+    cursor: default !important;
 } 
