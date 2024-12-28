@@ -47,6 +47,18 @@ class ESMonitor {
 
         createBtn.addEventListener('click', () => {
             modal.classList.remove('hidden');
+            const shardsInput = document.getElementById('shardCount');
+            const replicasInput = document.getElementById('replicaCount');
+            
+            console.log('Modal opened - Input elements:', {
+                shardsElement: shardsInput,
+                replicasElement: replicasInput,
+                shardsValue: shardsInput?.value,
+                replicasValue: replicasInput?.value
+            });
+
+            if (shardsInput) shardsInput.value = '1';
+            if (replicasInput) replicasInput.value = '1';
         });
 
         [closeBtn, cancelBtn].forEach(btn => {
@@ -136,45 +148,60 @@ class ESMonitor {
 
     resetIndexForm() {
         document.getElementById('indexName').value = '';
-        document.getElementById('shardCount').value = '1';
-        document.getElementById('replicaCount').value = '1';
-    }
-
-    getIndexSettings() {
-        const shards = document.getElementById('shardCount').value;
-        const replicas = document.getElementById('replicaCount').value;
-        const indexName = document.getElementById('indexName').value.trim();
-
-        if (!indexName) {
-            throw new Error('Please enter an index name');
-        }
-
-        // Elasticsearch'in beklediği tam format
-        return {
-            settings: {
-                index: {
-                    number_of_shards: parseInt(shards),
-                    number_of_replicas: parseInt(replicas)
-                }
-            }
-        };
+        document.getElementById('shardCountInput').value = '1';
+        document.getElementById('replicaCountInput').value = '1';
+        
+        // Input değerlerini kontrol edelim
+        console.log('Reset form values:', {
+            indexName: document.getElementById('indexName').value,
+            shards: document.getElementById('shardCountInput').value,
+            replicas: document.getElementById('replicaCountInput').value
+        });
     }
 
     async handleCreateIndex() {
         try {
             const indexName = document.getElementById('indexName').value.trim();
+            const shardsInput = document.getElementById('shardCountInput');
+            const replicasInput = document.getElementById('replicaCountInput');
+
+            console.log('Raw input values:', {
+                shards: shardsInput.value,
+                replicas: replicasInput.value
+            });
+
+            const shards = parseInt(shardsInput.value) || 1;
+            const replicas = parseInt(replicasInput.value) || 1;
+
+            console.log('Parsed values:', { shards, replicas });
+
             if (!indexName) {
                 Toast.show('Please enter an index name', 'error');
                 return;
             }
 
-            const operation = new CreateIndexOperation(
-                this.esService,
-                indexName,
-                this.getIndexSettings()
-            );
-            
-            await operation.execute();
+            if (isNaN(shards) || shards < 1) {
+                Toast.show('Number of shards must be at least 1', 'error');
+                return;
+            }
+
+            if (isNaN(replicas) || replicas < 0) {
+                Toast.show('Number of replicas must be 0 or greater', 'error');
+                return;
+            }
+
+            const settings = {
+                settings: {
+                    index: {
+                        number_of_shards: shards,
+                        number_of_replicas: replicas
+                    }
+                }
+            };
+
+            console.log('Final settings to be sent:', JSON.stringify(settings, null, 2));
+
+            await this.esService.createIndex(indexName, settings);
             Toast.show('Index created successfully', 'success');
             document.getElementById('createIndexModal').classList.add('hidden');
             this.resetIndexForm();

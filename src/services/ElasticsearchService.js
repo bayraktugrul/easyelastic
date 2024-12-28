@@ -146,26 +146,27 @@ class ElasticsearchService {
                 throw new Error('Index already exists');
             }
 
+            console.log('Creating index:', indexName);
+            console.log('Settings object:', settings);
+            console.log('Settings JSON:', JSON.stringify(settings, null, 2));
+
             const response = await fetch(`${this.baseUrl}/${indexName}`, {
                 method: 'PUT',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
+                    'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({
-                    settings: {
-                        number_of_shards: settings.settings.index.number_of_shards,
-                        number_of_replicas: settings.settings.index.number_of_replicas
-                    }
-                })
+                mode: 'cors',
+                body: JSON.stringify(settings)
             });
 
+            const responseData = await response.json();
+
             if (!response.ok) {
-                const error = await response.json();
-                throw new Error(error.error?.reason || 'Failed to create index');
+                console.error('Elasticsearch error response:', responseData);
+                throw new Error(responseData.error?.reason || 'Failed to create index');
             }
 
-            return await response.json();
+            return responseData;
         } catch (error) {
             console.error('Error creating index:', error);
             throw error;
