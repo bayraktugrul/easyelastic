@@ -7,7 +7,6 @@ class IndicesRepository {
         const indices = await this.service.getIndicesInfo();
         const mappedIndices = this.mapIndices(indices);
         
-        // Her indeks için alias bilgilerini alalım
         for (let index of mappedIndices) {
             try {
                 const aliases = await this.service.getAliases(index.index);
@@ -38,6 +37,18 @@ class IndicesRepository {
             health: index.health,
             aliases: []
         }));
+    }
+
+    async getIndexDetails(indexName) {
+        const [settings, mapping] = await Promise.all([
+            this.service.getIndexSettings(indexName),
+            this.service.getIndexMapping(indexName)
+        ]);
+
+        return {
+            settings: settings[indexName].settings,
+            mapping: mapping[indexName].mappings
+        };
     }
 }
 

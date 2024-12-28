@@ -140,20 +140,36 @@ class ElasticsearchService {
     }
 
     async createIndex(indexName, settings) {
-        const response = await fetch(`${this.baseUrl}/${indexName}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(settings)
-        });
+        try {
+            const exists = await fetch(`${this.baseUrl}/${indexName}`);
+            if (exists.ok) {
+                throw new Error('Index already exists');
+            }
 
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.error.reason || 'Failed to create index');
+            const response = await fetch(`${this.baseUrl}/${indexName}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    settings: {
+                        number_of_shards: settings.settings.index.number_of_shards,
+                        number_of_replicas: settings.settings.index.number_of_replicas
+                    }
+                })
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error?.reason || 'Failed to create index');
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error('Error creating index:', error);
+            throw error;
         }
-
-        return await response.json();
     }
 
     async deleteIndex(indexName) {
@@ -224,6 +240,18 @@ class ElasticsearchService {
             throw new Error(error.error?.reason || 'Failed to remove alias');
         }
 
+        return await response.json();
+    }
+
+    async getIndexSettings(indexName) {
+        const response = await fetch(`${this.baseUrl}/${indexName}/_settings`);
+        if (!response.ok) throw new Error('Failed to fetch index settings');
+        return await response.json();
+    }
+
+    async getIndexMapping(indexName) {
+        const response = await fetch(`${this.baseUrl}/${indexName}/_mapping`);
+        if (!response.ok) throw new Error('Failed to fetch index mapping');
         return await response.json();
     }
 }

@@ -98,6 +98,40 @@ class ESMonitor {
         });
 
         addAliasBtn.addEventListener('click', () => this.handleAddAlias());
+
+        // Index details modal handlers
+        const detailsModal = document.getElementById('indexDetailsModal');
+        const closeDetailsBtn = document.getElementById('closeIndexDetails');
+        const tabButtons = document.querySelectorAll('.tab-button');
+
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.show-details')) {
+                const indexName = e.target.closest('.show-details').dataset.index;
+                this.showIndexDetails(indexName);
+            }
+        });
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const tabId = button.dataset.tab;
+                
+                // Update active tab button
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                
+                // Update active tab content
+                document.querySelectorAll('.tab-pane').forEach(pane => {
+                    pane.classList.remove('active');
+                });
+                document.getElementById(`${tabId}Tab`).classList.add('active');
+            });
+        });
+
+        [closeDetailsBtn, detailsModal.querySelector('.close-modal')].forEach(btn => {
+            btn.addEventListener('click', () => {
+                detailsModal.classList.add('hidden');
+            });
+        });
     }
 
     resetIndexForm() {
@@ -106,19 +140,47 @@ class ESMonitor {
         document.getElementById('replicaCount').value = '1';
     }
 
+    getIndexSettings() {
+        const shards = document.getElementById('shardCount').value;
+        const replicas = document.getElementById('replicaCount').value;
+        const indexName = document.getElementById('indexName').value.trim();
+
+        if (!indexName) {
+            throw new Error('Please enter an index name');
+        }
+
+        // Elasticsearch'in beklediği tam format
+        return {
+            settings: {
+                index: {
+                    number_of_shards: parseInt(shards),
+                    number_of_replicas: parseInt(replicas)
+                }
+            }
+        };
+    }
+
     async handleCreateIndex() {
-        const operation = new CreateIndexOperation(
-            this.esService,
-            document.getElementById('indexName').value.trim(),
-            this.getIndexSettings()
-        );
-        
         try {
+            const indexName = document.getElementById('indexName').value.trim();
+            if (!indexName) {
+                Toast.show('Please enter an index name', 'error');
+                return;
+            }
+
+            const operation = new CreateIndexOperation(
+                this.esService,
+                indexName,
+                this.getIndexSettings()
+            );
+            
             await operation.execute();
-            this.eventBus.publish('index:created');
             Toast.show('Index created successfully', 'success');
+            document.getElementById('createIndexModal').classList.add('hidden');
+            this.resetIndexForm();
+            this.eventBus.publish('index:created');
         } catch (error) {
-            Toast.show(error.message, 'error');
+            Toast.show(`Failed to create index: ${error.message}`, 'error');
         }
     }
 
@@ -247,6 +309,9 @@ class ESMonitor {
                         render: function(data) {
                             return `
                                 <div class="action-buttons">
+                                    <button class="action-button show-details" title="Show Details" data-index="${data.index}">
+                                        <i class="fas fa-info-circle"></i>
+                                    </button>
                                     <button class="action-button manage-aliases" title="Manage Aliases" data-index="${data.index}">
                                         <i class="fas fa-tags"></i>
                                     </button>
@@ -433,6 +498,22 @@ class ESMonitor {
 
         } catch (error) {
             Toast.show(`Failed to remove alias: ${error.message}`, 'error');
+        }
+    }
+
+    async showIndexDetails(indexName) {
+        const modal = document.getElementById('indexDetailsModal');
+        try {
+            const details = await this.indicesRepository.getIndexDetails(indexName);
+            
+            document.getElementById('indexSettings').textContent = 
+                JSON.stringify(details.settings, null, 2);
+            document.getElementById('indexMapping').textContent = 
+                JSON.stringify(details.mapping, null, 2);
+            
+            modal.classList.remove('hidden');
+        } catch (error) {
+            Toast.show(`Failed to fetch index details: ${error.message}`, 'error');
         }
     }
 }

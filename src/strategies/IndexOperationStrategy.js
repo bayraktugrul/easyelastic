@@ -13,7 +13,15 @@ class CreateIndexOperation extends IndexOperation {
     }
 
     async execute() {
-        return await this.service.createIndex(this.indexName, this.settings);
+        if (!this.indexName) {
+            throw new Error('Index name is required');
+        }
+
+        try {
+            return await this.service.createIndex(this.indexName, this.settings);
+        } catch (error) {
+            throw new Error(`Failed to create index: ${error.message}`);
+        }
     }
 }
 
