@@ -17,8 +17,18 @@
     <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
 </head>
 <body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <ul class="nav-links">
+                <li><a href="#connection">Home</a></li>
+                <li><a href="#cluster-health">Cluster Info</a></li>
+                <li><a href="#indices">Indices</a></li>
+            </ul>
+        </div>
+    </nav>
+
     <div class="container">
-        <div class="header">
+        <div id="connection" class="header">
             <div class="connection-panel">
                 <div class="input-group">
                     <i class="fas fa-link"></i>
@@ -39,7 +49,7 @@
         </div>
         
         <div class="dashboard hidden" id="dashboard">
-            <div class="status-panel">
+            <div id="cluster-health" class="status-panel">
                 <h2><i class="fas fa-heart-pulse"></i> Cluster Health</h2>
                 <div class="cluster-overview">
                     <div class="cluster-status">
@@ -106,7 +116,7 @@
                 </div>
             </div>
 
-            <div class="indices-panel">
+            <div id="indices" class="indices-panel">
                 <div class="panel-header">
                     <h2><i class="fas fa-table"></i> Indices Overview</h2>
                     <button id="createIndexBtn" class="secondary">
