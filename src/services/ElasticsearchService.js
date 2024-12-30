@@ -255,6 +255,23 @@ class ElasticsearchService {
         if (!response.ok) throw new Error('Failed to fetch index mapping');
         return await response.json();
     }
+
+    async getClusterInfo() {
+        try {
+            const response = await fetch(`${this.baseUrl}`);
+            const data = await response.json();
+            
+            return {
+                clusterName: data.cluster_name,
+                nodeName: data.name,
+                version: data.version.number,
+                luceneVersion: data.version.lucene_version
+            };
+        } catch (error) {
+            console.error('Error fetching cluster info:', error);
+            throw error;
+        }
+    }
 }
 
 export default ElasticsearchService; 

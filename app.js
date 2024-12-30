@@ -234,13 +234,13 @@ class ESMonitor {
     }
 
     async connect() {
-        const url = document.getElementById('esUrl').value.trim();
-        if (!url) {
-            Toast.show('Please enter Elasticsearch URL', 'error');
-            return;
-        }
-
         try {
+            const url = document.getElementById('esUrl').value.trim();
+            if (!url) {
+                Toast.show('Please enter Elasticsearch URL', 'error');
+                return;
+            }
+
             this.esService = ElasticsearchService.getInstance(url);
             this.indicesRepository = new IndicesRepository(this.esService);
             
@@ -260,6 +260,12 @@ class ESMonitor {
 
     async updateDashboard() {
         try {
+            const clusterInfo = await this.esService.getClusterInfo();
+            document.getElementById('clusterName').textContent = clusterInfo.clusterName;
+            document.getElementById('nodeName').textContent = clusterInfo.nodeName;
+            document.getElementById('esVersion').textContent = clusterInfo.version;
+            document.getElementById('luceneVersion').textContent = clusterInfo.luceneVersion;
+
             const [health, stats, indices] = await Promise.all([
                 this.esService.getClusterHealth(),
                 this.esService.getClusterStats(),

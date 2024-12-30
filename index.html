@@ -50,8 +50,28 @@
         
         <div class="dashboard hidden" id="dashboard">
             <div id="cluster-health" class="status-panel">
-                <h2><i class="fas fa-heart-pulse"></i> Cluster Health</h2>
+                <h2><i class="fas fa-server"></i> Cluster Info</h2>
                 <div class="cluster-overview">
+                    <div class="cluster-details">
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="info-label">Cluster Name</span>
+                                <span class="info-value" id="clusterName">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Node Name</span>
+                                <span class="info-value" id="nodeName">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Elasticsearch Version</span>
+                                <span class="info-value" id="esVersion">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Lucene Version</span>
+                                <span class="info-value" id="luceneVersion">-</span>
+                            </div>
+                        </div>
+                    </div>
                     <div class="cluster-status">
                         <div id="clusterHealth" class="health-card"></div>
                     </div>
