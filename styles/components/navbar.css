@@ -16,6 +16,7 @@
     height: 60px;
     display: flex;
     align-items: center;
+    justify-content: space-between;
 }
 
 /* Logo styles */
@@ -79,4 +80,27 @@
 .nav-links a:hover {
     color: var(--primary-color);
     background: var(--info-bg);
+}
+
+/* GitHub link styles */
+.github-link {
+    text-decoration: none;
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.github-link:hover {
+    color: var(--primary-color);
+    background: var(--info-bg);
+}
+
+.github-link i {
+    font-size: 1.125rem;
 } 
