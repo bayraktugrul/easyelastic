@@ -13,15 +13,53 @@
     max-width: 1600px;
     margin: 0 auto;
     padding: 0 1rem;
+    height: 60px;
+    display: flex;
+    align-items: center;
 }
 
+/* Logo styles */
+.nav-logo {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    padding: 0 !important; /* Override default link padding */
+}
+
+.logo-text {
+    font-size: 1.25rem;
+    font-weight: 600;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.025em;
+}
+
+.logo-text span {
+    color: var(--text-primary);
+    -webkit-text-fill-color: initial;
+    font-weight: 500;
+}
+
+/* Ensure logo doesn't get hover effects from nav links */
+.nav-logo:hover {
+    background: none !important;
+}
+
+/* Existing styles */
 .nav-links {
     display: flex;
     list-style: none;
     margin: 0;
     padding: 0;
-    height: 50px;
+    height: 100%;
     align-items: center;
+    width: 100%;
+}
+
+.nav-links li:first-child {
+    margin-right: 2rem;
 }
 
 .nav-links li {
