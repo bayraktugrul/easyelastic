@@ -6,7 +6,7 @@
 
 .metric-box {
     background: var(--card-background);
-    border: 1px solid var(--border-color);
+    border: 1px solid rgba(229, 231, 235, 0.6);
     padding: 24px;
     border-radius: 12px;
     text-align: center;

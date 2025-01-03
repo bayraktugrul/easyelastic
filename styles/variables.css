@@ -30,5 +30,5 @@
     --info-bg: rgba(0, 107, 180, 0.1);      /* Kibana blue bg */
     
     /* Borders */
-    --border-color: #D3DAE6;  /* Kibana border gray */
+    --border-color: rgba(229, 231, 235, 0.6); /* Lighter border color, closer to white */
 } 

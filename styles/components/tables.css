@@ -1,5 +1,6 @@
 .dataTables_wrapper {
     background: var(--card-background);
+    border: 1px solid rgba(229, 231, 235, 0.4);
     border-radius: 16px;
     padding: 1rem;
     box-shadow: var(--shadow-sm);
@@ -15,28 +16,33 @@
 }
 
 .indices-table thead th {
-    background: var(--secondary-color);
-    color: white;
+    background: rgba(229, 231, 235, 0.3);
+    color: var(--text-primary);
     font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.1em;
     padding: 1rem;
+    border-bottom: 1px solid rgba(229, 231, 235, 0.4);
+    font-weight: 600;
 }
 
 .indices-table tbody tr {
-    border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+    background: var(--card-background);
+    border-bottom: 1px solid rgba(229, 231, 235, 0.3);
+    margin-bottom: 4px;
     transition: all 0.3s ease;
-    position: relative;
 }
 
 .indices-table tbody tr:hover {
-    background: rgba(99, 102, 241, 0.05);
+    background: rgba(99, 102, 241, 0.03);
+    border-bottom: 1px solid rgba(99, 102, 241, 0.1);
 }
 
 .indices-table tbody td {
     padding: 0.75rem 1rem !important;
     border: none !important;
     vertical-align: middle;
+    color: var(--text-primary);
 }
 
 .dataTables_filter {
@@ -52,8 +58,9 @@
 }
 
 .dataTables_filter input {
-    background: rgba(255, 255, 255, 0.8);
-    border: 1px solid rgba(99, 102, 241, 0.2);
+    background: white;
+    border: 1px solid rgba(229, 231, 235, 0.8);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
     border-radius: 12px;
     padding: 0.875rem 1.25rem;
     font-size: 0.875rem;
@@ -84,7 +91,7 @@
 .dataTables_length select {
     background: white;
     padding: 0.75rem 2.5rem 0.75rem 1rem;
-    border: 1px solid var(--border-color);
+    border: 1px solid rgba(229, 231, 235, 0.6);
     border-radius: 8px;
     font-size: 0.875rem;
     cursor: pointer;
@@ -114,18 +121,23 @@
     border-radius: 6px;
     margin: 0 2px;
     transition: all 0.2s ease;
+    color: var(--text-primary) !important;
+    background: white !important;
+    border: 1px solid rgba(229, 231, 235, 0.8) !important;
+    font-weight: 500;
 }
 
 .dataTables_paginate .paginate_button.current {
     background: var(--primary-color) !important;
-    border: none;
-    font-weight: 500;
+    border-color: var(--primary-color) !important;
+    color: white !important;
+    font-weight: 600;
 }
 
-.dataTables_paginate .paginate_button:hover:not(.current) {
-    background: rgba(99, 102, 241, 0.1) !important;
+.dataTables_paginate .paginate_button:hover:not(.current):not(.disabled) {
+    background: rgba(99, 102, 241, 0.03) !important;
+    border-color: rgba(99, 102, 241, 0.1) !important;
     color: var(--primary-color) !important;
-    border-color: transparent !important;
 }
 
 .indices-table [title] {
@@ -171,7 +183,7 @@
 }
 
 .dataTables_paginate .paginate_button {
-    color: var(--text-secondary) !important;
+    color: var(--text-primary) !important;
     border: none !important;
 }
 
@@ -180,8 +192,9 @@
 }
 
 .dataTables_paginate .paginate_button.disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+    background: rgba(229, 231, 235, 0.2) !important;
+    border-color: rgba(229, 231, 235, 0.4) !important;
+    color: var(--text-secondary) !important;
 }
 
 .dataTables_length,
@@ -220,4 +233,8 @@
     color: var(--text-secondary) !important;
     opacity: 0.5;
     cursor: not-allowed;
+}
+
+.tab-pane pre {
+    border: 1px solid rgba(229, 231, 235, 0.6);
 } 
