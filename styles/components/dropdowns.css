@@ -18,13 +18,15 @@
 }
 
 .dropdown-menu {
-    position: fixed;
+    position: absolute;
+    top: 100%;
+    right: 0;
     background: var(--card-background);
     border: 1px solid var(--border-color);
     border-radius: 8px;
     box-shadow: var(--shadow-md);
     min-width: 160px;
-    z-index: 1000;
+    z-index: 1200;
     opacity: 0;
     visibility: hidden;
     transform: translateY(10px);

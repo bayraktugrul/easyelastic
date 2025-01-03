@@ -1,34 +1,27 @@
 :root {
-    /* Primary Colors */
-    --primary-color: #006BB4;  /* Kibana blue */
+    --primary-color: #006BB4; 
     --primary-hover: #0079CC;
-    --secondary-color: #343741;  /* Kibana gray */
+    --secondary-color: #343741;  
     --secondary-hover: #535966;
     
-    /* Status Colors */
-    --success-color: #00BFB3;  /* Kibana teal */
-    --warning-color: #FEB100;  /* Kibana yellow */
-    --error-color: #BD271E;    /* Kibana red */
+    --success-color: #00BFB3;  
+    --warning-color: #FEB100;  
+    --error-color: #BD271E;   
     
-    /* Background Colors */
-    --background-color: #F5F7FA;  /* Kibana light gray */
+    --background-color: #F5F7FA; 
     --card-background: #FFFFFF;
+
+    --text-primary: #1A1C21;  
+    --text-secondary: #69707D; 
     
-    /* Text Colors */
-    --text-primary: #1A1C21;    /* Kibana dark */
-    --text-secondary: #69707D;  /* Kibana medium gray */
-    
-    /* Shadows */
     --shadow-sm: 0 2px 2px rgba(0, 0, 0, 0.1);
     --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.1);
     --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.1);
     
-    /* Status Backgrounds */
-    --success-bg: rgba(0, 191, 179, 0.1);   /* Kibana teal bg */
-    --warning-bg: rgba(254, 177, 0, 0.1);   /* Kibana yellow bg */
-    --error-bg: rgba(189, 39, 30, 0.1);     /* Kibana red bg */
-    --info-bg: rgba(0, 107, 180, 0.1);      /* Kibana blue bg */
+    --success-bg: rgba(0, 191, 179, 0.1); 
+    --warning-bg: rgba(254, 177, 0, 0.1);  
+    --error-bg: rgba(189, 39, 30, 0.1);   
+    --info-bg: rgba(0, 107, 180, 0.1);   
     
-    /* Borders */
-    --border-color: rgba(229, 231, 235, 0.6); /* Lighter border color, closer to white */
+    --border-color: rgba(229, 231, 235, 0.6); 
 } 
