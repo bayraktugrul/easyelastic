@@ -768,6 +768,7 @@ button.danger:hover {
     padding: 1rem;
     box-shadow: var(--shadow-sm);
     margin-top: 1rem;
+    overflow: visible !important;
 }
 
 .indices-table {
@@ -789,6 +790,7 @@ button.danger:hover {
 .indices-table tbody tr {
     border-bottom: 1px solid rgba(148, 163, 184, 0.1);
     transition: all 0.3s ease;
+    position: relative;
 }
 
 .indices-table tbody tr:hover {
@@ -1548,9 +1550,7 @@ html {
 }
 
 .dropdown-menu {
-    position: absolute;
-    right: 0;
-    top: 100%;
+    position: fixed;
     background: var(--card-background);
     border: 1px solid var(--border-color);
     border-radius: 8px;

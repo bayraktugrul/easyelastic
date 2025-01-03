@@ -163,6 +163,10 @@ class ESMonitor {
                     }
                 });
                 
+                const buttonRect = toggleBtn.getBoundingClientRect();
+                menu.style.top = `${buttonRect.bottom + 5}px`;
+                menu.style.left = `${buttonRect.left - menu.offsetWidth + buttonRect.width}px`;
+                
                 menu.classList.toggle('show');
             }
             
