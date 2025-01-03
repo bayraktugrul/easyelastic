@@ -18,4 +18,5 @@
 @import 'features/indices.css';
 @import 'features/metrics.css';
 @import 'utilities.css';
-@import 'responsive.css'; 
+@import 'responsive.css';
+@import 'components/background.css'; 

@@ -8,6 +8,7 @@ import IndicesService from './src/services/IndicesService.js';
 import ClusterHealth from './src/components/ClusterHealth.js';
 import Toast from './src/utils/Toast.js';
 import { formatNumber } from './src/utils/formatters.js';
+import initParticles from './src/utils/background.js';
 
 class ESMonitor {
     constructor() {
@@ -552,5 +553,6 @@ class ESMonitor {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    initParticles();
     window.esMonitor = new ESMonitor();
 }); 
