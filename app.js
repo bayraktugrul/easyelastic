@@ -312,6 +312,13 @@ class ESMonitor {
                         }
                     },
                     { 
+                        data: 'creation_date',
+                        render: function(data) {
+                            const date = new Date(parseInt(data));
+                            return date.toLocaleString();
+                        }
+                    },
+                    { 
                         data: 'health',
                         render: function(data) {
                             const healthClass = `health-badge ${data.toLowerCase()}`;

@@ -4,20 +4,29 @@ class IndicesRepository {
     }
 
     async getAllIndices() {
-        const indices = await this.service.getIndicesInfo();
-        const mappedIndices = this.mapIndices(indices);
-        
-        for (let index of mappedIndices) {
-            try {
-                const aliases = await this.service.getAliases(index.index);
-                index.aliases = aliases;
-            } catch (error) {
-                console.error(`Failed to fetch aliases for ${index.index}:`, error);
-                index.aliases = [];
-            }
-        }
+        try {
+            const indices = await this.service.getIndicesInfo();
+            const formattedIndices = [];
 
-        return mappedIndices;
+            for (let index of indices) {
+                const settings = await this.service.getIndexSettings(index.index);
+                const creationDate = settings[index.index].settings.index.creation_date;
+
+                formattedIndices.push({
+                    index: index.index,
+                    docs_count: index.docs?.count || 0,
+                    store_size: index.store?.size || '0b',
+                    health: index.health,
+                    creation_date: creationDate,
+                    aliases: await this.service.getAliases(index.index)
+                });
+            }
+
+            return formattedIndices;
+        } catch (error) {
+            console.error('Error getting indices:', error);
+            throw error;
+        }
     }
 
     async getIndexByName(indexName) {

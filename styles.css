@@ -1475,12 +1475,10 @@ button.danger:hover {
     background: var(--info-bg);
 }
 
-/* Container padding ayarı */
 .container {
     padding-top: 60px;
 }
 
-/* Smooth scroll için */
 html {
     scroll-behavior: smooth;
     scroll-padding-top: 60px;
