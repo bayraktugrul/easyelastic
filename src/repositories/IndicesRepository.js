@@ -9,17 +9,30 @@ class IndicesRepository {
             const formattedIndices = [];
 
             for (let index of indices) {
-                const settings = await this.service.getIndexSettings(index.index);
-                const creationDate = settings[index.index].settings.index.creation_date;
+                try {
+                    const settings = await this.service.getIndexSettings(index.index);
+                    const creationDate = settings[index.index]?.settings?.index?.creation_date || '';
+                    const aliases = await this.service.getAliases(index.index);
 
-                formattedIndices.push({
-                    index: index.index,
-                    docs_count: index.docs?.count || 0,
-                    store_size: index.store?.size || '0b',
-                    health: index.health,
-                    creation_date: creationDate,
-                    aliases: await this.service.getAliases(index.index)
-                });
+                    formattedIndices.push({
+                        index: index.index,
+                        docs_count: index.docs?.count || 0,
+                        store_size: index.store?.size || '0b',
+                        health: index.health,
+                        creation_date: creationDate,
+                        aliases: aliases
+                    });
+                } catch (error) {
+                    console.error(`Error processing index ${index.index}:`, error);
+                    formattedIndices.push({
+                        index: index.index,
+                        docs_count: index.docs?.count || 0,
+                        store_size: index.store?.size || '0b',
+                        health: index.health,
+                        creation_date: '',
+                        aliases: []
+                    });
+                }
             }
 
             return formattedIndices;

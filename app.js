@@ -512,29 +512,7 @@ class ESMonitor {
             aliasInput.value = '';
             
             await this.refreshAliasesList(indexName);
-            
-            const indices = await this.esService.getIndicesInfo();
-            const flattenedIndices = indices.map(index => ({
-                index: index.index,
-                docs_count: index.docs?.count || 0,
-                store_size: index.store?.size || '0b',
-                health: index.health,
-                aliases: []
-            }));
-
-            for (let index of flattenedIndices) {
-                try {
-                    const aliases = await this.esService.getAliases(index.index);
-                    index.aliases = aliases;
-                } catch (error) {
-                    console.error(`Failed to fetch aliases for ${index.index}:`, error);
-                    index.aliases = [];
-                }
-            }
-
-            const table = $('#indicesTable').DataTable();
-            table.clear().rows.add(flattenedIndices).draw();
-
+            await this.updateDashboard();
         } catch (error) {
             Toast.show(`Failed to add alias: ${error.message}`, 'error');
         }
@@ -546,29 +524,7 @@ class ESMonitor {
             Toast.show(`Alias "${aliasName}" removed successfully`, 'success');
             
             await this.refreshAliasesList(indexName);
-            
-            const indices = await this.esService.getIndicesInfo();
-            const flattenedIndices = indices.map(index => ({
-                index: index.index,
-                docs_count: index.docs?.count || 0,
-                store_size: index.store?.size || '0b',
-                health: index.health,
-                aliases: []
-            }));
-
-            for (let index of flattenedIndices) {
-                try {
-                    const aliases = await this.esService.getAliases(index.index);
-                    index.aliases = aliases;
-                } catch (error) {
-                    console.error(`Failed to fetch aliases for ${index.index}:`, error);
-                    index.aliases = [];
-                }
-            }
-
-            const table = $('#indicesTable').DataTable();
-            table.clear().rows.add(flattenedIndices).draw();
-
+            await this.updateDashboard();
         } catch (error) {
             Toast.show(`Failed to remove alias: ${error.message}`, 'error');
         }
