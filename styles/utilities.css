@@ -1,0 +1,66 @@
+.text-danger {
+    color: var(--error-color);
+}
+
+.success {
+    color: var(--success-color) !important;
+}
+
+.warning {
+    color: var(--warning-color) !important;
+}
+
+.rotating {
+    animation: rotate 1s linear infinite;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Tooltip styles */
+[title] {
+    cursor: help;
+    position: relative;
+}
+
+[title]:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 0;
+    transform: translateX(0);
+    padding: 8px 12px;
+    background: var(--text-primary);
+    color: white;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    white-space: nowrap;
+    z-index: 10;
+    box-shadow: var(--shadow-md);
+}
+
+[title]:hover::before {
+    content: '';
+    position: absolute;
+    bottom: calc(100% + 4px);
+    left: 15px;
+    border: 6px solid transparent;
+    border-top-color: var(--text-primary);
+}
+
+.health-green {
+    color: var(--success-color);
+    font-weight: 600;
+}
+
+.health-yellow {
+    color: var(--warning-color);
+    font-weight: 600;
+}
+
+.health-red {
+    color: var(--error-color);
+    font-weight: 600;
+} 

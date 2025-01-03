@@ -1,0 +1,97 @@
+.aliases-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin: 8px 0;
+    min-height: 36px;
+    padding: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--background-color);
+}
+
+.alias-input-group {
+    display: flex;
+    gap: 8px;
+}
+
+.alias-input-group input {
+    flex: 1;
+}
+
+.alias-input-group button {
+    padding: 8px 16px;
+}
+
+.current-aliases {
+    margin-bottom: 1.5rem;
+}
+
+.current-aliases label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.aliases-list .alias-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--info-bg);
+    color: var(--primary-color);
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    margin: 2px;
+}
+
+.aliases-list .alias-badge .remove-alias {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: rgba(220, 38, 38, 0.1);
+    color: var(--error-color);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.aliases-list .alias-badge .remove-alias:hover {
+    color: var(--error-color);
+    background: var(--error-bg);
+}
+
+.aliases-list .alias-badge .remove-alias i {
+    font-size: 12px;
+}
+
+.no-aliases {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    font-style: italic;
+}
+
+.alias-badge {
+    display: inline-flex;
+    align-items: center;
+    background: var(--info-bg);
+    color: var(--primary-color);
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    margin: 2px;
+}
+
+.alias-badge .remove-alias {
+    margin-left: 4px;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+
+.alias-badge .remove-alias:hover {
+    opacity: 1;
+} 

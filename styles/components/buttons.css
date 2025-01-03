@@ -1,0 +1,116 @@
+button {
+    padding: 12px 24px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+button:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
+
+button.secondary {
+    background-color: var(--secondary-color);
+}
+
+button.secondary:hover {
+    background-color: var(--secondary-hover);
+}
+
+button.danger {
+    background-color: var(--error-color);
+}
+
+button.danger:hover {
+    background-color: #dc2626;
+}
+
+.button-group {
+    display: flex;
+    gap: 8px;
+}
+
+.action-button {
+    padding: 0.5rem;
+    border-radius: 10px;
+    cursor: default !important;
+    background: transparent;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+    min-height: 32px;
+    transition: background-color 0.2s ease;
+}
+
+.action-button i {
+    font-size: 1rem;
+    cursor: default !important;
+    color: var(--text-secondary);
+}
+
+.action-button.show-details i {
+    color: var(--primary-color);
+}
+
+.action-button.manage-aliases i {
+    color: var(--secondary-color);
+}
+
+.action-button.delete-index i {
+    color: var(--error-color);
+}
+
+.action-button:hover {
+    background: var(--info-bg);
+}
+
+.action-button.manage-aliases:hover {
+    color: var(--primary-color);
+}
+
+.action-button.delete-index:hover {
+    color: var(--error-color);
+    background: var(--error-bg);
+}
+
+/* Action button tooltip stilleri */
+.action-button i[title] {
+    cursor: default;
+    position: relative;
+}
+
+.action-button i[title]:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 4px 8px;
+    background: var(--text-primary);
+    color: white;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    margin-bottom: 8px;
+}
+
+.action-button i[title]:hover::before {
+    content: '';
+    position: absolute;
+    bottom: calc(100% + 4px);
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: var(--text-primary);
+} 

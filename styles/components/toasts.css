@@ -1,0 +1,23 @@
+.toastify {
+    font-family: 'Inter', sans-serif;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.toastify:hover {
+    transform: translateY(-2px);
+}
+
+.toastify-custom {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+.toastify-custom:hover {
+    transform: translateY(-2px);
+    transition: transform 0.2s ease;
+} 

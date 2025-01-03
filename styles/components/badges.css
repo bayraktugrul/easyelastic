@@ -1,0 +1,38 @@
+.health-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    font-weight: 600;
+    font-size: 0.75rem;
+    letter-spacing: 0.025em;
+    box-shadow: var(--shadow-sm);
+}
+
+.health-badge i {
+    font-size: 0.75rem;
+}
+
+.health-badge.green {
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--success-color);
+}
+
+.health-badge.yellow {
+    background: rgba(245, 158, 11, 0.1);
+    color: var(--warning-color);
+}
+
+.health-badge.red {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--error-color);
+}
+
+.alias-badge {
+    display: inline-flex;
+    align-items: center;
+    background: var(--info-bg);
+    color: var(--primary-color);
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    margin: 2px;
+} 

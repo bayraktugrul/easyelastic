@@ -1,0 +1,27 @@
+.alert {
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.alert-success {
+    background: var(--success-bg);
+    color: var(--success-color);
+}
+
+.alert-warning {
+    background: var(--warning-bg);
+    color: var(--warning-color);
+}
+
+.alert-error {
+    background: var(--error-bg);
+    color: var(--error-color);
+}
+
+.alert i {
+    font-size: 1.25rem;
+} 

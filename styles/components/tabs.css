@@ -1,0 +1,61 @@
+.index-details-tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.5rem;
+}
+
+.tab-button {
+    background: none;
+    border: none;
+    padding: 0.5rem 1rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.tab-button:hover {
+    color: var(--primary-color);
+    background: var(--info-bg);
+}
+
+.tab-button.active {
+    color: var(--primary-color);
+    background: var(--info-bg);
+    font-weight: 600;
+}
+
+.tab-content {
+    position: relative;
+    min-height: 300px;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.tab-pane {
+    display: none;
+    padding: 1rem;
+    background: var(--background-color);
+    border-radius: 8px;
+}
+
+.tab-pane.active {
+    display: block;
+}
+
+.tab-pane pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    background: var(--card-background);
+    padding: 1rem;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    overflow-x: auto;
+} 

@@ -1,0 +1,27 @@
+.status-panel, .metrics-panel, .indices-panel {
+    background-color: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 1.25rem;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.3s ease;
+}
+
+.status-panel:hover, .metrics-panel:hover, .indices-panel:hover {
+    box-shadow: var(--shadow-md);
+}
+
+h2 {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    margin-bottom: 20px;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+h2 i {
+    color: #3b82f6;
+} 
