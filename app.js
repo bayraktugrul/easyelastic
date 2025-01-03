@@ -144,6 +144,34 @@ class ESMonitor {
                 detailsModal.classList.add('hidden');
             });
         });
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.action-dropdown')) {
+                document.querySelectorAll('.dropdown-menu.show').forEach(menu => {
+                    menu.classList.remove('show');
+                });
+            }
+            
+            const toggleBtn = e.target.closest('.dropdown-toggle');
+            if (toggleBtn) {
+                e.stopPropagation();
+                const menu = toggleBtn.nextElementSibling;
+                
+                document.querySelectorAll('.dropdown-menu.show').forEach(openMenu => {
+                    if (openMenu !== menu) {
+                        openMenu.classList.remove('show');
+                    }
+                });
+                
+                menu.classList.toggle('show');
+            }
+            
+            if (e.target.closest('.dropdown-item')) {
+                const item = e.target.closest('.dropdown-item');
+                const menu = item.closest('.dropdown-menu');
+                menu.classList.remove('show');
+            }
+        });
     }
 
     resetIndexForm() {
@@ -348,16 +376,21 @@ class ESMonitor {
                         data: null,
                         render: function(data) {
                             return `
-                                <div class="action-buttons">
-                                    <button class="action-button show-details" title="Show Details" data-index="${data.index}">
-                                        <i class="fas fa-info-circle"></i>
+                                <div class="action-dropdown">
+                                    <button class="action-button dropdown-toggle" title="Actions">
+                                        <i class="fas fa-ellipsis-v"></i>
                                     </button>
-                                    <button class="action-button manage-aliases" title="Manage Aliases" data-index="${data.index}">
-                                        <i class="fas fa-tags"></i>
-                                    </button>
-                                    <button class="action-button delete-index" title="Delete Index" data-index="${data.index}">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </button>
+                                    <div class="dropdown-menu">
+                                        <button class="dropdown-item show-details" data-index="${data.index}">
+                                            <i class="fas fa-info-circle"></i> Details
+                                        </button>
+                                        <button class="dropdown-item manage-aliases" data-index="${data.index}">
+                                            <i class="fas fa-tags"></i> Manage Aliases
+                                        </button>
+                                        <button class="dropdown-item delete-index" data-index="${data.index}">
+                                            <i class="fas fa-trash-alt"></i> Delete
+                                        </button>
+                                    </div>
                                 </div>`;
                         }
                     }

@@ -1424,7 +1424,6 @@ button.danger:hover {
     line-height: 1.5;
 }
 
-/* Delete butonu için özel stil */
 .action-button.delete-index i {
     color: var(--error-color);
     cursor: default !important;
@@ -1527,4 +1526,82 @@ html {
     .info-item {
         padding: 0.75rem;
     }
+}
+
+.action-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-toggle {
+    background: transparent;
+    border: none;
+    padding: 0.5rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    border-radius: 6px;
+}
+
+.dropdown-toggle:hover {
+    background: var(--info-bg);
+    color: var(--primary-color);
+}
+
+.dropdown-menu {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: var(--shadow-md);
+    min-width: 160px;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.2s ease;
+}
+
+.dropdown-menu.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    color: var(--text-primary);
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background: var(--info-bg);
+    color: var(--primary-color);
+}
+
+.dropdown-item i {
+    width: 16px;
+}
+
+.dropdown-item.delete-index {
+    color: var(--error-color);
+}
+
+.dropdown-item.delete-index:hover {
+    background: var(--error-bg);
+}
+
+.dropdown-divider {
+    height: 1px;
+    background: var(--border-color);
+    margin: 0.5rem 0;
 } 
