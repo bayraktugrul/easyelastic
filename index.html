@@ -46,17 +46,24 @@
             <div class="connection-panel">
                 <div class="input-group">
                     <i class="fas fa-link"></i>
-                    <input type="text" id="esUrl" placeholder="Elasticsearch URL (e.g. http://localhost:9200)">
+                    <input type="text" 
+                           id="esUrl" 
+                           placeholder="Elasticsearch URL (e.g. http://localhost:9200)"
+                           spellcheck="false"
+                           autocomplete="off">
                 </div>
                 <div class="button-group">
                     <button id="testBtn" class="secondary">
-                        <i class="fas fa-vial"></i> Test Connection
+                        <i class="fas fa-vial"></i>
+                        Test
                     </button>
                     <button id="connectBtn">
-                        <i class="fas fa-plug"></i> Connect
+                        <i class="fas fa-plug"></i>
+                        Connect
                     </button>
                     <button id="disconnectBtn" class="danger">
-                        <i class="fas fa-power-off"></i> Disconnect
+                        <i class="fas fa-power-off"></i>
+                        Disconnect
                     </button>
                 </div>
             </div>
