@@ -361,6 +361,23 @@
                 </div>
             </div>
         </div>
+
+        <div id="deleteFieldModal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-trash-alt"></i> Delete Field</h3>
+                    <button class="close-modal">×</button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete field "<span id="deleteFieldName"></span>"?</p>
+                    <p class="text-danger">This action cannot be undone!</p>
+                </div>
+                <div class="modal-footer">
+                    <button id="cancelDeleteField" class="secondary">Cancel</button>
+                    <button id="confirmDeleteField" class="danger">Delete</button>
+                </div>
+            </div>
+        </div>
     </div>
     <script type="module" src="app.js"></script>
 </body>

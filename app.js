@@ -602,33 +602,61 @@ class ESMonitor {
         const closeBtn = modal.querySelector('.close-modal');
         const cancelBtn = document.getElementById('cancelUpdateMapping');
         const confirmBtn = document.getElementById('confirmUpdateMapping');
+        const addFieldBtn = document.getElementById('addFieldBtn');
         
         try {
             const details = await this.indicesRepository.getIndexDetails(indexName);
             const currentMapping = details.mapping;
+            const originalMapping = JSON.parse(JSON.stringify(details.mapping)); // Deep copy original mapping
             
             document.getElementById('mappingJson').value = JSON.stringify(currentMapping, null, 2);
             
             const mappingFields = document.querySelector('.mapping-fields');
-            mappingFields.innerHTML = '';
             
-            if (currentMapping.properties) {
-                Object.entries(currentMapping.properties).forEach(([fieldName, fieldConfig]) => {
-                    mappingFields.innerHTML += `
-                        <div class="mapping-field">
-                            <div class="field-info">
-                                <span class="field-name">${fieldName}</span>
-                                <span class="field-type">${fieldConfig.type}</span>
+            const refreshVisualFields = () => {
+                mappingFields.innerHTML = '';
+                if (currentMapping.properties) {
+                    Object.entries(currentMapping.properties).forEach(([fieldName, fieldConfig]) => {
+                        const isDraft = !originalMapping.properties?.[fieldName];
+                        mappingFields.innerHTML += `
+                            <div class="mapping-field">
+                                <div class="field-info">
+                                    <span class="field-name">${fieldName}</span>
+                                    <span class="field-type">${fieldConfig.type}</span>
+                                    ${isDraft ? '<span class="field-draft-badge">draft</span>' : ''}
+                                </div>
                             </div>
-                            <button class="remove-field" data-field="${fieldName}">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                    `;
-                });
-            }
+                        `;
+                    });
+                }
+            };
             
-            // Show modal
+            refreshVisualFields();
+            
+            // Add field handler
+            addFieldBtn.addEventListener('click', () => {
+                const fieldName = document.getElementById('fieldName').value.trim();
+                const fieldType = document.getElementById('fieldType').value;
+                
+                if (!fieldName) {
+                    Toast.show('Please enter a field name', 'error');
+                    return;
+                }
+                
+                if (!currentMapping.properties) {
+                    currentMapping.properties = {};
+                }
+                
+                if (currentMapping.properties[fieldName]) {
+                    Toast.show('Field already exists', 'error');
+                    return;
+                }
+                
+                currentMapping.properties[fieldName] = { type: fieldType };
+                document.getElementById('fieldName').value = '';
+                refreshVisualFields();
+            });
+            
             modal.classList.remove('hidden');
             modal.dataset.indexName = indexName;
             
