@@ -348,17 +348,15 @@ class ElasticsearchService {
 
     async searchDocuments(indexName, params = {}) {
         try {
-            // First check if index exists
             const indexExists = await fetch(`${this.baseUrl}/${indexName}`);
             if (!indexExists.ok) {
                 throw new Error(`Index ${indexName} not found`);
             }
 
-            // Add default search parameters if not provided
             const searchParams = {
-                query: { match_all: {} },  // Default to match all documents
+                query: { match_all: {} },
                 ...params,
-                track_total_hits: true  // Her zaman toplam doküman sayısını al
+                track_total_hits: true
             };
 
             console.log('Search request:', {

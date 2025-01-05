@@ -11,10 +11,12 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.7/css/dataTables.tailwind.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.tailwind.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/scroller/2.3.0/css/scroller.tailwind.min.css">
     
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/scroller/2.3.0/js/dataTables.scroller.min.js"></script>
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 </head>
 <body>
@@ -191,14 +193,15 @@
                         </select>
                     </div>
                 </div>
-                <div class="sample-preview">
-                    <div class="preview-header">
-                        <h3>Preview Data</h3>
-                        <span class="record-count">Showing 10 sample records</span>
-                    </div>
-                    <div class="sample-records">
-                        <!-- Records will be loaded here -->
-                    </div>
+                <div class="sample-table-container">
+                    <table id="sampleDataTable" class="sample-table">
+                        <thead>
+                            <!-- Headers will be generated dynamically -->
+                        </thead>
+                        <tbody>
+                            <!-- Data will be loaded here -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

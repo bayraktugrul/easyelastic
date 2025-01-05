@@ -220,7 +220,6 @@ class ESMonitor {
             if (selectedIndex) {
                 await this.showSampleDataPreview(selectedIndex);
             } else {
-                // Clear preview when no index is selected
                 document.querySelector('.sample-records').innerHTML = `
                     <div class="no-records">
                         <p>Please select an index to view documents.</p>
@@ -361,10 +360,8 @@ class ESMonitor {
             this.metricsService.updateClusterMetrics(stats);
             await this.updateIndicesTable(indices);
             
-            // Update index selector in sample data section
             const indexSelector = document.getElementById('indexSelector');
-            const currentValue = indexSelector.value; // Keep current selection if exists
-            
+            const currentValue = indexSelector.value;
             indexSelector.innerHTML = `
                 <option value="">Select an index</option>
                 ${indices.map(index => `
@@ -886,46 +883,118 @@ class ESMonitor {
         try {
             const response = await this.esService.searchDocuments(indexName, {
                 size: 10,
-                sort: ['_doc']  // Dokümanları doğal sıralamada getir
+                sort: ['_doc']
             });
+
+            const container = document.querySelector('.sample-table-container');
             
-            const container = document.querySelector('.sample-records');
-            if (!response.hits || !response.hits.hits) {
+            if (!response.hits || !response.hits.hits || response.hits.total.value === 0) {
                 container.innerHTML = `
                     <div class="no-records">
-                        <p>Error loading documents. Please try again.</p>
+                        <p>${response.hits.total.value === 0 ? 'No documents found in this index.' : 'Error loading documents.'}</p>
                     </div>`;
                 return;
             }
 
-            if (response.hits.total.value === 0) {
-                container.innerHTML = `
-                    <div class="no-records">
-                        <p>No documents found in this index.</p>
-                    </div>`;
-                return;
+            const fields = new Set();
+            response.hits.hits.forEach(hit => {
+                Object.keys(hit._source).forEach(field => fields.add(field));
+            });
+            const fieldArray = Array.from(fields);
+
+            const data = response.hits.hits.map(hit => {
+                const row = {};
+                row.id = hit._id;
+                fieldArray.forEach(field => {
+                    row[field] = hit._source[field] !== undefined ? 
+                        typeof hit._source[field] === 'object' ? 
+                            JSON.stringify(hit._source[field]) : 
+                            hit._source[field] : '';
+                });
+                return row;
+            });
+
+            // Destroy existing DataTable if exists
+            if (this.sampleDataTable) {
+                this.sampleDataTable.destroy();
+                container.innerHTML = '';
             }
 
-            container.innerHTML = response.hits.hits.map(hit => `
-                <div class="sample-record">
-                    <div class="record-header">
-                        <span class="record-id">ID: ${hit._id}</span>
-                        <span class="record-score">Score: ${hit._score || 'N/A'}</span>
-                    </div>
-                    <div class="record-content">${JSON.stringify(hit._source, null, 2)}</div>
-                </div>
-            `).join('');
+            // Create fresh table element
+            container.innerHTML = `
+                <table id="sampleDataTable" class="display" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            ${fieldArray.map(field => `<th>${field}</th>`).join('')}
+                        </tr>
+                    </thead>
+                </table>
+            `;
 
-            document.querySelector('.record-count').textContent = 
-                `Showing ${response.hits.hits.length} of ${response.hits.total.value} documents`;
+            this.sampleDataTable = $('#sampleDataTable').DataTable({
+                data: data,
+                columns: [
+                    { 
+                        data: 'id', 
+                        title: 'ID',
+                        width: '250px'
+                    },
+                    ...fieldArray.map(field => ({
+                        data: field,
+                        title: field,
+                        width: '200px'
+                    }))
+                ],
+                scrollX: true,
+                scrollY: '400px',
+                scrollCollapse: true,
+                paging: true,
+                pageLength: 10,
+                lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                ordering: true,
+                info: true,
+                searching: true,
+                autoWidth: false,
+                responsive: false,
+                fixedHeader: false,
+                dom: "<'dt-controls'<'dataTables_length'l><'dataTables_filter'f>>" +
+                     "<'dataTables_scroll't>" +
+                     "<'dt-bottom'<'dataTables_info'i><'dataTables_paginate'p>>",
+                language: {
+                    search: "Search:",
+                    lengthMenu: "Show _MENU_ entries",
+                    info: "Showing _START_ to _END_ of _TOTAL_ entries",
+                    infoEmpty: "No entries available",
+                    infoFiltered: "(filtered from _MAX_ total entries)",
+                    paginate: {
+                        first: "First",
+                        last: "Last",
+                        next: "Next",
+                        previous: "Previous"
+                    }
+                },
+                initComplete: function() {
+                    const table = this;
+                    setTimeout(() => {
+                        table.api().columns.adjust();
+                        const scrollBody = $(table.api().table().container()).find('.dataTables_scrollBody');
+                        scrollBody.css('overflow-x', 'auto');
+                        
+                        // Toplam genişliği hesapla ve uygula
+                        const totalColumns = table.api().columns()[0].length;
+                        const minTableWidth = (totalColumns * 200) + 50; // Her kolon 200px + ekstra boşluk
+                        $(table.api().table().node()).css('width', `${minTableWidth}px`);
+                    }, 0);
+                }
+            });
 
         } catch (error) {
-            const container = document.querySelector('.sample-records');
+            const container = document.querySelector('.sample-table-container');
             container.innerHTML = `
                 <div class="no-records error">
                     <p>Error: ${error.message}</p>
                 </div>`;
-            document.querySelector('.record-count').textContent = 'Error loading documents';
         }
     }
 }

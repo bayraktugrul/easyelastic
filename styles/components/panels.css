@@ -1,4 +1,4 @@
-.status-panel, .metrics-panel, .indices-panel {
+.status-panel, .metrics-panel, .indices-panel, .sample-data-panel {
     background-color: var(--card-background);
     border: 1px solid rgba(229, 231, 235, 0.6);
     border-radius: 16px;
@@ -7,7 +7,12 @@
     transition: box-shadow 0.3s ease;
 }
 
-.status-panel:hover, .metrics-panel:hover, .indices-panel:hover {
+.indices-panel,
+.sample-data-panel {
+    margin-top: 1rem;
+}
+
+.status-panel:hover, .metrics-panel:hover, .indices-panel:hover, .sample-data-panel:hover {
     box-shadow: var(--shadow-md);
 }
 
@@ -29,9 +34,9 @@ h2 i {
 .sample-data-panel {
     background: white;
     border-radius: 16px;
-    padding: 1.5rem;
-    margin-top: 2rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    padding: 1.25rem;
+    margin-top: 1rem;
+    box-shadow: var(--shadow-sm);
 }
 
 .sample-actions {
@@ -87,4 +92,347 @@ h2 i {
     font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
     font-size: 0.875rem;
     white-space: pre-wrap;
+}
+
+.sample-table-container {
+    margin-top: 1rem;
+    width: 100%;
+    overflow: hidden;
+}
+
+#sampleDataTable {
+    margin: 0 !important;
+    border-collapse: collapse !important;
+}
+
+#sampleDataTable th,
+#sampleDataTable td {
+    white-space: nowrap;
+    min-width: 200px;
+    padding: 0.75rem 1rem;
+}
+
+#sampleDataTable th:first-child,
+#sampleDataTable td:first-child {
+    min-width: 250px;
+}
+
+#sampleDataTable thead th {
+    background: #f8fafc;
+    padding: 0.75rem 1rem;
+    font-weight: 600;
+    color: #475569;
+    border-bottom: 2px solid rgba(229, 231, 235, 0.8);
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+#sampleDataTable tbody td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid rgba(229, 231, 235, 0.4);
+    font-size: 0.875rem;
+    background: white;
+    white-space: nowrap;
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#sampleDataTable tbody tr:hover td {
+    background-color: #f8fafc;
+}
+
+.dataTables_wrapper {
+    width: 100%;
+    padding: 1rem;
+}
+
+.dt-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.dataTables_filter input {
+    padding: 0.5rem 1rem;
+    border: 1px solid rgba(229, 231, 235, 0.8);
+    border-radius: 6px;
+    min-width: 250px;
+}
+
+.dataTables_info {
+    font-size: 0.875rem;
+    color: #64748b;
+    padding: 0.5rem 0;
+}
+
+.dataTables_scroll {
+    width: 100%;
+    margin-bottom: 1rem;
+    border: 1px solid rgba(229, 231, 235, 0.8);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.dataTables_scrollBody {
+    width: 100% !important;
+    overflow-x: auto !important;
+    overflow-y: auto !important;
+    border-bottom: none !important;
+}
+
+.dataTables_scroll::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+}
+
+.dataTables_scroll::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.dataTables_scroll::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+.dataTables_scroll::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+#sampleDataTable td span {
+    display: block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#sampleDataTable .id-column {
+    min-width: 250px !important;
+    width: 250px !important;
+}
+
+#sampleDataTable .data-column {
+    min-width: 200px !important;
+    width: 200px !important;
+}
+
+.dataTables_scroll::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 30px;
+    pointer-events: none;
+    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.9));
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.dataTables_scroll.has-more-right::after {
+    opacity: 1;
+}
+
+.dataTables_scrollBody::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    display: block !important;
+}
+
+.dataTables_scrollBody::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.dataTables_scrollBody::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+.dataTables_scrollBody::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+.dataTables_paginate {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.paginate_button {
+    padding: 0.375rem 0.75rem;
+    border: 1px solid rgba(229, 231, 235, 0.8);
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    color: #475569;
+}
+
+.paginate_button.current {
+    background: #3b82f6;
+    color: white;
+    border-color: #3b82f6;
+}
+
+.paginate_button:hover:not(.current) {
+    background: #f8fafc;
+}
+
+.paginate_button.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Info text */
+.dataTables_info {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin-top: 1rem;
+}
+
+/* Scrollbar styles */
+.dataTables_scrollBody::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+}
+
+.dataTables_scrollBody::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.dataTables_scrollBody::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+.dataTables_scrollBody::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* Length Menu */
+.dataTables_length select {
+    padding: 0.5rem;
+    border: 1px solid rgba(229, 231, 235, 0.8);
+    border-radius: 6px;
+    margin: 0 0.5rem;
+}
+
+/* Ensure horizontal scrollbar is visible */
+.dataTables_scrollBody {
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 #f1f1f1;
+}
+
+/* Force Horizontal Scroll */
+.dataTables_scrollBody {
+    position: relative;
+    overflow: auto;
+    width: 100%;
+}
+
+/* Scrollbar Styles */
+.dataTables_scrollBody::-webkit-scrollbar {
+    height: 10px !important;
+    display: block !important;
+}
+
+.dataTables_scrollBody::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 5px;
+}
+
+.dataTables_scrollBody::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 5px;
+}
+
+.dataTables_scrollBody::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Firefox için scrollbar */
+.dataTables_scrollBody {
+    scrollbar-width: thin;
+    scrollbar-color: #888 #f1f1f1;
+}
+
+/* DataTables Wrapper */
+.dataTables_wrapper {
+    width: 100%;
+    padding: 1rem;
+}
+
+/* Scroll Container */
+.dataTables_scroll {
+    width: 100%;
+    margin-bottom: 1rem;
+    border: 1px solid rgba(229, 231, 235, 0.8);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Scroll Body */
+.dataTables_scrollBody {
+    width: 100% !important;
+    overflow-x: auto !important;
+    overflow-y: auto !important;
+    border-bottom: none !important;
+}
+
+/* Table Base */
+#sampleDataTable {
+    margin: 0 !important;
+    border-collapse: collapse !important;
+}
+
+/* Table Header */
+.dataTables_scrollHead {
+    overflow: visible !important;
+    background: #f8fafc;
+}
+
+/* Table Cells */
+#sampleDataTable th,
+#sampleDataTable td {
+    white-space: nowrap;
+    min-width: 200px;
+    padding: 0.75rem 1rem;
+}
+
+#sampleDataTable th:first-child,
+#sampleDataTable td:first-child {
+    min-width: 250px;
+}
+
+/* Scrollbar Styles */
+.dataTables_scrollBody::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.dataTables_scrollBody::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.dataTables_scrollBody::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+.dataTables_scrollBody::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* Firefox Scrollbar */
+.dataTables_scrollBody {
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 #f1f1f1;
 } 
