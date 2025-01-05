@@ -362,6 +362,7 @@ class ESMonitor {
             
             const indexSelector = document.getElementById('indexSelector');
             const currentValue = indexSelector.value;
+            
             indexSelector.innerHTML = `
                 <option value="">Select an index</option>
                 ${indices.map(index => `
@@ -370,6 +371,12 @@ class ESMonitor {
                     </option>
                 `).join('')}
             `;
+
+            if (!currentValue && indices.length > 0) {
+                indexSelector.value = indices[0].index;
+                await this.showSampleDataPreview(indices[0].index);
+            }
+
         } catch (error) {
             Toast.show(`Failed to update dashboard: ${error.message}`, 'error');
         }
@@ -978,24 +985,18 @@ class ESMonitor {
                         const scrollHead = wrapper.find('.dataTables_scrollHead');
                         const scrollBody = wrapper.find('.dataTables_scrollBody');
 
-                        // Scroll senkronizasyonu
                         scrollBody.on('scroll', function() {
                             scrollHead.scrollLeft($(this).scrollLeft());
                         });
 
-                        // Tablo genişliğini ayarla
                         const totalColumns = table.api().columns()[0].length;
-                        const minTableWidth = (totalColumns * 200); // Her kolon için 200px
-
-                        // Hem header hem body tablolarının genişliğini ayarla
+                        const minTableWidth = (totalColumns * 200); 
                         $(table.api().table().header()).css('width', `${minTableWidth}px`);
                         $(table.api().table().body()).css('width', `${minTableWidth}px`);
                         
-                        // Scroll container'ları ayarla
                         scrollHead.css('overflow', 'hidden');
                         scrollBody.css('overflow-x', 'scroll');
 
-                        // Kolonları yeniden hesapla
                         table.api().columns.adjust();
                     }, 0);
                 }
