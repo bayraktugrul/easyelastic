@@ -187,6 +187,11 @@ class ESMonitor {
                 const indexName = e.target.closest('.update-mapping').dataset.index;
                 this.showUpdateMapping(indexName);
             }
+
+            if (e.target.closest('.add-document')) {
+                const indexName = e.target.closest('.add-document').dataset.index;
+                this.showAddDocument(indexName);
+            }
         });
 
         document.getElementById('cancelDeleteAlias').addEventListener('click', () => {
@@ -426,6 +431,9 @@ class ESMonitor {
                                         </button>
                                         <button class="dropdown-item update-mapping" data-index="${data.index}">
                                             <i class="fas fa-code"></i> Update Mapping
+                                        </button>
+                                        <button class="dropdown-item add-document" data-index="${data.index}">
+                                            <i class="fas fa-file-plus"></i> Add Document
                                         </button>
                                         <button class="dropdown-item delete-index" data-index="${data.index}">
                                             <i class="fas fa-trash-alt"></i> Delete
@@ -714,6 +722,133 @@ class ESMonitor {
         } catch (error) {
             Toast.show(`Failed to load mapping: ${error.message}`, 'error');
         }
+    }
+
+    async showAddDocument(indexName) {
+        const modal = document.getElementById('addDocumentModal');
+        const closeBtn = modal.querySelector('.close-modal');
+        const cancelBtn = document.getElementById('cancelAddDocument');
+        const confirmBtn = document.getElementById('confirmAddDocument');
+        const documentFields = document.getElementById('documentFields');
+        
+        try {
+            const details = await this.indicesRepository.getIndexDetails(indexName);
+            const mapping = details.mapping;
+            
+            documentFields.innerHTML = '';
+            if (mapping.properties) {
+                Object.entries(mapping.properties).forEach(([fieldName, fieldConfig]) => {
+                    const fieldHtml = this.createFieldInput(fieldName, fieldConfig);
+                    documentFields.innerHTML += fieldHtml;
+                });
+            }
+            
+            modal.classList.remove('hidden');
+            modal.dataset.indexName = indexName;
+            
+            document.getElementById('documentId').value = '';
+            
+            [closeBtn, cancelBtn].forEach(btn => {
+                btn.addEventListener('click', () => {
+                    modal.classList.add('hidden');
+                });
+            });
+            
+            confirmBtn.addEventListener('click', async () => {
+                try {
+                    const documentId = document.getElementById('documentId').value.trim();
+                    const docData = this.collectFormData(mapping.properties);
+                    
+                    await this.esService.addDocument(indexName, docData, documentId || null);
+                    await this.esService.refreshIndex(indexName);
+                    
+                    Toast.show('Document added successfully', 'success');
+                    modal.classList.add('hidden');
+                    await this.updateDashboard();
+                } catch (error) {
+                    Toast.show(`Failed to add document: ${error.message}`, 'error');
+                }
+            });
+            
+        } catch (error) {
+            Toast.show(`Failed to prepare document form: ${error.message}`, 'error');
+        }
+    }
+
+    createFieldInput(fieldName, fieldConfig) {
+        let input = '';
+        const fieldId = `field_${fieldName}`;
+        
+        switch(fieldConfig.type) {
+            case 'text':
+            case 'keyword':
+                input = `<input type="text" id="${fieldId}" placeholder="Enter ${fieldName}">`;
+                break;
+            case 'long':
+            case 'integer':
+            case 'short':
+            case 'byte':
+                input = `<input type="number" id="${fieldId}" placeholder="Enter ${fieldName}">`;
+                break;
+            case 'double':
+            case 'float':
+                input = `<input type="number" step="0.01" id="${fieldId}" placeholder="Enter ${fieldName}">`;
+                break;
+            case 'date':
+                input = `<input type="datetime-local" id="${fieldId}">`;
+                break;
+            case 'boolean':
+                input = `
+                    <select id="${fieldId}">
+                        <option value="">Select value</option>
+                        <option value="true">True</option>
+                        <option value="false">False</option>
+                    </select>`;
+                break;
+            default:
+                input = `<input type="text" id="${fieldId}" placeholder="Enter ${fieldName}">`;
+        }
+        
+        return `
+            <div class="document-field">
+                <label for="${fieldId}">
+                    ${fieldName}
+                    <span class="field-type-badge">${fieldConfig.type}</span>
+                </label>
+                ${input}
+            </div>
+        `;
+    }
+
+    collectFormData(mappingProperties) {
+        const docData = {};
+        
+        Object.entries(mappingProperties).forEach(([fieldName, fieldConfig]) => {
+            const fieldId = `field_${fieldName}`;
+            const value = document.getElementById(fieldId).value;
+            
+            if (value) {
+                switch(fieldConfig.type) {
+                    case 'long':
+                    case 'integer':
+                    case 'short':
+                    case 'byte':
+                        docData[fieldName] = parseInt(value);
+                        break;
+                    case 'double':
+                    case 'float':
+                        docData[fieldName] = parseFloat(value);
+                        break;
+                    case 'boolean':
+                        docData[fieldName] = value === 'true';
+                        break;
+                    default:
+                        docData[fieldName] = value;
+                }
+            }
+        });
+        
+        return docData;
     }
 }
 

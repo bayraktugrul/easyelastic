@@ -378,6 +378,28 @@
                 </div>
             </div>
         </div>
+
+        <div id="addDocumentModal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-file-plus"></i> Add Document</h3>
+                    <button class="close-modal">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="documentId">Document ID (optional)</label>
+                        <input type="text" id="documentId" placeholder="Leave empty for auto-generated ID">
+                    </div>
+                    <div id="documentFields" class="document-fields">
+                        <!-- Fields will be generated dynamically based on mapping -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="cancelAddDocument" class="secondary">Cancel</button>
+                    <button id="confirmAddDocument">Add</button>
+                </div>
+            </div>
+        </div>
     </div>
     <script type="module" src="app.js"></script>
 </body>

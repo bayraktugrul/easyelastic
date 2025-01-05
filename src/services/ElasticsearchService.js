@@ -293,6 +293,58 @@ class ElasticsearchService {
             throw new Error(`Failed to update mapping: ${error.message}`);
         }
     }
+
+    async addDocument(indexName, docData, id = null) {
+        try {
+            const method = id ? 'PUT' : 'POST';
+            const url = id ? 
+                `${this.baseUrl}/${indexName}/_doc/${id}` : 
+                `${this.baseUrl}/${indexName}/_doc`;
+
+            console.log('Adding document:', {
+                url,
+                method,
+                docData
+            });
+
+            const response = await fetch(url, {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(docData)
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error?.reason || 'Failed to add document');
+            }
+
+            const result = await response.json();
+            console.log('Document added response:', result);
+            return result;
+        } catch (error) {
+            console.error('Error adding document:', error);
+            throw new Error(`Failed to add document: ${error.message}`);
+        }
+    }
+
+    async refreshIndex(indexName) {
+        try {
+            const response = await fetch(`${this.baseUrl}/${indexName}/_refresh`, {
+                method: 'POST'
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error?.reason || 'Failed to refresh index');
+            }
+
+            return await response.json();
+        } catch (error) {
+            throw new Error(`Failed to refresh index: ${error.message}`);
+        }
+    }
 }
 
 export default ElasticsearchService; 
