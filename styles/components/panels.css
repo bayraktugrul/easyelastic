@@ -37,6 +37,8 @@ h2 i {
     padding: 1.25rem;
     margin-top: 1rem;
     box-shadow: var(--shadow-sm);
+    width: 100%;
+    overflow: hidden;
 }
 
 .sample-actions {
@@ -103,6 +105,8 @@ h2 i {
 #sampleDataTable {
     margin: 0 !important;
     border-collapse: collapse !important;
+    width: 100% !important;
+    table-layout: fixed !important;
 }
 
 #sampleDataTable th,
@@ -114,7 +118,14 @@ h2 i {
 
 #sampleDataTable th:first-child,
 #sampleDataTable td:first-child {
-    min-width: 250px;
+    width: 250px !important;
+    min-width: 250px !important;
+}
+
+#sampleDataTable th:not(:first-child),
+#sampleDataTable td:not(:first-child) {
+    width: 200px !important;
+    min-width: 200px !important;
 }
 
 #sampleDataTable thead th {
@@ -147,6 +158,7 @@ h2 i {
 .dataTables_wrapper {
     width: 100%;
     padding: 1rem;
+    overflow: hidden;
 }
 
 .dt-controls {
@@ -179,7 +191,7 @@ h2 i {
 
 .dataTables_scrollBody {
     width: 100% !important;
-    overflow-x: auto !important;
+    overflow-x: scroll !important;
     overflow-y: auto !important;
     border-bottom: none !important;
 }
@@ -381,7 +393,7 @@ h2 i {
 /* Scroll Body */
 .dataTables_scrollBody {
     width: 100% !important;
-    overflow-x: auto !important;
+    overflow-x: scroll !important;
     overflow-y: auto !important;
     border-bottom: none !important;
 }
@@ -394,8 +406,10 @@ h2 i {
 
 /* Table Header */
 .dataTables_scrollHead {
-    overflow: visible !important;
-    background: #f8fafc;
+    overflow: hidden !important;
+    position: relative;
+    border: 0;
+    width: 100% !important;
 }
 
 /* Table Cells */
@@ -431,8 +445,76 @@ h2 i {
     background: #94a3b8;
 }
 
-/* Firefox Scrollbar */
 .dataTables_scrollBody {
     scrollbar-width: thin;
     scrollbar-color: #cbd5e1 #f1f1f1;
+}
+
+/* DataTables Scroll Container */
+.dataTables_scroll {
+    width: 100%;
+    margin-bottom: 1rem;
+    border: 1px solid rgba(229, 231, 235, 0.8);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Header ve Body scroll senkronizasyonu için */
+.dataTables_scrollHead {
+    overflow: hidden !important;
+    position: relative;
+    border: 0;
+    width: 100% !important;
+}
+
+.dataTables_scrollBody {
+    overflow-y: auto !important;
+    overflow-x: scroll !important;
+    width: 100% !important;
+    max-height: 400px;
+    border-top: none;
+}
+
+/* Tablo stilleri */
+#sampleDataTable {
+    margin: 0 !important;
+    width: 100%;
+}
+
+/* Header hücreleri */
+#sampleDataTable thead th {
+    position: sticky;
+    top: 0;
+    background: #f8fafc;
+    z-index: 1;
+    white-space: nowrap;
+    padding: 0.75rem 1rem;
+    border-bottom: 2px solid rgba(229, 231, 235, 0.8);
+}
+
+/* Body hücreleri */
+#sampleDataTable tbody td {
+    white-space: nowrap;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid rgba(229, 231, 235, 0.4);
+}
+
+/* Scrollbar stilleri */
+.dataTables_scrollBody::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+}
+
+.dataTables_scrollBody::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.dataTables_scrollBody::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+.dataTables_scrollBody::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
 } 

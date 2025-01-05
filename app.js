@@ -914,13 +914,11 @@ class ESMonitor {
                 return row;
             });
 
-            // Destroy existing DataTable if exists
             if (this.sampleDataTable) {
                 this.sampleDataTable.destroy();
                 container.innerHTML = '';
             }
 
-            // Create fresh table element
             container.innerHTML = `
                 <table id="sampleDataTable" class="display" style="width:100%">
                     <thead>
@@ -951,19 +949,18 @@ class ESMonitor {
                 scrollCollapse: true,
                 paging: true,
                 pageLength: 10,
-                lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                lengthChange: false,
                 ordering: true,
                 info: true,
                 searching: true,
                 autoWidth: false,
                 responsive: false,
                 fixedHeader: false,
-                dom: "<'dt-controls'<'dataTables_length'l><'dataTables_filter'f>>" +
+                dom: "<'dt-controls'<'dataTables_filter'f>>" +
                      "<'dataTables_scroll't>" +
                      "<'dt-bottom'<'dataTables_info'i><'dataTables_paginate'p>>",
                 language: {
                     search: "Search:",
-                    lengthMenu: "Show _MENU_ entries",
                     info: "Showing _START_ to _END_ of _TOTAL_ entries",
                     infoEmpty: "No entries available",
                     infoFiltered: "(filtered from _MAX_ total entries)",
@@ -977,14 +974,29 @@ class ESMonitor {
                 initComplete: function() {
                     const table = this;
                     setTimeout(() => {
-                        table.api().columns.adjust();
-                        const scrollBody = $(table.api().table().container()).find('.dataTables_scrollBody');
-                        scrollBody.css('overflow-x', 'auto');
-                        
-                        // Toplam genişliği hesapla ve uygula
+                        const wrapper = $(table.api().table().container());
+                        const scrollHead = wrapper.find('.dataTables_scrollHead');
+                        const scrollBody = wrapper.find('.dataTables_scrollBody');
+
+                        // Scroll senkronizasyonu
+                        scrollBody.on('scroll', function() {
+                            scrollHead.scrollLeft($(this).scrollLeft());
+                        });
+
+                        // Tablo genişliğini ayarla
                         const totalColumns = table.api().columns()[0].length;
-                        const minTableWidth = (totalColumns * 200) + 50; // Her kolon 200px + ekstra boşluk
-                        $(table.api().table().node()).css('width', `${minTableWidth}px`);
+                        const minTableWidth = (totalColumns * 200); // Her kolon için 200px
+
+                        // Hem header hem body tablolarının genişliğini ayarla
+                        $(table.api().table().header()).css('width', `${minTableWidth}px`);
+                        $(table.api().table().body()).css('width', `${minTableWidth}px`);
+                        
+                        // Scroll container'ları ayarla
+                        scrollHead.css('overflow', 'hidden');
+                        scrollBody.css('overflow-x', 'scroll');
+
+                        // Kolonları yeniden hesapla
+                        table.api().columns.adjust();
                     }, 0);
                 }
             });
