@@ -30,6 +30,7 @@
                 <li><a href="#connection">Home</a></li>
                 <li><a href="#cluster-health">Cluster</a></li>
                 <li><a href="#indices">Indices</a></li>
+                <li><a href="#sample-data">Sample Data</a></li>
             </ul>
             <a href="https://github.com/bayraktugrul/easyelastic" 
                target="_blank" 
@@ -179,6 +180,26 @@
                     <tbody>
                     </tbody>
                 </table>
+            </div>
+
+            <div id="sample-data" class="sample-data-panel">
+                <div class="panel-header">
+                    <h2><i class="fas fa-database"></i> Sample Data</h2>
+                    <div class="sample-actions">
+                        <select id="indexSelector" class="secondary">
+                            <option value="">Select an index</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="sample-preview">
+                    <div class="preview-header">
+                        <h3>Preview Data</h3>
+                        <span class="record-count">Showing 10 sample records</span>
+                    </div>
+                    <div class="sample-records">
+                        <!-- Records will be loaded here -->
+                    </div>
+                </div>
             </div>
         </div>
 

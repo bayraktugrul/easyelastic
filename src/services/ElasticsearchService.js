@@ -345,6 +345,52 @@ class ElasticsearchService {
             throw new Error(`Failed to refresh index: ${error.message}`);
         }
     }
+
+    async searchDocuments(indexName, params = {}) {
+        try {
+            // First check if index exists
+            const indexExists = await fetch(`${this.baseUrl}/${indexName}`);
+            if (!indexExists.ok) {
+                throw new Error(`Index ${indexName} not found`);
+            }
+
+            // Add default search parameters if not provided
+            const searchParams = {
+                query: { match_all: {} },  // Default to match all documents
+                ...params,
+                track_total_hits: true  // Her zaman toplam doküman sayısını al
+            };
+
+            console.log('Search request:', {
+                url: `${this.baseUrl}/${indexName}/_search`,
+                params: searchParams
+            });
+
+            const response = await fetch(`${this.baseUrl}/${indexName}/_search`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(searchParams)
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                console.error('Search error response:', result);
+                if (result.error?.root_cause?.[0]?.reason) {
+                    throw new Error(result.error.root_cause[0].reason);
+                }
+                throw new Error(result.error?.reason || 'Failed to search documents');
+            }
+
+            console.log('Search response:', result);
+            return result;
+        } catch (error) {
+            console.error('Search error:', error);
+            throw error;
+        }
+    }
 }
 
 export default ElasticsearchService; 

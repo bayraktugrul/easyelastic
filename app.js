@@ -214,6 +214,21 @@ class ESMonitor {
                 Toast.show(`Failed to remove alias: ${error.message}`, 'error');
             }
         });
+
+        document.getElementById('indexSelector').addEventListener('change', async (e) => {
+            const selectedIndex = e.target.value;
+            if (selectedIndex) {
+                await this.showSampleDataPreview(selectedIndex);
+            } else {
+                // Clear preview when no index is selected
+                document.querySelector('.sample-records').innerHTML = `
+                    <div class="no-records">
+                        <p>Please select an index to view documents.</p>
+                    </div>
+                `;
+                document.querySelector('.record-count').textContent = 'No index selected';
+            }
+        });
     }
 
     resetIndexForm() {
@@ -345,6 +360,19 @@ class ESMonitor {
             this.components.clusterHealth.render(health);
             this.metricsService.updateClusterMetrics(stats);
             await this.updateIndicesTable(indices);
+            
+            // Update index selector in sample data section
+            const indexSelector = document.getElementById('indexSelector');
+            const currentValue = indexSelector.value; // Keep current selection if exists
+            
+            indexSelector.innerHTML = `
+                <option value="">Select an index</option>
+                ${indices.map(index => `
+                    <option value="${index.index}" ${currentValue === index.index ? 'selected' : ''}>
+                        ${index.index}
+                    </option>
+                `).join('')}
+            `;
         } catch (error) {
             Toast.show(`Failed to update dashboard: ${error.message}`, 'error');
         }
@@ -425,6 +453,9 @@ class ESMonitor {
                                     <div class="dropdown-menu">
                                         <button class="dropdown-item show-details" data-index="${data.index}">
                                             <i class="fas fa-info-circle"></i> Details
+                                        </button>
+                                        <button class="dropdown-item view-documents" data-index="${data.index}">
+                                            <i class="fas fa-file-alt"></i> View Documents
                                         </button>
                                         <button class="dropdown-item manage-aliases" data-index="${data.index}">
                                             <i class="fas fa-tags"></i> Manage Aliases
@@ -849,6 +880,53 @@ class ESMonitor {
         });
         
         return docData;
+    }
+
+    async showSampleDataPreview(indexName) {
+        try {
+            const response = await this.esService.searchDocuments(indexName, {
+                size: 10,
+                sort: ['_doc']  // Dokümanları doğal sıralamada getir
+            });
+            
+            const container = document.querySelector('.sample-records');
+            if (!response.hits || !response.hits.hits) {
+                container.innerHTML = `
+                    <div class="no-records">
+                        <p>Error loading documents. Please try again.</p>
+                    </div>`;
+                return;
+            }
+
+            if (response.hits.total.value === 0) {
+                container.innerHTML = `
+                    <div class="no-records">
+                        <p>No documents found in this index.</p>
+                    </div>`;
+                return;
+            }
+
+            container.innerHTML = response.hits.hits.map(hit => `
+                <div class="sample-record">
+                    <div class="record-header">
+                        <span class="record-id">ID: ${hit._id}</span>
+                        <span class="record-score">Score: ${hit._score || 'N/A'}</span>
+                    </div>
+                    <div class="record-content">${JSON.stringify(hit._source, null, 2)}</div>
+                </div>
+            `).join('');
+
+            document.querySelector('.record-count').textContent = 
+                `Showing ${response.hits.hits.length} of ${response.hits.total.value} documents`;
+
+        } catch (error) {
+            const container = document.querySelector('.sample-records');
+            container.innerHTML = `
+                <div class="no-records error">
+                    <p>Error: ${error.message}</p>
+                </div>`;
+            document.querySelector('.record-count').textContent = 'Error loading documents';
+        }
     }
 }
 
