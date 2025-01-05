@@ -458,9 +458,6 @@ class ESMonitor {
                                         <button class="dropdown-item show-details" data-index="${data.index}">
                                             <i class="fas fa-info-circle"></i> Details
                                         </button>
-                                        <button class="dropdown-item view-documents" data-index="${data.index}">
-                                            <i class="fas fa-file-alt"></i> View Documents
-                                        </button>
                                         <button class="dropdown-item manage-aliases" data-index="${data.index}">
                                             <i class="fas fa-tags"></i> Manage Aliases
                                         </button>
@@ -468,7 +465,7 @@ class ESMonitor {
                                             <i class="fas fa-code"></i> Update Mapping
                                         </button>
                                         <button class="dropdown-item add-document" data-index="${data.index}">
-                                            <i class="fas fa-file-plus"></i> Add Document
+                                            <i class="fas fa-file-circle-plus"></i> Add Document
                                         </button>
                                         <button class="dropdown-item delete-index" data-index="${data.index}">
                                             <i class="fas fa-trash-alt"></i> Delete
@@ -817,17 +814,17 @@ class ESMonitor {
         switch(fieldConfig.type) {
             case 'text':
             case 'keyword':
-                input = `<input type="text" id="${fieldId}" placeholder="Enter ${fieldName}">`;
+                input = `<input type="text" id="${fieldId}" placeholder="Enter value">`;
                 break;
             case 'long':
             case 'integer':
             case 'short':
             case 'byte':
-                input = `<input type="number" id="${fieldId}" placeholder="Enter ${fieldName}">`;
+                input = `<input type="number" id="${fieldId}" placeholder="Enter number">`;
                 break;
             case 'double':
             case 'float':
-                input = `<input type="number" step="0.01" id="${fieldId}" placeholder="Enter ${fieldName}">`;
+                input = `<input type="number" step="0.01" id="${fieldId}" placeholder="Enter decimal">`;
                 break;
             case 'date':
                 input = `<input type="datetime-local" id="${fieldId}">`;
@@ -841,7 +838,7 @@ class ESMonitor {
                     </select>`;
                 break;
             default:
-                input = `<input type="text" id="${fieldId}" placeholder="Enter ${fieldName}">`;
+                input = `<input type="text" id="${fieldId}" placeholder="Enter value">`;
         }
         
         return `
@@ -907,15 +904,13 @@ class ESMonitor {
                 return;
             }
 
-            const fields = new Set();
-            response.hits.hits.forEach(hit => {
-                Object.keys(hit._source).forEach(field => fields.add(field));
-            });
-            const fieldArray = Array.from(fields);
+            // Tüm alanları mapping'den alalım
+            const fieldArray = Object.keys(mapping);
 
             const data = response.hits.hits.map(hit => {
                 const row = {};
                 row.id = hit._id;
+                // Tüm mapping alanlarını döngüye al
                 fieldArray.forEach(field => {
                     row[field] = hit._source[field] !== undefined ? 
                         typeof hit._source[field] === 'object' ? 
