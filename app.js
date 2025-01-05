@@ -93,6 +93,7 @@ class ESMonitor {
 
         const aliasModal = document.getElementById('aliasModal');
         const closeAliasBtn = document.getElementById('closeAliasModal');
+        const closeAliasModalBtn = aliasModal.querySelector('.close-modal');
         const addAliasBtn = document.getElementById('addAliasBtn');
 
         document.addEventListener('click', async (e) => {
@@ -106,7 +107,6 @@ class ESMonitor {
                 const indexName = button.dataset.index;
                 const aliasName = button.dataset.alias;
                 
-                // Show confirmation modal
                 const modal = document.getElementById('deleteAliasModal');
                 document.getElementById('deleteAliasName').textContent = aliasName;
                 document.getElementById('deleteAliasIndexName').textContent = indexName;
@@ -116,8 +116,10 @@ class ESMonitor {
             }
         });
 
-        closeAliasBtn.addEventListener('click', () => {
-            aliasModal.classList.add('hidden');
+        [closeAliasBtn, closeAliasModalBtn].forEach(btn => {
+            btn.addEventListener('click', () => {
+                aliasModal.classList.add('hidden');
+            });
         });
 
         addAliasBtn.addEventListener('click', () => this.handleAddAlias());
@@ -184,7 +186,6 @@ class ESMonitor {
             }
         });
 
-        // Add event listeners for the delete alias confirmation modal
         document.getElementById('cancelDeleteAlias').addEventListener('click', () => {
             document.getElementById('deleteAliasModal').classList.add('hidden');
         });
