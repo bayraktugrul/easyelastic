@@ -101,8 +101,18 @@ class ESMonitor {
                 await this.showAliasManager(indexName);
             }
             if (e.target.closest('.remove-alias')) {
-                const { index, alias } = e.target.closest('.remove-alias').dataset;
-                await this.removeAlias(index, alias);
+                e.preventDefault();
+                const button = e.target.closest('.remove-alias');
+                const indexName = button.dataset.index;
+                const aliasName = button.dataset.alias;
+                
+                // Show confirmation modal
+                const modal = document.getElementById('deleteAliasModal');
+                document.getElementById('deleteAliasName').textContent = aliasName;
+                document.getElementById('deleteAliasIndexName').textContent = indexName;
+                modal.dataset.indexName = indexName;
+                modal.dataset.aliasName = aliasName;
+                modal.classList.remove('hidden');
             }
         });
 
@@ -171,6 +181,28 @@ class ESMonitor {
                 const item = e.target.closest('.dropdown-item');
                 const menu = item.closest('.dropdown-menu');
                 menu.classList.remove('show');
+            }
+        });
+
+        // Add event listeners for the delete alias confirmation modal
+        document.getElementById('cancelDeleteAlias').addEventListener('click', () => {
+            document.getElementById('deleteAliasModal').classList.add('hidden');
+        });
+
+        document.getElementById('confirmDeleteAlias').addEventListener('click', async () => {
+            const modal = document.getElementById('deleteAliasModal');
+            const indexName = modal.dataset.indexName;
+            const aliasName = modal.dataset.aliasName;
+            
+            try {
+                await this.esService.removeAlias(indexName, aliasName);
+                Toast.show(`Alias "${aliasName}" removed successfully`, 'success');
+                
+                modal.classList.add('hidden');
+                await this.refreshAliasesList(indexName);
+                await this.updateDashboard();
+            } catch (error) {
+                Toast.show(`Failed to remove alias: ${error.message}`, 'error');
             }
         });
     }
