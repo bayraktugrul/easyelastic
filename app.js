@@ -888,6 +888,10 @@ class ESMonitor {
 
     async showSampleDataPreview(indexName) {
         try {
+            // Önce mapping bilgisini alalım
+            const indexDetails = await this.esService.getIndexMapping(indexName);
+            const mapping = indexDetails[indexName].mappings.properties || {};
+
             const response = await this.esService.searchDocuments(indexName, {
                 size: 10,
                 sort: ['_doc']
@@ -942,13 +946,19 @@ class ESMonitor {
                 columns: [
                     { 
                         data: 'id', 
-                        title: 'ID',
-                        width: '250px'
+                        title: `<div class="column-header">
+                                    <span>ID</span>
+                                    <span class="field-type" data-type="keyword">keyword</span>
+                                </div>`,
+                        width: '280px'
                     },
                     ...fieldArray.map(field => ({
                         data: field,
-                        title: field,
-                        width: '200px'
+                        title: `<div class="column-header">
+                                    <span>${field}</span>
+                                    <span class="field-type" data-type="${mapping[field]?.type || 'unknown'}">${mapping[field]?.type || 'unknown'}</span>
+                                </div>`,
+                        width: '220px'
                     }))
                 ],
                 scrollX: true,
