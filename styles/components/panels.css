@@ -34,7 +34,7 @@ h2 i {
 .sample-data-panel {
     background: white;
     border-radius: 16px;
-    padding: 1.25rem;
+    padding: 1rem;
     margin-top: 1rem;
     box-shadow: var(--shadow-sm);
     width: 100%;
@@ -97,7 +97,7 @@ h2 i {
 }
 
 .sample-table-container {
-    margin-top: 1rem;
+    margin-top: 0.75rem;
     width: 100%;
     overflow: hidden;
 }
@@ -159,7 +159,7 @@ h2 i {
 
 .dataTables_wrapper {
     width: 100%;
-    padding: 1rem;
+    padding: 0.75rem;
     overflow: hidden;
 }
 
@@ -167,14 +167,15 @@ h2 i {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
 }
 
 .dataTables_filter input {
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 0.75rem;
     border: 1px solid rgba(229, 231, 235, 0.8);
     border-radius: 6px;
     min-width: 250px;
+    font-size: 0.875rem;
 }
 
 .dataTables_info {
@@ -185,7 +186,7 @@ h2 i {
 
 .dataTables_scroll {
     width: 100%;
-    margin-bottom: 1rem;
+    margin-bottom: 0;
     border: 1px solid rgba(229, 231, 235, 0.8);
     border-radius: 8px;
     overflow: hidden;

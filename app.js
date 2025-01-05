@@ -959,51 +959,17 @@ class ESMonitor {
                 scrollX: true,
                 scrollY: '400px',
                 scrollCollapse: true,
-                paging: true,
-                pageLength: 10,
-                lengthChange: false,
+                paging: false,
                 ordering: true,
-                info: true,
+                info: false,
                 searching: true,
                 autoWidth: false,
                 responsive: false,
                 fixedHeader: false,
                 dom: "<'dt-controls'<'dataTables_filter'f>>" +
-                     "<'dataTables_scroll't>" +
-                     "<'dt-bottom'<'dataTables_info'i><'dataTables_paginate'p>>",
+                     "<'dataTables_scroll't>",
                 language: {
-                    search: "Search:",
-                    info: "Showing _START_ to _END_ of _TOTAL_ entries",
-                    infoEmpty: "No entries available",
-                    infoFiltered: "(filtered from _MAX_ total entries)",
-                    paginate: {
-                        first: "First",
-                        last: "Last",
-                        next: "Next",
-                        previous: "Previous"
-                    }
-                },
-                initComplete: function() {
-                    const table = this;
-                    setTimeout(() => {
-                        const wrapper = $(table.api().table().container());
-                        const scrollHead = wrapper.find('.dataTables_scrollHead');
-                        const scrollBody = wrapper.find('.dataTables_scrollBody');
-
-                        scrollBody.on('scroll', function() {
-                            scrollHead.scrollLeft($(this).scrollLeft());
-                        });
-
-                        const totalColumns = table.api().columns()[0].length;
-                        const minTableWidth = (totalColumns * 200); 
-                        $(table.api().table().header()).css('width', `${minTableWidth}px`);
-                        $(table.api().table().body()).css('width', `${minTableWidth}px`);
-                        
-                        scrollHead.css('overflow', 'hidden');
-                        scrollBody.css('overflow-x', 'scroll');
-
-                        table.api().columns.adjust();
-                    }, 0);
+                    search: "Search:"
                 }
             });
 
