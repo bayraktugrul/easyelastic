@@ -140,11 +140,9 @@ class ESMonitor {
             button.addEventListener('click', () => {
                 const tabId = button.dataset.tab;
                 
-                // Update active tab button
                 tabButtons.forEach(btn => btn.classList.remove('active'));
                 button.classList.add('active');
                 
-                // Update active tab content
                 document.querySelectorAll('.tab-pane').forEach(pane => {
                     pane.classList.remove('active');
                 });
@@ -183,6 +181,11 @@ class ESMonitor {
                 const item = e.target.closest('.dropdown-item');
                 const menu = item.closest('.dropdown-menu');
                 menu.classList.remove('show');
+            }
+
+            if (e.target.closest('.update-mapping')) {
+                const indexName = e.target.closest('.update-mapping').dataset.index;
+                this.showUpdateMapping(indexName);
             }
         });
 
@@ -421,6 +424,9 @@ class ESMonitor {
                                         <button class="dropdown-item manage-aliases" data-index="${data.index}">
                                             <i class="fas fa-tags"></i> Manage Aliases
                                         </button>
+                                        <button class="dropdown-item update-mapping" data-index="${data.index}">
+                                            <i class="fas fa-code"></i> Update Mapping
+                                        </button>
                                         <button class="dropdown-item delete-index" data-index="${data.index}">
                                             <i class="fas fa-trash-alt"></i> Delete
                                         </button>
@@ -464,7 +470,17 @@ class ESMonitor {
             const urlInput = document.getElementById('esUrl');
             urlInput.value = savedUrl;
             
-            await this.connect();
+            this.esService = ElasticsearchService.getInstance(savedUrl);
+            this.indicesRepository = new IndicesRepository(this.esService);
+            
+            const isConnected = await this.esService.checkConnection();
+            if (isConnected) {
+                document.getElementById('dashboard').classList.remove('hidden');
+                await this.updateDashboard();
+            } else {
+                localStorage.removeItem('esUrl');
+                Toast.show('Saved connection is no longer valid', 'error');
+            }
         }
     }
 
@@ -577,6 +593,98 @@ class ESMonitor {
             modal.classList.remove('hidden');
         } catch (error) {
             Toast.show(`Failed to fetch index details: ${error.message}`, 'error');
+        }
+    }
+
+    async showUpdateMapping(indexName) {
+        const modal = document.getElementById('updateMappingModal');
+        const mappingTabs = modal.querySelectorAll('.mapping-tabs .tab-button');
+        const closeBtn = modal.querySelector('.close-modal');
+        const cancelBtn = document.getElementById('cancelUpdateMapping');
+        const confirmBtn = document.getElementById('confirmUpdateMapping');
+        
+        try {
+            const details = await this.indicesRepository.getIndexDetails(indexName);
+            const currentMapping = details.mapping;
+            
+            document.getElementById('mappingJson').value = JSON.stringify(currentMapping, null, 2);
+            
+            const mappingFields = document.querySelector('.mapping-fields');
+            mappingFields.innerHTML = '';
+            
+            if (currentMapping.properties) {
+                Object.entries(currentMapping.properties).forEach(([fieldName, fieldConfig]) => {
+                    mappingFields.innerHTML += `
+                        <div class="mapping-field">
+                            <div class="field-info">
+                                <span class="field-name">${fieldName}</span>
+                                <span class="field-type">${fieldConfig.type}</span>
+                            </div>
+                            <button class="remove-field" data-field="${fieldName}">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    `;
+                });
+            }
+            
+            // Show modal
+            modal.classList.remove('hidden');
+            modal.dataset.indexName = indexName;
+            
+            // Tab switching
+            mappingTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabId = tab.dataset.tab;
+                    mappingTabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    modal.querySelectorAll('.tab-pane').forEach(pane => {
+                        pane.classList.remove('active');
+                    });
+                    document.getElementById(`${tabId}MappingTab`).classList.add('active');
+                });
+            });
+            
+            [closeBtn, cancelBtn].forEach(btn => {
+                btn.addEventListener('click', () => {
+                    modal.classList.add('hidden');
+                });
+            });
+            
+            confirmBtn.addEventListener('click', async () => {
+                try {
+                    const activeTab = modal.querySelector('.mapping-tabs .tab-button.active').dataset.tab;
+                    let newMapping;
+                    
+                    if (activeTab === 'json') {
+                        // Get mapping from JSON editor
+                        newMapping = JSON.parse(document.getElementById('mappingJson').value);
+                    } else {
+                        // Build mapping from visual editor
+                        newMapping = {
+                            properties: {}
+                        };
+                        
+                        mappingFields.querySelectorAll('.mapping-field').forEach(field => {
+                            const fieldName = field.querySelector('.field-name').textContent;
+                            const fieldType = field.querySelector('.field-type').textContent;
+                            newMapping.properties[fieldName] = { type: fieldType };
+                        });
+                    }
+                    
+                    await this.esService.updateMapping(indexName, newMapping);
+                    Toast.show('Mapping updated successfully', 'success');
+                    modal.classList.add('hidden');
+                    
+                    await this.updateDashboard();
+                } catch (error) {
+                    Toast.show(`Failed to update mapping: ${error.message}`, 'error');
+                }
+            });
+            
+        } catch (error) {
+            Toast.show(`Failed to load mapping: ${error.message}`, 'error');
         }
     }
 }

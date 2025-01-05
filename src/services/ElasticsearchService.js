@@ -272,6 +272,27 @@ class ElasticsearchService {
             throw error;
         }
     }
+
+    async updateMapping(indexName, mapping) {
+        try {
+            const response = await fetch(`${this.baseUrl}/${indexName}/_mapping`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(mapping)
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error.reason || 'Failed to update mapping');
+            }
+
+            return await response.json();
+        } catch (error) {
+            throw new Error(`Failed to update mapping: ${error.message}`);
+        }
+    }
 }
 
 export default ElasticsearchService; 

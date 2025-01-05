@@ -296,6 +296,71 @@
                 </div>
             </div>
         </div>
+
+        <div id="updateMappingModal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-code"></i> Update Mapping</h3>
+                    <button class="close-modal">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="mapping-tabs">
+                        <button class="tab-button active" data-tab="json">JSON</button>
+                        <button class="tab-button" data-tab="visual">Visual Editor</button>
+                    </div>
+                    
+                    <!-- JSON Editor Tab -->
+                    <div id="jsonMappingTab" class="tab-pane active">
+                        <div class="form-group">
+                            <label for="mappingJson">Mapping JSON</label>
+                            <textarea id="mappingJson" class="code-editor" placeholder="{&#10;  &quot;properties&quot;: {&#10;    &quot;field_name&quot;: {&#10;      &quot;type&quot;: &quot;text&quot;&#10;    }&#10;  }&#10;}"></textarea>
+                        </div>
+                    </div>
+                    
+                    <!-- Visual Editor Tab -->
+                    <div id="visualMappingTab" class="tab-pane">
+                        <div class="visual-mapping-editor">
+                            <div class="mapping-fields">
+                                <!-- Existing fields will be listed here -->
+                            </div>
+                            <div class="add-field-form">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="fieldName">Field Name</label>
+                                        <input type="text" id="fieldName" placeholder="Enter field name">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="fieldType">Field Type</label>
+                                        <select id="fieldType">
+                                            <option value="text">Text</option>
+                                            <option value="keyword">Keyword</option>
+                                            <option value="long">Long</option>
+                                            <option value="integer">Integer</option>
+                                            <option value="short">Short</option>
+                                            <option value="byte">Byte</option>
+                                            <option value="double">Double</option>
+                                            <option value="float">Float</option>
+                                            <option value="date">Date</option>
+                                            <option value="boolean">Boolean</option>
+                                            <option value="binary">Binary</option>
+                                            <option value="object">Object</option>
+                                            <option value="nested">Nested</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <button id="addFieldBtn" class="secondary">
+                                    <i class="fas fa-plus"></i> Add Field
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="cancelUpdateMapping" class="secondary">Cancel</button>
+                    <button id="confirmUpdateMapping">Update</button>
+                </div>
+            </div>
+        </div>
     </div>
     <script type="module" src="app.js"></script>
 </body>
