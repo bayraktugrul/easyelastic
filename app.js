@@ -999,7 +999,6 @@ class ESMonitor {
         const dropdownBtn = document.getElementById('connectionSelectBtn');
         const dropdownMenu = document.getElementById('connectionDropdownMenu');
         
-        // Save button handler
         document.getElementById('saveConnectionBtn').addEventListener('click', () => {
             this.saveConnection();
         });
@@ -1037,7 +1036,7 @@ class ESMonitor {
 
         // Add click handlers
         connectionList.querySelectorAll('.connection-item').forEach(item => {
-            item.addEventListener('click', (e) => {
+            item.addEventListener('click', async (e) => {
                 if (!e.target.closest('.connection-action-btn')) {
                     const name = item.dataset.name;
                     const connection = connections.find(c => c.name === name);
@@ -1046,6 +1045,8 @@ class ESMonitor {
                         document.getElementById('esUrl').value = connection.url;
                         document.getElementById('selectedConnectionText').textContent = connection.name;
                         dropdownMenu.classList.remove('show');
+                        // Otomatik connect
+                        await this.connect();
                     }
                 }
             });
@@ -1059,6 +1060,7 @@ class ESMonitor {
                 if (connection) {
                     document.getElementById('connectionName').value = connection.name;
                     document.getElementById('esUrl').value = connection.url;
+                    document.getElementById('selectedConnectionText').textContent = connection.name;
                     dropdownMenu.classList.remove('show');
                 }
             });
@@ -1095,17 +1097,18 @@ class ESMonitor {
 
         const connections = this.getSavedConnections();
         
-        // Check if name already exists
-        if (connections.some(c => c.name === name)) {
-            Toast.show('Connection name already exists', 'error');
-            return;
+        // Eğer connection zaten varsa güncelle
+        const existingIndex = connections.findIndex(c => c.name === name);
+        if (existingIndex !== -1) {
+            connections[existingIndex] = { name, url };
+            Toast.show('Connection updated successfully', 'success');
+        } else {
+            connections.push({ name, url });
+            Toast.show('Connection saved successfully', 'success');
         }
 
-        connections.push({ name, url });
         localStorage.setItem('esConnections', JSON.stringify(connections));
-        
         this.updateConnectionsList();
-        Toast.show('Connection saved successfully', 'success');
     }
 
     deleteConnection() {

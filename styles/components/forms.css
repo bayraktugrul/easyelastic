@@ -590,39 +590,6 @@
     color: var(--error-color);
 }
 
-.connection-dropdown-footer {
-    padding: 0.75rem;
-    border-top: 1px solid rgba(229, 231, 235, 0.8);
-    background: rgba(249, 250, 251, 0.5);
-}
-
-.new-connection-btn {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    background: rgba(99, 102, 241, 0.1);
-    color: var(--primary-color);
-    border-radius: 8px;
-    font-size: 0.875rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    transition: all 0.2s ease;
-    border: 1px solid rgba(99, 102, 241, 0.2);
-    cursor: pointer;
-}
-
-.new-connection-btn:hover {
-    background: var(--primary-color);
-    color: white;
-    transform: translateY(-1px);
-}
-
-.new-connection-btn:active {
-    transform: translateY(0);
-}
-
-/* Dropdown içeriğinin scrollbar stilleri */
 .connection-dropdown-menu::-webkit-scrollbar {
     width: 8px;
 }
