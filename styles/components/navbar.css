@@ -1,13 +1,15 @@
 .navbar {
     backdrop-filter: blur(8px);
-    background-color: rgba(255, 255, 255, 0.85);
+    background: rgba(255, 255, 255, 0.9);
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    box-shadow: 
+        0 1px 3px rgba(0, 0, 0, 0.05),
+        0 4px 6px -2px rgba(0, 0, 0, 0.025);
     z-index: 1000;
-    border-bottom: 1px solid rgba(229, 231, 235, 0.3);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
 }
 
 .nav-container {
@@ -44,7 +46,7 @@
 }
 
 .logo-text .easy {
-    background: linear-gradient(135deg, #006BB4 0%, #3B82F6 100%);
+    background: linear-gradient(135deg, var(--primary-color) 0%, #3B82F6 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     font-weight: 700;
@@ -52,7 +54,7 @@
 }
 
 .logo-text .elastic {
-    background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+    background: linear-gradient(135deg, #3B82F6 0%, var(--primary-hover) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     font-weight: 700;

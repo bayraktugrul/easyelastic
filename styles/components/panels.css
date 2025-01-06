@@ -1,11 +1,13 @@
 .status-panel, .metrics-panel, .indices-panel, .sample-data-panel {
     background-color: var(--card-background);
-    border: 1px solid rgba(229, 231, 235, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.5);
     border-radius: 16px;
     padding: 1.25rem;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    box-shadow: 
+        0 4px 6px -1px rgba(0, 0, 0, 0.05),
+        0 10px 15px -3px rgba(0, 0, 0, 0.025);
     backdrop-filter: blur(6px);
-    background: rgba(255, 255, 255, 0.85);
+    background: rgba(255, 255, 255, 0.9);
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -590,7 +592,8 @@ h2 i {
     font-size: 11px;
     font-weight: 500;
     padding: 3px 8px;
-    border-radius: 4px;
+    border-radius: 6px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
     text-transform: uppercase;
     letter-spacing: 0.02em;
     line-height: 1;
@@ -693,7 +696,6 @@ h2 i {
     animation: shimmer 1.5s infinite;
 }
 
-/* Metric Cards */
 .cluster-stats {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -702,19 +704,22 @@ h2 i {
 }
 
 .stat-card {
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(229, 231, 235, 0.4);
+    background: rgba(255, 255, 255, 0.98);
+    border: 1px solid rgba(255, 255, 255, 0.6);
     border-radius: 12px;
     padding: 1.25rem;
-    backdrop-filter: blur(8px);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 
+        0 4px 6px -1px rgba(0, 0, 0, 0.05),
+        0 2px 4px -2px rgba(0, 0, 0, 0.025);
     position: relative;
     overflow: hidden;
 }
 
 .stat-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.05);
+    box-shadow: 
+        0 12px 20px -3px rgba(0, 0, 0, 0.1),
+        0 4px 6px -4px rgba(0, 0, 0, 0.05);
     border-color: rgba(99, 102, 241, 0.2);
 }
 
@@ -760,7 +765,6 @@ h2 i {
     line-height: 1.5;
 }
 
-/* Value change animation */
 @keyframes value-change {
     0% { transform: translateY(-10px); opacity: 0; }
     100% { transform: translateY(0); opacity: 1; }
