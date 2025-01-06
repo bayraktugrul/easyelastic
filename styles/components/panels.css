@@ -727,22 +727,10 @@ h2 i {
     margin-bottom: 1rem;
     background: var(--info-bg);
     color: var(--primary-color);
-    transition: all 0.3s ease;
-}
-
-.stat-card:hover .stat-icon {
-    transform: scale(1.1);
-    background: var(--primary-color);
-    color: white;
 }
 
 .stat-icon i {
     font-size: 1.25rem;
-    transition: transform 0.3s ease;
-}
-
-.stat-card:hover .stat-icon i {
-    transform: rotate(360deg);
 }
 
 .stat-content {
