@@ -1,26 +1,26 @@
 @media (max-width: 768px) {
-    .health-metrics {
-        grid-template-columns: 1fr;
-    }
-
-    .metric {
-        padding: 10px;
-    }
-
-    .status-icon {
-        font-size: 20px;
-    }
-
-    .status-text {
-        font-size: 16px;
-    }
-
-    .info-grid {
+    .dashboard {
         grid-template-columns: 1fr;
         gap: 1rem;
     }
-    
-    .info-item {
-        padding: 0.75rem;
+
+    .cluster-stats {
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+
+    .nav-container {
+        padding: 0 0.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .connection-panel {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .button-group {
+        width: 100%;
+        justify-content: stretch;
     }
 } 

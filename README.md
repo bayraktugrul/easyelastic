@@ -42,6 +42,6 @@ Contributions, issues and feature requests are welcome! Feel free to check [issu
 
 This project is [MIT](LICENSE) licensed.
 
----
+
 
 <p align="center">Made with ❤️ for the Elasticsearch community</p>

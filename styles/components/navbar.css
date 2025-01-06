@@ -1,12 +1,13 @@
 .navbar {
+    backdrop-filter: blur(8px);
+    background-color: rgba(255, 255, 255, 0.85);
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    background-color: var(--card-background);
-    box-shadow: var(--shadow-sm);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
     z-index: 1000;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid rgba(229, 231, 235, 0.3);
 }
 
 .nav-container {
@@ -89,9 +90,27 @@
     color: var(--text-secondary);
     font-weight: 500;
     font-size: 0.875rem;
-    transition: all 0.2s ease;
+    letter-spacing: 0.01em;
+    transition: all 0.3s ease;
     padding: 0.5rem 1rem;
     border-radius: 6px;
+    position: relative;
+}
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 50%;
+    background: var(--primary-color);
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.nav-links a:hover::after {
+    width: 100%;
 }
 
 .nav-links a:hover {
@@ -99,25 +118,35 @@
     background: var(--info-bg);
 }
 
-/* GitHub link styles */
+.nav-links a.active {
+    color: var(--primary-color);
+    background: var(--info-bg);
+    font-weight: 600;
+}
+
 .github-link {
-    text-decoration: none;
-    color: var(--text-secondary);
-    font-weight: 500;
-    font-size: 0.875rem;
-    transition: all 0.2s ease;
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
+    background: rgba(0, 0, 0, 0.05);
+    color: white;
+    padding: 0.5rem 1.25rem;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(8px);
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    text-decoration: none;
+    color: var(--text-secondary);
+    border: 1px solid rgba(229, 231, 235, 0.3);
 }
 
 .github-link:hover {
-    color: var(--primary-color);
+    transform: translateY(-1px);
     background: var(--info-bg);
+    color: var(--primary-color);
 }
 
 .github-link i {
     font-size: 1.125rem;
+    color: currentColor;
 } 
