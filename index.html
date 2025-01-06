@@ -50,15 +50,41 @@
     <div class="container">
         <div id="connection" class="header">
             <div class="connection-panel">
+                <div class="saved-connections">
+                    <div class="connection-dropdown">
+                        <button class="connection-select-btn" id="connectionSelectBtn">
+                            <span id="selectedConnectionText">Select a connection</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="connection-dropdown-menu" id="connectionDropdownMenu">
+                            <div class="connection-list" id="connectionList">
+                                <!-- Connections will be added here dynamically -->
+                            </div>
+                            <div class="connection-dropdown-footer">
+                                <button class="new-connection-btn">
+                                    <i class="fas fa-plus"></i>
+                                    New Connection
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="input-group">
+                    <input type="text" 
+                           id="connectionName" 
+                           placeholder="Connection name (optional)"
+                           spellcheck="false">
                     <i class="fas fa-link"></i>
                     <input type="text" 
                            id="esUrl" 
                            placeholder="Elasticsearch URL (e.g. http://localhost:9200)"
-                           spellcheck="false"
-                           autocomplete="off">
+                           spellcheck="false">
                 </div>
                 <div class="button-group">
+                    <button id="saveConnectionBtn" class="secondary">
+                        <i class="fas fa-save"></i>
+                        Save
+                    </button>
                     <button id="testBtn" class="secondary">
                         <i class="fas fa-vial"></i>
                         Test

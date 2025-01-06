@@ -7,10 +7,13 @@
     display: flex;
     gap: 1rem;
     align-items: center;
+    flex-wrap: wrap;
     box-shadow: 
         0 4px 6px -1px rgba(0, 0, 0, 0.05),
         0 10px 15px -3px rgba(0, 0, 0, 0.025);
     transition: all 0.2s ease;
+    position: relative;
+    z-index: 1;
 }
 
 .connection-panel:hover {
@@ -18,13 +21,16 @@
 }
 
 .input-group {
-    position: relative;
+    display: flex;
+    gap: 1rem;
     flex: 1;
+    position: relative;
+    align-items: center;
 }
 
 .input-group i {
     position: absolute;
-    left: 16px;
+    left: 220px;
     top: 50%;
     transform: translateY(-50%);
     color: var(--text-secondary);
@@ -32,9 +38,20 @@
     font-size: 0.9rem;
 }
 
+#connectionName {
+    width: 200px;
+    padding: 0.75rem 1rem;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(229, 231, 235, 0.8);
+    border-radius: 10px;
+    font-size: 0.925rem;
+    transition: all 0.2s ease;
+    color: var(--text-primary);
+}
+
 #esUrl {
     width: 100%;
-    padding: 0.75rem 1rem 0.75rem 2.75rem;
+    padding: 0.75rem 1rem 0.75rem 2.5rem;
     background: rgba(255, 255, 255, 0.9);
     border: 1px solid rgba(229, 231, 235, 0.8);
     border-radius: 10px;
@@ -446,4 +463,180 @@
     border: 1px solid rgba(229, 231, 235, 0.8);
     border-radius: 6px;
     font-size: 0.875rem;
+}
+
+.saved-connections {
+    min-width: 200px;
+    position: relative;
+    z-index: 2;
+}
+
+.connection-dropdown {
+    position: relative;
+    z-index: 1001;
+}
+
+.connection-select-btn {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(229, 231, 235, 0.8);
+    border-radius: 10px;
+    font-size: 0.925rem;
+    transition: all 0.2s ease;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    gap: 0.5rem;
+}
+
+.connection-select-btn:hover {
+    border-color: rgba(99, 102, 241, 0.4);
+}
+
+.connection-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.98);
+    border: 1px solid rgba(229, 231, 235, 0.8);
+    border-radius: 10px;
+    box-shadow: 
+        0 4px 6px -1px rgba(0, 0, 0, 0.05),
+        0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    display: none;
+    z-index: 1002;
+    backdrop-filter: blur(8px);
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.connection-dropdown-menu.show {
+    display: block;
+    animation: dropdownFadeIn 0.2s ease;
+}
+
+@keyframes dropdownFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.connection-list {
+    position: relative;
+}
+
+.connection-item {
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-bottom: 1px solid rgba(229, 231, 235, 0.4);
+}
+
+.connection-item:last-child {
+    border-bottom: none;
+}
+
+.connection-item:hover {
+    background: rgba(99, 102, 241, 0.05);
+}
+
+.connection-item-actions {
+    display: flex;
+    gap: 0.5rem;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.connection-item:hover .connection-item-actions {
+    opacity: 1;
+}
+
+.connection-action-btn {
+    padding: 0.25rem;
+    border-radius: 4px;
+    color: var(--text-secondary);
+    transition: all 0.2s ease;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.connection-action-btn:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.connection-action-btn.edit:hover {
+    color: var(--primary-color);
+}
+
+.connection-action-btn.delete:hover {
+    color: var(--error-color);
+}
+
+.connection-dropdown-footer {
+    padding: 0.75rem;
+    border-top: 1px solid rgba(229, 231, 235, 0.8);
+    background: rgba(249, 250, 251, 0.5);
+}
+
+.new-connection-btn {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: rgba(99, 102, 241, 0.1);
+    color: var(--primary-color);
+    border-radius: 8px;
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    cursor: pointer;
+}
+
+.new-connection-btn:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-1px);
+}
+
+.new-connection-btn:active {
+    transform: translateY(0);
+}
+
+/* Dropdown içeriğinin scrollbar stilleri */
+.connection-dropdown-menu::-webkit-scrollbar {
+    width: 8px;
+}
+
+.connection-dropdown-menu::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+}
+
+.connection-dropdown-menu::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+}
+
+.connection-dropdown-menu::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.15);
 } 

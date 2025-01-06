@@ -24,6 +24,8 @@ class ESMonitor {
         this.initializeModalHandlers();
         this.subscribeToEvents();
         this.loadSavedConnection();
+        this.loadSavedConnections();
+        this.initializeConnectionHandlers();
     }
 
     subscribeToEvents() {
@@ -331,6 +333,10 @@ class ESMonitor {
             const isConnected = await this.esService.checkConnection();
             if (isConnected) {
                 localStorage.setItem('esUrl', url);
+                const name = document.getElementById('connectionName').value.trim();
+                if (name) {
+                    localStorage.setItem('lastConnection', name);
+                }
                 document.getElementById('dashboard').classList.remove('hidden');
                 await this.updateDashboard();
                 Toast.show('Connected and data loaded successfully', 'success');
@@ -505,28 +511,35 @@ class ESMonitor {
     }
 
     async loadSavedConnection() {
-        const savedUrl = localStorage.getItem('esUrl');
-        if (savedUrl) {
-            const urlInput = document.getElementById('esUrl');
-            urlInput.value = savedUrl;
-            
-            this.esService = ElasticsearchService.getInstance(savedUrl);
-            this.indicesRepository = new IndicesRepository(this.esService);
-            
-            const isConnected = await this.esService.checkConnection();
-            if (isConnected) {
-                document.getElementById('dashboard').classList.remove('hidden');
-                await this.updateDashboard();
-            } else {
-                localStorage.removeItem('esUrl');
-                Toast.show('Saved connection is no longer valid', 'error');
+        const lastConnectionName = localStorage.getItem('lastConnection');
+        if (lastConnectionName) {
+            const connections = this.getSavedConnections();
+            const lastConnection = connections.find(c => c.name === lastConnectionName);
+            if (lastConnection) {
+                document.getElementById('connectionName').value = lastConnection.name;
+                document.getElementById('esUrl').value = lastConnection.url;
+                document.getElementById('selectedConnectionText').textContent = lastConnection.name;
+                
+                this.esService = ElasticsearchService.getInstance(lastConnection.url);
+                this.indicesRepository = new IndicesRepository(this.esService);
+                
+                const isConnected = await this.esService.checkConnection();
+                if (isConnected) {
+                    document.getElementById('dashboard').classList.remove('hidden');
+                    await this.updateDashboard();
+                } else {
+                    localStorage.removeItem('lastConnection');
+                    Toast.show('Saved connection is no longer valid', 'error');
+                }
             }
         }
     }
 
     clearConnection() {
-        localStorage.removeItem('esUrl');
+        localStorage.removeItem('lastConnection');
         document.getElementById('esUrl').value = '';
+        document.getElementById('connectionName').value = '';
+        document.getElementById('selectedConnectionText').textContent = 'Select a connection';
         document.getElementById('dashboard').classList.add('hidden');
         this.esService = null;
         Toast.show('Connection cleared', 'info');
@@ -980,6 +993,141 @@ class ESMonitor {
                     <p>Error: ${error.message}</p>
                 </div>`;
         }
+    }
+
+    initializeConnectionHandlers() {
+        const dropdownBtn = document.getElementById('connectionSelectBtn');
+        const dropdownMenu = document.getElementById('connectionDropdownMenu');
+        
+        // Save button handler
+        document.getElementById('saveConnectionBtn').addEventListener('click', () => {
+            this.saveConnection();
+        });
+        
+        dropdownBtn.addEventListener('click', () => {
+            dropdownMenu.classList.toggle('show');
+        });
+        
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.connection-dropdown')) {
+                dropdownMenu.classList.remove('show');
+            }
+        });
+    }
+
+    updateConnectionsList() {
+        const connectionList = document.getElementById('connectionList');
+        const connections = this.getSavedConnections();
+        
+        connectionList.innerHTML = connections.length === 0 ? 
+            '<div class="connection-item">No saved connections</div>' :
+            connections.map(conn => `
+                <div class="connection-item" data-name="${conn.name}">
+                    <span class="connection-name">${conn.name}</span>
+                    <div class="connection-item-actions">
+                        <button class="connection-action-btn edit" data-name="${conn.name}">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="connection-action-btn delete" data-name="${conn.name}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+        // Add click handlers
+        connectionList.querySelectorAll('.connection-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                if (!e.target.closest('.connection-action-btn')) {
+                    const name = item.dataset.name;
+                    const connection = connections.find(c => c.name === name);
+                    if (connection) {
+                        document.getElementById('connectionName').value = connection.name;
+                        document.getElementById('esUrl').value = connection.url;
+                        document.getElementById('selectedConnectionText').textContent = connection.name;
+                        dropdownMenu.classList.remove('show');
+                    }
+                }
+            });
+        });
+
+        connectionList.querySelectorAll('.connection-action-btn.edit').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const name = btn.dataset.name;
+                const connection = connections.find(c => c.name === name);
+                if (connection) {
+                    document.getElementById('connectionName').value = connection.name;
+                    document.getElementById('esUrl').value = connection.url;
+                    dropdownMenu.classList.remove('show');
+                }
+            });
+        });
+
+        connectionList.querySelectorAll('.connection-action-btn.delete').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const name = btn.dataset.name;
+                this.deleteConnection();
+                dropdownMenu.classList.remove('show');
+            });
+        });
+    }
+
+    getSavedConnections() {
+        const connections = localStorage.getItem('esConnections');
+        return connections ? JSON.parse(connections) : [];
+    }
+
+    saveConnection() {
+        const name = document.getElementById('connectionName').value.trim();
+        const url = document.getElementById('esUrl').value.trim();
+
+        if (!url) {
+            Toast.show('Please enter Elasticsearch URL', 'error');
+            return;
+        }
+
+        if (!name) {
+            Toast.show('Please enter a name for the connection', 'error');
+            return;
+        }
+
+        const connections = this.getSavedConnections();
+        
+        // Check if name already exists
+        if (connections.some(c => c.name === name)) {
+            Toast.show('Connection name already exists', 'error');
+            return;
+        }
+
+        connections.push({ name, url });
+        localStorage.setItem('esConnections', JSON.stringify(connections));
+        
+        this.updateConnectionsList();
+        Toast.show('Connection saved successfully', 'success');
+    }
+
+    deleteConnection() {
+        const name = document.getElementById('connectionName').value.trim();
+        if (!name) {
+            Toast.show('Please select a connection to delete', 'error');
+            return;
+        }
+
+        const connections = this.getSavedConnections();
+        const newConnections = connections.filter(c => c.name !== name);
+        localStorage.setItem('esConnections', JSON.stringify(newConnections));
+        
+        this.updateConnectionsList();
+        document.getElementById('connectionName').value = '';
+        document.getElementById('esUrl').value = '';
+        document.getElementById('selectedConnectionText').textContent = 'Select a connection';
+        Toast.show('Connection deleted successfully', 'success');
+    }
+
+    loadSavedConnections() {
+        this.updateConnectionsList();
     }
 }
 
