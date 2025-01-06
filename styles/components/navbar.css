@@ -21,31 +21,48 @@
 
 /* Logo styles */
 .nav-logo {
-    display: inline-flex;
+    display: flex;
     align-items: center;
     text-decoration: none;
-    padding: 0 !important; /* Override default link padding */
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition: all 0.2s ease;
 }
 
 .logo-text {
     font-size: 1.25rem;
     font-weight: 600;
-    background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    letter-spacing: -0.025em;
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    align-items: center;
 }
 
-.logo-text span {
-    color: var(--text-primary);
-    -webkit-text-fill-color: initial;
-    font-weight: 500;
+.logo-text .icon {
+    color: #F59E0B;
+    margin-right: 0.5rem;
+}
+
+.logo-text .easy {
+    background: linear-gradient(135deg, #006BB4 0%, #3B82F6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.logo-text .elastic {
+    background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-left: -1px;
 }
 
 /* Ensure logo doesn't get hover effects from nav links */
 .nav-logo:hover {
-    background: none !important;
+    transform: translateY(-1px);
+    background: var(--info-bg);
 }
 
 /* Existing styles */
