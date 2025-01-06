@@ -702,10 +702,11 @@ h2 i {
 }
 
 .stat-card {
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.95);
     border: 1px solid rgba(229, 231, 235, 0.4);
     border-radius: 12px;
     padding: 1.25rem;
+    backdrop-filter: blur(8px);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
@@ -725,8 +726,9 @@ h2 i {
     height: 40px;
     border-radius: 10px;
     margin-bottom: 1rem;
-    background: var(--info-bg);
-    color: var(--primary-color);
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
+    color: white;
+    box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.15);
 }
 
 .stat-icon i {
