@@ -2,10 +2,10 @@ const initParticles = () => {
     particlesJS('particles-js', {
         particles: {
             number: {
-                value: 60,
+                value: 20,
                 density: {
                     enable: true,
-                    value_area: 800
+                    value_area: 1000
                 }
             },
             color: {
@@ -19,18 +19,18 @@ const initParticles = () => {
                 random: true,
                 anim: {
                     enable: true,
-                    speed: 1,
-                    opacity_min: 0.05,
+                    speed: 0.5,
+                    opacity_min: 0.1,
                     sync: false
                 }
             },
             size: {
-                value: 3,
+                value: 2.5,
                 random: true,
                 anim: {
                     enable: true,
-                    speed: 2,
-                    size_min: 0.5,
+                    speed: 1,
+                    size_min: 1,
                     sync: false
                 }
             },
@@ -38,21 +38,19 @@ const initParticles = () => {
                 enable: true,
                 distance: 150,
                 color: '#006BB4',
-                opacity: 0.15,
+                opacity: 0.12,
                 width: 1
             },
             move: {
                 enable: true,
-                speed: 1.5,
+                speed: 1,
                 direction: 'none',
                 random: true,
                 straight: false,
                 out_mode: 'out',
                 bounce: false,
                 attract: {
-                    enable: true,
-                    rotateX: 600,
-                    rotateY: 1200
+                    enable: false
                 }
             }
         },
