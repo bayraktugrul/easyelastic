@@ -11,9 +11,10 @@
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+.status-panel,
 .indices-panel,
 .sample-data-panel {
-    margin-top: 1rem;
+    margin-top: 0.5rem;
 }
 
 .status-panel:hover, .metrics-panel:hover, .indices-panel:hover, .sample-data-panel:hover {
