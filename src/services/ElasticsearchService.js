@@ -1,19 +1,6 @@
 class ElasticsearchService {
-    static instance = null;
-    
-    static getInstance(baseUrl) {
-        if (!ElasticsearchService.instance) {
-            ElasticsearchService.instance = new ElasticsearchService(baseUrl);
-        }
-        return ElasticsearchService.instance;
-    }
-    
     constructor(baseUrl) {
-        if (ElasticsearchService.instance) {
-            return ElasticsearchService.instance;
-        }
         this.baseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
-        ElasticsearchService.instance = this;
     }
 
     async makeRequest(endpoint) {

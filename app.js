@@ -305,7 +305,7 @@ class ESMonitor {
         }
 
         try {
-            const service = ElasticsearchService.getInstance(url);
+            const service = new ElasticsearchService(url);
             const isConnected = await service.checkConnection();
             
             if (isConnected) {
@@ -322,12 +322,19 @@ class ESMonitor {
     async connect() {
         try {
             const url = document.getElementById('esUrl').value.trim();
+            console.log('Connecting to URL:', url);
             if (!url) {
                 Toast.show('Please enter Elasticsearch URL', 'error');
                 return;
             }
 
-            this.esService = ElasticsearchService.getInstance(url);
+            // Önceki servisleri temizle
+            if (this.esService) {
+                this.esService = null;
+                this.indicesRepository = null;
+            }
+
+            this.esService = new ElasticsearchService(url);
             this.indicesRepository = new IndicesRepository(this.esService);
             
             const isConnected = await this.esService.checkConnection();
@@ -341,9 +348,15 @@ class ESMonitor {
                 await this.updateDashboard();
                 Toast.show('Connected and data loaded successfully', 'success');
             } else {
+                this.esService = null;
+                this.indicesRepository = null;
+                document.getElementById('dashboard').classList.add('hidden');
                 Toast.show('Failed to connect to Elasticsearch', 'error');
             }
         } catch (error) {
+            this.esService = null;
+            this.indicesRepository = null;
+            document.getElementById('dashboard').classList.add('hidden');
             Toast.show(`Connection error: ${error.message}`, 'error');
         }
     }
@@ -520,7 +533,7 @@ class ESMonitor {
                 document.getElementById('esUrl').value = lastConnection.url;
                 document.getElementById('selectedConnectionText').textContent = lastConnection.name;
                 
-                this.esService = ElasticsearchService.getInstance(lastConnection.url);
+                this.esService = new ElasticsearchService(lastConnection.url);
                 this.indicesRepository = new IndicesRepository(this.esService);
                 
                 const isConnected = await this.esService.checkConnection();
@@ -1017,6 +1030,7 @@ class ESMonitor {
     updateConnectionsList() {
         const connectionList = document.getElementById('connectionList');
         const connections = this.getSavedConnections();
+        const dropdownMenu = document.getElementById('connectionDropdownMenu');
         
         connectionList.innerHTML = connections.length === 0 ? 
             '<div class="connection-item">No saved connections</div>' :
