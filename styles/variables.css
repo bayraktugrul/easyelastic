@@ -1,28 +1,41 @@
 :root {
-    --primary-color: #006BB4; 
-    --primary-rgb: 0, 107, 180;
-    --primary-hover: #0079CC;
-    --secondary-color: #343741;  
-    --secondary-hover: #535966;
-    
-    --success-color: #00BFA5;  
-    --warning-color: #FF9800;  
-    --error-color: #FF5252;   
-    
-    --background-color: #EEF2FF; 
-    --card-background: #FFFFFF;
+    /* Light Theme */
+    --background-color: #f8fafc;
+    --card-background: rgba(255, 255, 255, 0.9);
+    --text-primary: #1e293b;
+    --text-secondary: #64748b;
+    --border-color: rgba(255, 255, 255, 0.5);
+    --primary-color: #3b82f6;
+    --primary-hover: #2563eb;
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --info-bg: rgba(59, 130, 246, 0.1);
+    --error-color: #ef4444;
+    --error-bg: #fee2e2;
+    --success-color: #22c55e;
+    --success-bg: #dcfce7;
+    --warning-color: #f59e0b;
+    --warning-bg: #fef3c7;
+}
 
-    --text-primary: #1A1C21;  
-    --text-secondary: #69707D; 
-    
-    --shadow-sm: 0 2px 2px rgba(0, 0, 0, 0.1);
-    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.1);
-    --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.1);
-    
-    --success-bg: rgba(0, 191, 165, 0.15); 
-    --warning-bg: rgba(255, 152, 0, 0.15);  
-    --error-bg: rgba(255, 82, 82, 0.15);   
-    --info-bg: rgba(0, 107, 180, 0.15);   
-    
-    --border-color: rgba(229, 231, 235, 0.6); 
+[data-theme="dark"] {
+    /* Dark Theme */
+    --background-color: #0f172a;
+    --card-background: rgba(30, 41, 59, 0.9);
+    --text-primary: #e2e8f0;
+    --text-secondary: #94a3b8;
+    --border-color: rgba(255, 255, 255, 0.1);
+    --primary-color: #60a5fa;
+    --primary-hover: #3b82f6;
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+    --info-bg: rgba(59, 130, 246, 0.15);
+    --error-color: #f87171;
+    --error-bg: rgba(239, 68, 68, 0.15);
+    --success-color: #4ade80;
+    --success-bg: rgba(34, 197, 94, 0.15);
+    --warning-color: #fbbf24;
+    --warning-bg: rgba(245, 158, 11, 0.15);
 } 

@@ -151,4 +151,57 @@
 .github-link i {
     font-size: 1.125rem;
     color: currentColor;
+}
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.theme-toggle {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 6px;
+    position: relative;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.theme-toggle:hover {
+    background: var(--info-bg);
+    color: var(--primary-color);
+}
+
+.theme-toggle i {
+    font-size: 1.125rem;
+    position: absolute;
+    transition: all 0.2s;
+}
+
+.theme-toggle .light-icon {
+    opacity: 0;
+    transform: rotate(-90deg);
+}
+
+.theme-toggle .dark-icon {
+    opacity: 1;
+    transform: rotate(0);
+}
+
+[data-theme="dark"] .theme-toggle .light-icon {
+    opacity: 1;
+    transform: rotate(0);
+}
+
+[data-theme="dark"] .theme-toggle .dark-icon {
+    opacity: 0;
+    transform: rotate(90deg);
 } 

@@ -10,6 +10,7 @@ import Toast from './src/utils/Toast.js';
 import { formatNumber } from './src/utils/formatters.js';
 import initParticles from './src/utils/background.js';
 import QuickFilter from './src/components/QuickFilter.js';
+import ThemeManager from './src/utils/ThemeManager.js';
 
 class ESMonitor {
     constructor() {
@@ -1158,5 +1159,6 @@ class ESMonitor {
 
 document.addEventListener('DOMContentLoaded', () => {
     initParticles();
+    new ThemeManager();
     window.esMonitor = new ESMonitor();
 }); 
