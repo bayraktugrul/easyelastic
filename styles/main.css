@@ -14,6 +14,7 @@
 @import 'components/aliases.css';
 @import 'components/toasts.css';
 @import 'components/panels.css';
+@import 'components/quick-filter.css';
 @import 'features/cluster-health.css';
 @import 'features/indices.css';
 @import 'features/metrics.css';

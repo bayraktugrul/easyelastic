@@ -9,6 +9,7 @@ import ClusterHealth from './src/components/ClusterHealth.js';
 import Toast from './src/utils/Toast.js';
 import { formatNumber } from './src/utils/formatters.js';
 import initParticles from './src/utils/background.js';
+import QuickFilter from './src/components/QuickFilter.js';
 
 class ESMonitor {
     constructor() {
@@ -347,6 +348,11 @@ class ESMonitor {
                 document.getElementById('dashboard').classList.remove('hidden');
                 await this.updateDashboard();
                 Toast.show('Connected and data loaded successfully', 'success');
+                
+                // QuickFilter'ı initialize et
+                if (!this.quickFilter) {
+                    this.quickFilter = new QuickFilter(this.esService);
+                }
             } else {
                 this.esService = null;
                 this.indicesRepository = null;
@@ -555,6 +561,7 @@ class ESMonitor {
         document.getElementById('selectedConnectionText').textContent = 'Select a connection';
         document.getElementById('dashboard').classList.add('hidden');
         this.esService = null;
+        this.quickFilter = null;
         Toast.show('Connection cleared', 'info');
     }
 

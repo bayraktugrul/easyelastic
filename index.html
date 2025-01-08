@@ -36,6 +36,7 @@
                 <li><a href="#cluster-health">Cluster</a></li>
                 <li><a href="#indices">Indices</a></li>
                 <li><a href="#sample-data">Sample Data</a></li>
+                <li><a href="#quick-filter">Quick Filter</a></li>
             </ul>
             <a href="https://github.com/bayraktugrul/easyelastic" 
                target="_blank" 
@@ -228,6 +229,58 @@
                             <!-- Data will be loaded here -->
                         </tbody>
                     </table>
+                </div>
+            </div>
+
+            <div id="quick-filter" class="quick-filter-panel">
+                <div class="panel-header" style="background: #f8fafc; padding: 1.25rem; border-bottom: 1px solid #e5e7eb; border-radius: 12px 12px 0 0;">
+                    <h2>
+                        <i class="fas fa-filter"></i>
+                        Quick Filter
+                    </h2>
+                    <div class="quick-filter-actions">
+                        <div class="quick-filter-dropdown">
+                            <button class="quick-filter-select-btn" id="quickFilterIndexBtn">
+                                <span id="selectedQuickFilterIndex">Select an index</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <div class="quick-filter-dropdown-menu" id="quickFilterDropdownMenu">
+                                <div class="quick-filter-list" id="quickFilterIndexList">
+                                    <!-- Indices will be added here dynamically -->
+                                </div>
+                            </div>
+                        </div>
+                        <button id="addQuickFilterBtn" class="secondary" disabled>
+                            <i class="fas fa-plus"></i> Add Filter
+                        </button>
+                    </div>
+                </div>
+
+                <div class="quick-filter-content" style="background: white; padding: 1.5rem;">
+                    <!-- Left Side: Filters -->
+                    <div class="filters-container">
+                        <div id="quickFilters" class="quick-filters">
+                            <!-- Filters will be added here dynamically -->
+                        </div>
+                        <div class="query-preview-box">
+                            <div class="query-header">
+                                <span>Elasticsearch Query</span>
+                                <button class="btn-icon" id="copyQuickFilterQuery" title="Copy Query">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                            <pre id="quickFilterQueryPreview" class="query-preview"></pre>
+                        </div>
+                    </div>
+
+                    <!-- Right Side: Results -->
+                    <div class="results-container">
+                        <div class="results-header">
+                            <span>Search Results</span>
+                            <span class="results-count" id="quickFilterResultsCount">0 results found</span>
+                        </div>
+                        <pre id="quickFilterResults" class="results-preview"></pre>
+                    </div>
                 </div>
             </div>
         </div>
