@@ -50,22 +50,19 @@ export default class QuickFilter {
                 return;
             }
             
-            // Mevcut seçenekleri temizle
             indexSelector.innerHTML = '<option value="">Select an index</option>';
             
-            // İndexleri ekle
             if (indices && indices.length > 0) {
                 indices.forEach(index => {
                     const option = document.createElement('option');
                     option.value = index.index;
-                    option.textContent = `${index.index} (${index.docs?.count || 0} docs)`;
+                    option.textContent = index.index;
                     indexSelector.appendChild(option);
                 });
             } else {
                 console.log('No indices found');
             }
 
-            // Event listener ekle
             indexSelector.addEventListener('change', (e) => {
                 const selectedIndex = e.target.value;
                 if (selectedIndex) {
@@ -90,24 +87,46 @@ export default class QuickFilter {
     async loadFields() {
         try {
             const mapping = await this.esService.getIndexMapping(this.selectedIndex);
-            this.fields = Object.keys(mapping[this.selectedIndex].mappings.properties || {});
+            const properties = mapping[this.selectedIndex].mappings.properties || {};
+            
+            // Tüm field'ları düz bir liste haline getir
+            this.fields = this.flattenFields(properties);
+            
         } catch (error) {
+            console.error('Failed to load fields:', error);
             Toast.show('Failed to load fields', 'error');
         }
     }
 
+    // Nested field'ları düzleştirmek için yardımcı metod
+    flattenFields(properties, prefix = '') {
+        let fields = [];
+        
+        for (const [key, value] of Object.entries(properties)) {
+            const fieldName = prefix ? `${prefix}.${key}` : key;
+            
+            if (value.type) {
+                fields.push(fieldName);
+            }
+            
+            // Nested veya object tipindeki field'ları da işle
+            if (value.properties) {
+                fields = fields.concat(this.flattenFields(value.properties, fieldName));
+            }
+        }
+        
+        return fields;
+    }
+
     addFilter() {
-        const filterId = Date.now();
         const filterHtml = `
-            <div class="filter-item" data-filter-id="${filterId}">
+            <div class="filter-item">
                 <select class="field-select">
                     <option value="">Select Field</option>
-                    ${this.fields.map(field => `
-                        <option value="${field}">${field}</option>
-                    `).join('')}
+                    ${this.fields.map(field => `<option value="${field}">${field}</option>`).join('')}
                 </select>
                 <input type="text" class="value-input" placeholder="Enter value">
-                <button class="remove-filter" title="Remove Filter">
+                <button class="remove-filter">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
@@ -118,11 +137,13 @@ export default class QuickFilter {
 
         const filterElement = container.lastElementChild;
         
+        // Remove filter butonu için event listener
         filterElement.querySelector('.remove-filter').addEventListener('click', () => {
             filterElement.remove();
             this.updateQuery();
         });
 
+        // Field ve value değişikliklerini dinle
         filterElement.querySelectorAll('select, input').forEach(element => {
             element.addEventListener('change', () => this.updateQuery());
             element.addEventListener('input', () => this.updateQuery());
