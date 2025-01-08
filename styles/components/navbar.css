@@ -1,15 +1,13 @@
 .navbar {
     backdrop-filter: blur(8px);
-    background: rgba(255, 255, 255, 0.9);
+    background: var(--navbar-background);
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    box-shadow: 
-        0 1px 3px rgba(0, 0, 0, 0.05),
-        0 4px 6px -2px rgba(0, 0, 0, 0.025);
+    box-shadow: var(--shadow-sm);
     z-index: 1000;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+    border-bottom: 1px solid var(--border-color);
 }
 
 .nav-container {
@@ -41,7 +39,7 @@
 }
 
 .logo-text .icon {
-    color: #F59E0B;
+    color: var(--logo-warning);
     margin-right: 0.5rem;
 }
 
@@ -127,8 +125,8 @@
 }
 
 .github-link {
-    background: rgba(0, 0, 0, 0.05);
-    color: white;
+    background: var(--card-background);
+    color: var(--text-secondary);
     padding: 0.5rem 1.25rem;
     border-radius: 8px;
     font-weight: 600;
@@ -138,8 +136,7 @@
     align-items: center;
     gap: 0.5rem;
     text-decoration: none;
-    color: var(--text-secondary);
-    border: 1px solid rgba(229, 231, 235, 0.3);
+    border: 1px solid var(--border-light);
 }
 
 .github-link:hover {

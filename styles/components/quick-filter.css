@@ -1,23 +1,23 @@
 .quick-filter-panel {
     margin-bottom: 2rem;
-    background: #f8fafc;
-    border: 1px solid #e5e7eb;
+    background: var(--card-background);
+    border: 1px solid var(--border-light);
     border-radius: 8px;
     overflow: hidden;
 }
 
 .panel-header {
     padding: 1.25rem;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid var(--border-light);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: white;
+    background: var(--card-background);
 }
 
 .panel-header h2 {
     font-size: 1.125rem;
-    color: #1f2937;
+    color: var(--text-primary);
     display: flex;
     align-items: center;
     gap: 0.75rem;
@@ -25,7 +25,7 @@
 }
 
 .panel-header h2 i {
-    color: #3b82f6;
+    color: var(--primary-color);
 }
 
 .quick-filter-actions {
@@ -59,10 +59,10 @@
     grid-template-columns: 1.5fr 1fr auto;
     gap: 0.75rem;
     align-items: center;
-    background: white;
+    background: var(--card-background);
     padding: 1rem;
     border-radius: 6px;
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--border-light);
     transition: all 0.2s;
 }
 
