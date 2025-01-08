@@ -257,4 +257,38 @@
 .btn-icon:hover {
     color: #3b82f6;
     background: rgba(59, 130, 246, 0.1);
+}
+
+/* Index Selector */
+#quickFilterIndexSelector {
+    min-width: 250px;
+    padding: 0.6rem 2rem 0.6rem 1rem;
+    font-size: 0.875rem;
+    color: #475569;
+    background-color: white;
+    border: 1px solid rgba(229, 231, 235, 0.8);
+    border-radius: 6px;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+#quickFilterIndexSelector:hover {
+    border-color: #94a3b8;
+}
+
+#quickFilterIndexSelector:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+#quickFilterIndexSelector option {
+    padding: 0.5rem;
+    font-size: 0.875rem;
+    color: #475569;
 } 

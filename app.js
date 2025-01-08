@@ -329,10 +329,10 @@ class ESMonitor {
                 return;
             }
 
-            // Önceki servisleri temizle
             if (this.esService) {
                 this.esService = null;
                 this.indicesRepository = null;
+                this.quickFilter = null;
             }
 
             this.esService = new ElasticsearchService(url);
@@ -346,22 +346,22 @@ class ESMonitor {
                     localStorage.setItem('lastConnection', name);
                 }
                 document.getElementById('dashboard').classList.remove('hidden');
+                
+                this.quickFilter = new QuickFilter(this.esService);
+                
                 await this.updateDashboard();
                 Toast.show('Connected and data loaded successfully', 'success');
-                
-                // QuickFilter'ı initialize et
-                if (!this.quickFilter) {
-                    this.quickFilter = new QuickFilter(this.esService);
-                }
             } else {
                 this.esService = null;
                 this.indicesRepository = null;
+                this.quickFilter = null;
                 document.getElementById('dashboard').classList.add('hidden');
                 Toast.show('Failed to connect to Elasticsearch', 'error');
             }
         } catch (error) {
             this.esService = null;
             this.indicesRepository = null;
+            this.quickFilter = null;
             document.getElementById('dashboard').classList.add('hidden');
             Toast.show(`Connection error: ${error.message}`, 'error');
         }
@@ -545,6 +545,7 @@ class ESMonitor {
                 const isConnected = await this.esService.checkConnection();
                 if (isConnected) {
                     document.getElementById('dashboard').classList.remove('hidden');
+                    this.quickFilter = new QuickFilter(this.esService);
                     await this.updateDashboard();
                 } else {
                     localStorage.removeItem('lastConnection');

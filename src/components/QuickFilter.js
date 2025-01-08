@@ -14,19 +14,15 @@ export default class QuickFilter {
     }
 
     initializeEventListeners() {
-        // Index dropdown
-        const indexBtn = document.getElementById('quickFilterIndexBtn');
-        const indexMenu = document.getElementById('quickFilterDropdownMenu');
+        const indexSelector = document.getElementById('quickFilterIndexSelector');
 
-        if (indexBtn && indexMenu) {
-            indexBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                indexMenu.classList.toggle('show');
-            });
-
-            document.addEventListener('click', (e) => {
-                if (!e.target.closest('#quickFilterIndexBtn')) {
-                    indexMenu.classList.remove('show');
+        if (indexSelector) {
+            indexSelector.addEventListener('change', (e) => {
+                const selectedIndex = e.target.value;
+                if (selectedIndex) {
+                    this.selectIndex(selectedIndex);
+                } else {
+                    document.getElementById('addQuickFilterBtn').disabled = true;
                 }
             });
         }
@@ -47,30 +43,46 @@ export default class QuickFilter {
     async loadIndices() {
         try {
             const indices = await this.esService.getIndicesInfo();
-            const indexList = document.getElementById('quickFilterIndexList');
+            const indexSelector = document.getElementById('quickFilterIndexSelector');
             
-            indexList.innerHTML = indices.map(index => `
-                <div class="quick-filter-item" data-index="${index.index}">
-                    <span class="index-name">${index.index}</span>
-                    <span class="index-count">${index.docs?.count || 0} docs</span>
-                </div>
-            `).join('');
-
-            indexList.querySelectorAll('.quick-filter-item').forEach(item => {
-                item.addEventListener('click', () => {
-                    const indexName = item.dataset.index;
-                    this.selectIndex(indexName);
+            if (!indexSelector) {
+                console.error('Index selector element not found');
+                return;
+            }
+            
+            // Mevcut seçenekleri temizle
+            indexSelector.innerHTML = '<option value="">Select an index</option>';
+            
+            // İndexleri ekle
+            if (indices && indices.length > 0) {
+                indices.forEach(index => {
+                    const option = document.createElement('option');
+                    option.value = index.index;
+                    option.textContent = `${index.index} (${index.docs?.count || 0} docs)`;
+                    indexSelector.appendChild(option);
                 });
+            } else {
+                console.log('No indices found');
+            }
+
+            // Event listener ekle
+            indexSelector.addEventListener('change', (e) => {
+                const selectedIndex = e.target.value;
+                if (selectedIndex) {
+                    this.selectIndex(selectedIndex);
+                } else {
+                    document.getElementById('addQuickFilterBtn').disabled = true;
+                }
             });
+
         } catch (error) {
+            console.error('Failed to load indices:', error);
             Toast.show('Failed to load indices', 'error');
         }
     }
 
     async selectIndex(indexName) {
         this.selectedIndex = indexName;
-        document.getElementById('selectedQuickFilterIndex').textContent = indexName;
-        document.getElementById('quickFilterDropdownMenu').classList.remove('show');
         document.getElementById('addQuickFilterBtn').disabled = false;
         await this.loadFields();
     }

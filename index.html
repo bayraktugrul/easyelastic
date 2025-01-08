@@ -239,17 +239,9 @@
                         Quick Filter
                     </h2>
                     <div class="quick-filter-actions">
-                        <div class="quick-filter-dropdown">
-                            <button class="quick-filter-select-btn" id="quickFilterIndexBtn">
-                                <span id="selectedQuickFilterIndex">Select an index</span>
-                                <i class="fas fa-chevron-down"></i>
-                            </button>
-                            <div class="quick-filter-dropdown-menu" id="quickFilterDropdownMenu">
-                                <div class="quick-filter-list" id="quickFilterIndexList">
-                                    <!-- Indices will be added here dynamically -->
-                                </div>
-                            </div>
-                        </div>
+                        <select id="quickFilterIndexSelector" class="secondary">
+                            <option value="">Select an index</option>
+                        </select>
                         <button id="addQuickFilterBtn" class="secondary" disabled>
                             <i class="fas fa-plus"></i> Add Filter
                         </button>
