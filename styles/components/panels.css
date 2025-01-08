@@ -1,7 +1,7 @@
-.status-panel, .metrics-panel, .indices-panel, .sample-data-panel {
+.status-panel, .metrics-panel, .indices-panel, .sample-data-panel, .quick-filter-panel, .connection-panel, .cluster-health-panel {
     background-color: var(--card-background);
     border: 1px solid rgba(255, 255, 255, 0.5);
-    border-radius: 16px;
+    border-radius: 8px;
     padding: 1.25rem;
     box-shadow: 
         0 4px 6px -1px rgba(0, 0, 0, 0.05),
