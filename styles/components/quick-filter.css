@@ -1,18 +1,18 @@
 .quick-filter-panel {
     margin-bottom: 0;
-    background: var(--card-background);
-    border: 1px solid var(--border-light);
+    background: var(--panel-background);
+    border: 1px solid var(--border-panel);
     border-radius: 8px;
     overflow: hidden;
 }
 
 .panel-header {
     padding: 1.25rem;
-    border-bottom: 1px solid var(--border-light);
+    border-bottom: 1px solid var(--border-panel);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: var(--card-background);
+    background: var(--panel-header-background);
 }
 
 .panel-header h2 {
@@ -59,44 +59,44 @@
     grid-template-columns: 1.5fr 1fr auto;
     gap: 0.75rem;
     align-items: center;
-    background: var(--card-background);
+    background: var(--panel-background);
     padding: 1rem;
     border-radius: 6px;
-    border: 1px solid var(--border-light);
+    border: 1px solid var(--border-panel);
     transition: all 0.2s;
 }
 
 .filter-item:hover {
-    border-color: #3b82f6;
-    box-shadow: 0 2px 4px rgba(59, 130, 246, 0.1);
+    border-color: var(--primary-color);
+    box-shadow: 0 2px 4px var(--input-focus-ring);
 }
 
 .filter-item select,
 .filter-item input {
     padding: 0.75rem;
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--input-border);
     border-radius: 6px;
     font-size: 0.875rem;
-    color: #1f2937;
+    color: var(--input-text);
     transition: all 0.2s;
-    background: #f8fafc;
+    background: var(--input-background);
 }
 
 .filter-item select:hover,
 .filter-item input:hover {
-    border-color: #94a3b8;
+    border-color: var(--button-hover-border);
 }
 
 .filter-item select:focus,
 .filter-item input:focus {
-    border-color: #3b82f6;
+    border-color: var(--primary-color);
     outline: none;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-    background: white;
+    box-shadow: 0 0 0 3px var(--input-focus-ring);
+    background: var(--input-background);
 }
 
 .filter-item .remove-filter {
-    color: #ef4444;
+    color: var(--error-color);
     background: none;
     border: none;
     cursor: pointer;
@@ -106,29 +106,29 @@
 }
 
 .filter-item .remove-filter:hover {
-    background: #fee2e2;
+    background: var(--error-bg);
 }
 
 /* Query Preview and Results */
 .query-preview-box,
 .results-container {
-    background: white;
+    background: var(--panel-background);
     border-radius: 8px;
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--border-panel);
     overflow: hidden;
 }
 
 .query-header,
 .results-header {
     padding: 1rem;
-    background: white;
-    border-bottom: 1px solid #e5e7eb;
+    background: var(--panel-header-background);
+    border-bottom: 1px solid var(--border-panel);
     display: flex;
     justify-content: space-between;
     align-items: center;
     font-size: 0.875rem;
     font-weight: 500;
-    color: #1f2937;
+    color: var(--text-primary);
 }
 
 .query-preview,
@@ -138,10 +138,10 @@
     font-family: 'Monaco', 'Menlo', monospace;
     font-size: 0.875rem;
     line-height: 1.6;
-    color: #334155;
+    color: var(--text-code);
     overflow-x: auto;
     max-height: 400px;
-    background: #f8fafc;
+    background: var(--panel-background);
 }
 
 /* Index Selector */
@@ -149,9 +149,9 @@
     min-width: 250px;
     padding: 0.75rem 2.5rem 0.75rem 1rem;
     font-size: 0.875rem;
-    color: #1f2937;
-    background-color: white;
-    border: 1px solid #e5e7eb;
+    color: var(--input-text);
+    background: var(--input-background);
+    border: 1px solid var(--input-border);
     border-radius: 6px;
     appearance: none;
     background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
@@ -163,22 +163,22 @@
 }
 
 #quickFilterIndexSelector:hover {
-    border-color: #94a3b8;
+    border-color: var(--button-hover-border);
 }
 
 #quickFilterIndexSelector:focus {
-    border-color: #3b82f6;
+    border-color: var(--primary-color);
     outline: none;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    box-shadow: 0 0 0 3px var(--input-focus-ring);
 }
 
 /* Add Filter Button */
 #addQuickFilterBtn {
     padding: 0.75rem 1.25rem;
-    background: white;
-    border: 1px solid #e5e7eb;
+    background: var(--button-bg);
+    border: 1px solid var(--button-border);
     border-radius: 6px;
-    color: #1f2937;
+    color: var(--button-text);
     font-size: 0.875rem;
     font-weight: 500;
     display: flex;
@@ -189,9 +189,9 @@
 }
 
 #addQuickFilterBtn:not(:disabled):hover {
-    border-color: #3b82f6;
-    color: #3b82f6;
-    background: rgba(59, 130, 246, 0.05);
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    background: var(--button-hover-bg);
 }
 
 #addQuickFilterBtn:disabled {

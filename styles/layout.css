@@ -12,11 +12,11 @@
 .header h1 {
     font-size: 24px;
     margin-bottom: 1rem;
-    color: #1e293b;
+    color: var(--text-primary);
 }
 
 .header h1 i {
-    color: #3b82f6;
+    color: var(--primary-color);
     margin-right: 10px;
 }
 
@@ -24,9 +24,9 @@
     margin-bottom: 1rem;
     display: flex;
     gap: 12px;
-    background: rgba(255, 255, 255, 0.9);
+    background: var(--card-background);
     backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid var(--border-color);
     box-shadow: var(--shadow-lg);
     padding: 20px;
     border-radius: 16px;
@@ -50,7 +50,7 @@
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* Status panel stilleri */
+/* Status panel styles */
 .status-panel, .metrics-panel, .indices-panel, 
 .sample-data-panel, .quick-filter-panel, .search-panel {
     background-color: var(--card-background);
