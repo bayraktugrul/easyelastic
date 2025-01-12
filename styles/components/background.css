@@ -5,13 +5,13 @@
     top: 0;
     left: 0;
     z-index: -1;
-    background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%);
+    background: var(--gradient-primary);
     background-image: 
-        radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0, transparent 50%),
-        radial-gradient(at 98% 1%, rgba(0, 191, 165, 0.1) 0, transparent 50%),
-        radial-gradient(at 0% 100%, rgba(255, 152, 0, 0.1) 0, transparent 50%),
-        radial-gradient(at 98% 98%, rgba(0, 107, 180, 0.15) 0, transparent 50%),
-        linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.95) 100%);
+        radial-gradient(at 0% 0%, var(--gradient-spot-1) 0, transparent 50%),
+        radial-gradient(at 98% 1%, var(--gradient-spot-2) 0, transparent 50%),
+        radial-gradient(at 0% 100%, var(--gradient-spot-3) 0, transparent 50%),
+        radial-gradient(at 98% 98%, var(--gradient-spot-4) 0, transparent 50%),
+        var(--gradient-overlay);
 }
 
 /* Subtle grid pattern */
@@ -20,8 +20,8 @@
     position: absolute;
     inset: 0;
     background-image: 
-        linear-gradient(rgba(0, 0, 0, 0.025) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 0, 0, 0.025) 1px, transparent 1px);
+        linear-gradient(var(--grid-line-color) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-line-color) 1px, transparent 1px);
     background-size: 32px 32px;
     mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
 }
