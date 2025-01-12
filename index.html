@@ -322,6 +322,26 @@
 {
   &quot;actions&quot;: [
     {
+      &quot;remove&quot;: {
+        &quot;index&quot;: &quot;old-index&quot;,
+        &quot;alias&quot;: &quot;my-alias&quot;
+      }
+    },
+    {
+      &quot;add&quot;: {
+        &quot;index&quot;: &quot;new-index&quot;,
+        &quot;alias&quot;: &quot;my-alias&quot;
+      }
+    }
+  ]
+}">
+                                        <i class="fas fa-exchange-alt"></i>
+                                        Add/Remove Alias (Atomic)
+                                    </button>
+                                    <button class="query-item" data-query="POST _aliases
+{
+  &quot;actions&quot;: [
+    {
       &quot;add&quot;: {
         &quot;index&quot;: &quot;my-index&quot;,
         &quot;alias&quot;: &quot;my-alias&quot;
