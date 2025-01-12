@@ -1,6 +1,6 @@
 .dataTables_wrapper {
     background: var(--card-background);
-    border: 1px solid rgba(229, 231, 235, 0.4);
+    border: 1px solid var(--border-color);
     border-radius: 16px;
     padding: 1rem;
     box-shadow: var(--shadow-sm);
@@ -16,26 +16,25 @@
 }
 
 .indices-table thead th {
-    background: rgba(229, 231, 235, 0.3);
+    background: var(--table-header-bg);
     color: var(--text-primary);
     font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.1em;
     padding: 1rem;
-    border-bottom: 1px solid rgba(229, 231, 235, 0.4);
+    border-bottom: 1px solid var(--border-color);
     font-weight: 600;
 }
 
 .indices-table tbody tr {
     background: var(--card-background);
-    border-bottom: 1px solid rgba(229, 231, 235, 0.3);
+    border-bottom: 1px solid var(--border-color);
     margin-bottom: 4px;
     transition: all 0.3s ease;
 }
 
 .indices-table tbody tr:hover {
-    background: rgba(99, 102, 241, 0.03);
-    border-bottom: 1px solid rgba(99, 102, 241, 0.1);
+    background: var(--table-row-hover);
 }
 
 .indices-table tbody td {
@@ -58,8 +57,9 @@
 }
 
 .dataTables_filter input {
-    background: white;
-    border: 1px solid rgba(229, 231, 235, 0.8);
+    background: var(--input-background);
+    color: var(--input-text);
+    border: 1px solid var(--input-border);
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
     border-radius: 12px;
     padding: 0.875rem 1.25rem;
@@ -237,4 +237,47 @@
 
 .tab-pane pre {
     border: 1px solid rgba(229, 231, 235, 0.6);
+}
+
+/* Sample Data Table */
+#sampleDataTable thead th {
+    background: var(--table-header-bg);
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border-color);
+}
+
+#sampleDataTable tbody td {
+    background: var(--card-background);
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border-color);
+}
+
+#sampleDataTable tbody tr:hover td {
+    background: var(--table-row-hover);
+}
+
+.dataTables_scrollBody {
+    background: var(--card-background);
+}
+
+.dataTables_scrollBody::-webkit-scrollbar-track {
+    background: var(--background-color);
+}
+
+.dataTables_scrollBody::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+}
+
+.dataTables_scrollBody::-webkit-scrollbar-thumb:hover {
+    background: var(--text-secondary);
+}
+
+.dataTables_filter input {
+    background: var(--input-background);
+    color: var(--input-text);
+    border: 1px solid var(--input-border);
+}
+
+.dataTables_info {
+    color: var(--text-secondary);
 } 

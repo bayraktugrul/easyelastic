@@ -182,7 +182,7 @@
 }
 
 .health-item:hover {
-    background: #f1f5f9;
+    background: var(--button-hover-bg);
 }
 
 .health-item i {

@@ -1,13 +1,13 @@
 .navbar {
-    backdrop-filter: blur(8px);
     background: var(--navbar-background);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--border-color);
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     box-shadow: var(--shadow-sm);
     z-index: 1000;
-    border-bottom: 1px solid var(--border-color);
 }
 
 .nav-container {
@@ -87,7 +87,7 @@
 
 .nav-links a {
     text-decoration: none;
-    color: var(--text-secondary);
+    color: var(--text-primary);
     font-weight: 500;
     font-size: 0.875rem;
     letter-spacing: 0.01em;
@@ -115,7 +115,7 @@
 
 .nav-links a:hover {
     color: var(--primary-color);
-    background: var(--info-bg);
+    background: var(--button-hover-bg);
 }
 
 .nav-links a.active {

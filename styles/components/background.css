@@ -33,6 +33,6 @@
 .indices-panel,
 .modal-content {
     backdrop-filter: blur(6px);
-    background: rgba(255, 255, 255, 0.85) !important;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: var(--card-background) !important;
+    border: 1px solid var(--border-color);
 } 

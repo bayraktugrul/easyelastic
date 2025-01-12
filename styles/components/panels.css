@@ -1,13 +1,11 @@
 .status-panel, .metrics-panel, .indices-panel, .sample-data-panel, .quick-filter-panel, .connection-panel, .cluster-health-panel {
     background-color: var(--card-background);
-    border: 1px solid rgba(255, 255, 255, 0.5);
+    border: 1px solid var(--border-color);
     border-radius: 8px;
     padding: 1.25rem;
-    box-shadow: 
-        0 4px 6px -1px rgba(0, 0, 0, 0.05),
-        0 10px 15px -3px rgba(0, 0, 0, 0.025);
+    box-shadow: var(--shadow-sm);
     backdrop-filter: blur(6px);
-    background: rgba(255, 255, 255, 0.9);
+    background: var(--card-background);
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -19,7 +17,7 @@
 
 .status-panel:hover, .metrics-panel:hover, .indices-panel:hover, .sample-data-panel:hover {
     transform: translateY(-1px);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.05);
+    box-shadow: var(--shadow-md);
 }
 
 h2 {
@@ -27,18 +25,18 @@ h2 {
     font-weight: 600;
     letter-spacing: 0.3px;
     margin-bottom: 20px;
-    color: #1e293b;
+    color: var(--text-primary);
     display: flex;
     align-items: center;
     gap: 8px;
 }
 
 h2 i {
-    color: #3b82f6;
+    color: var(--primary-color);
 }
 
 .sample-data-panel {
-    background: white;
+    background: var(--panel-background);
     border-radius: 16px;
     padding: 1rem;
     margin-top: 1rem;
@@ -56,25 +54,24 @@ h2 i {
 #sampleDataType {
     padding: 0.5rem 1rem;
     border-radius: 8px;
-    border: 1px solid rgba(229, 231, 235, 0.8);
-    background: white;
+    border: 1px solid var(--border-color);
+    background: var(--input-background);
+    color: var(--input-text);
     font-size: 0.875rem;
 }
 
 .sample-preview {
     margin-top: 1.5rem;
-    border: 1px solid rgba(229, 231, 235, 0.8);
+    border: 1px solid var(--border-color);
     border-radius: 12px;
     overflow: hidden;
+    background: var(--card-background);
 }
 
 .preview-header {
     padding: 1rem;
-    background: rgba(249, 250, 251, 0.8);
-    border-bottom: 1px solid rgba(229, 231, 235, 0.8);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    background: var(--panel-header-background);
+    border-bottom: 1px solid var(--border-color);
 }
 
 .record-count {
@@ -90,8 +87,8 @@ h2 i {
 }
 
 .sample-record {
-    background: white;
-    border: 1px solid rgba(229, 231, 235, 0.8);
+    background: var(--card-background);
+    border: 1px solid var(--border-color);
     border-radius: 8px;
     padding: 1rem;
 }
@@ -100,6 +97,7 @@ h2 i {
     font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
     font-size: 0.875rem;
     white-space: pre-wrap;
+    color: var(--text-code);
 }
 
 .sample-table-container {

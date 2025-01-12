@@ -50,7 +50,6 @@
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* Status panel styles */
 .status-panel, .metrics-panel, .indices-panel, 
 .sample-data-panel, .quick-filter-panel, .search-panel {
     background-color: var(--card-background);
