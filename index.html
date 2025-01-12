@@ -19,6 +19,7 @@
     <script src="https://cdn.datatables.net/scroller/2.3.0/js/dataTables.scroller.min.js"></script>
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <link rel="stylesheet" href="styles/components/search.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.js"></script>
 </head>
 <body>
     <div id="particles-js"></div>
@@ -311,11 +312,7 @@
                                     </button>
                                 </div>
                             </div>
-                            <pre id="queryInput" class="query-editor" contenteditable="true" spellcheck="false">{
-    "query": {
-        "match_all": {}
-    }
-}</pre>
+                            <div id="queryInput" class="query-editor"></div>
                             <div class="query-actions">
                                 <button id="executeQuery">
                                     <i class="fas fa-play"></i>

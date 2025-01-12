@@ -2,11 +2,13 @@ export default class Search {
     constructor(esService) {
         this.esService = esService;
         this.selectedIndex = null;
+        this.editor = null;
         this.init();
     }
 
     async init() {
         await this.loadIndices();
+        await this.initializeMonacoEditor();
         this.initializeEventListeners();
     }
 
@@ -48,6 +50,110 @@ export default class Search {
         }
     }
 
+    async initializeMonacoEditor() {
+        require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs' }});
+        require(['vs/editor/editor.main'], () => {
+            monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
+                schemas: [{
+                    fileMatch: ["*"],
+                    schema: {
+                        type: "object",
+                        properties: {
+                            query: {
+                                type: "object",
+                                properties: {
+                                    match: { type: "object" },
+                                    match_all: { type: "object" },
+                                    term: { type: "object" },
+                                    terms: { type: "object" },
+                                    range: { type: "object" },
+                                    exists: { type: "object" },
+                                    prefix: { type: "object" },
+                                    wildcard: { type: "object" },
+                                    regexp: { type: "object" },
+                                    fuzzy: { type: "object" },
+                                    bool: {
+                                        type: "object",
+                                        properties: {
+                                            must: { type: "array" },
+                                            should: { type: "array" },
+                                            must_not: { type: "array" },
+                                            filter: { type: "array" }
+                                        }
+                                    }
+                                }
+                            },
+                            sort: { type: "array" },
+                            from: { type: "number" },
+                            size: { type: "number" },
+                            _source: {
+                                oneOf: [
+                                    { type: "array" },
+                                    { type: "boolean" }
+                                ]
+                            }
+                        }
+                    }
+                }]
+            });
+
+            this.editor = monaco.editor.create(document.getElementById('queryInput'), {
+                value: JSON.stringify({
+                    query: {
+                        match_all: {}
+                    }
+                }, null, 2),
+                language: 'json',
+                theme: 'vs-light',
+                minimap: { enabled: false },
+                automaticLayout: true,
+                fontSize: 14,
+                lineNumbers: 'on',
+                scrollBeyondLastLine: false,
+                roundedSelection: false,
+                renderIndentGuides: true,
+                contextmenu: true,
+                lineHeight: 21,
+                padding: { top: 8, bottom: 8 },
+                suggest: {
+                    snippets: 'inline'
+                }
+            });
+
+            monaco.languages.registerCompletionItemProvider('json', {
+                provideCompletionItems: () => {
+                    const suggestions = [
+                        {
+                            label: 'match_all',
+                            kind: monaco.languages.CompletionItemKind.Snippet,
+                            insertText: {
+                                value: '{\n  "query": {\n    "match_all": {}\n  }\n}'
+                            },
+                            documentation: 'Match all documents query'
+                        },
+                        {
+                            label: 'match',
+                            kind: monaco.languages.CompletionItemKind.Snippet,
+                            insertText: {
+                                value: '{\n  "query": {\n    "match": {\n      "${1:field}": "${2:value}"\n    }\n  }\n}'
+                            },
+                            documentation: 'Match query'
+                        },
+                        {
+                            label: 'bool',
+                            kind: monaco.languages.CompletionItemKind.Snippet,
+                            insertText: {
+                                value: '{\n  "query": {\n    "bool": {\n      "must": [\n        ${1}\n      ],\n      "should": [\n        ${2}\n      ],\n      "must_not": [\n        ${3}\n      ]\n    }\n  }\n}'
+                            },
+                            documentation: 'Bool query'
+                        }
+                    ];
+                    return { suggestions };
+                }
+            });
+        });
+    }
+
     initializeEventListeners() {
         const indexSelector = document.getElementById('searchIndexSelector');
         const executeBtn = document.getElementById('executeQuery');
@@ -81,9 +187,7 @@ export default class Search {
         }
 
         try {
-            const queryInput = document.getElementById('queryInput');
-            const query = JSON.parse(queryInput.textContent);
-            
+            const query = JSON.parse(this.editor.getValue());
             const results = await this.esService.searchDocuments(this.selectedIndex, query);
             this.displayResults(results);
         } catch (error) {
@@ -93,17 +197,15 @@ export default class Search {
 
     formatQuery() {
         try {
-            const queryInput = document.getElementById('queryInput');
-            const query = JSON.parse(queryInput.textContent);
-            queryInput.textContent = JSON.stringify(query, null, 4);
+            const query = JSON.parse(this.editor.getValue());
+            this.editor.setValue(JSON.stringify(query, null, 2));
         } catch (error) {
             Toast.show('Invalid JSON', 'error');
         }
     }
 
     copyQuery() {
-        const queryInput = document.getElementById('queryInput');
-        navigator.clipboard.writeText(queryInput.textContent)
+        navigator.clipboard.writeText(this.editor.getValue())
             .then(() => Toast.show('Query copied to clipboard', 'success'))
             .catch(() => Toast.show('Failed to copy query', 'error'));
     }

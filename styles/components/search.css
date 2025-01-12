@@ -91,18 +91,18 @@ body .search-panel .query-label {
 }
 
 .query-editor {
-    margin: 0;
-    padding: 1rem;
-    min-height: 300px;
-    font-family: 'Monaco', 'Menlo', monospace;
-    font-size: 0.875rem;
-    line-height: 1.6;
-    color: var(--text-primary);
-    background: white;
+    height: 300px;
     border: none;
-    outline: none;
-    white-space: pre;
-    overflow-y: auto;
+    background: white;
+    font-family: 'Monaco', 'Menlo', monospace;
+}
+
+.query-editor .monaco-editor {
+    padding: 8px;
+}
+
+.monaco-editor {
+    border-radius: 4px;
 }
 
 .query-actions {
