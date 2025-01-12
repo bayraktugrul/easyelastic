@@ -74,7 +74,6 @@ body .search-panel .query-box {
     background: white !important;
     border: 1px solid #e5e7eb;
     border-radius: 8px;
-    overflow: hidden;
 }
 
 body .search-panel .query-label {
@@ -87,6 +86,8 @@ body .search-panel .query-label {
     justify-content: space-between;
     align-items: center;
     background: #f8fafc !important;
+    position: relative;
+    z-index: 1000;
 }
 
 .query-editor {
@@ -158,6 +159,8 @@ body .search-panel .results-container {
     border: none;
     cursor: pointer;
     transition: all 0.2s;
+    position: relative;
+    z-index: 1001;
 }
 
 .btn-icon:hover {
@@ -210,4 +213,55 @@ body .search-panel .results-container {
 .query-editor::-webkit-scrollbar-thumb:hover,
 .results-preview::-webkit-scrollbar-thumb:hover {
     background: #94a3b8;
+}
+
+.btn-icon[title]::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-8px);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+    z-index: 1002;
+    pointer-events: none;
+}
+
+.btn-icon[title]::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: rgba(0, 0, 0, 0.8);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+    z-index: 1002;
+    pointer-events: none;
+}
+
+.btn-icon[title]:hover::after,
+.btn-icon[title]:hover::before {
+    opacity: 1;
+    visibility: visible;
+}
+
+.btn-icon[title]:hover::after {
+    transform: translateX(-50%) translateY(-4px);
+}
+
+.editor-actions {
+    position: relative;
+    z-index: 1001;
+    display: flex;
+    gap: 0.5rem;
 } 
