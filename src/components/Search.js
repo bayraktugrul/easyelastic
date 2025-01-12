@@ -15,6 +15,19 @@ export default class Search {
     async initializeMonacoEditor() {
         require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs' }});
         require(['vs/editor/editor.main'], () => {
+            monaco.editor.defineTheme('es-dark', {
+                base: 'vs-dark',
+                inherit: true,
+                rules: [],
+                colors: {
+                    'editor.background': '#1e293b',
+                    'editor.foreground': '#e2e8f0',
+                    'editor.lineHighlightBackground': '#334155',
+                    'editorLineNumber.foreground': '#64748b',
+                    'editorIndentGuide.background': '#334155'
+                }
+            });
+
             monaco.languages.register({ id: 'elasticsearch' });
             monaco.languages.setMonarchTokensProvider('elasticsearch', {
                 tokenizer: {
@@ -35,10 +48,12 @@ export default class Search {
                 }
             });
 
+            const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'es-dark' : 'vs-light';
+            
             this.editor = monaco.editor.create(document.getElementById('queryInput'), {
                 value: 'GET my-index/_search\n{\n  "query": {\n    "match_all": {}\n  }\n}',
                 language: 'elasticsearch',
-                theme: 'vs-light',
+                theme: theme,
                 minimap: { enabled: false },
                 automaticLayout: true,
                 fontSize: 14,
@@ -52,6 +67,11 @@ export default class Search {
                 suggest: {
                     snippets: 'inline'
                 }
+            });
+
+            document.addEventListener('themeChanged', (e) => {
+                const newTheme = e.detail.theme === 'dark' ? 'es-dark' : 'vs-light';
+                monaco.editor.setTheme(newTheme);
             });
 
             // Snippet'leri ekle
