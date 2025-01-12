@@ -37,6 +37,7 @@
                 <li><a href="#indices">Indices</a></li>
                 <li><a href="#sample-data">Sample Data</a></li>
                 <li><a href="#quick-filter">Quick Filter</a></li>
+                <li><a href="#search">Search</a></li>
             </ul>
             <div class="nav-actions">
                 <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
@@ -278,6 +279,57 @@
                             <span class="results-count" id="quickFilterResultsCount">0 results found</span>
                         </div>
                         <pre id="quickFilterResults" class="results-preview"></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div id="search" class="search-panel">
+                <div class="panel-header">
+                    <h2>
+                        <i class="fas fa-search"></i>
+                        Search
+                    </h2>
+                    <div class="search-actions">
+                        <select id="searchIndexSelector" class="secondary">
+                            <option value="">Select an index</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="search-content">
+                    <!-- Sol taraf: Query Editör -->
+                    <div class="query-container">
+                        <div class="editor-header">
+                            <span>Elasticsearch Query</span>
+                            <div class="editor-actions">
+                                <button class="btn-icon" id="formatQuery" title="Format Query">
+                                    <i class="fas fa-code"></i>
+                                </button>
+                                <button class="btn-icon" id="copyQuery" title="Copy Query">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                                <button id="executeQuery" class="primary">
+                                    <i class="fas fa-play"></i>
+                                    Execute
+                                </button>
+                            </div>
+                        </div>
+                        <div class="query-editor" id="queryEditor">
+                            <pre id="queryInput" class="language-json" contenteditable="true" spellcheck="false">{
+    "query": {
+        "match_all": {}
+    }
+}</pre>
+                        </div>
+                    </div>
+
+                    <!-- Sağ taraf: Sonuçlar -->
+                    <div class="results-container">
+                        <div class="results-header">
+                            <span>Response</span>
+                            <span class="results-count" id="searchResultsCount">0 results found</span>
+                        </div>
+                        <pre id="searchResults" class="results-preview"></pre>
                     </div>
                 </div>
             </div>
