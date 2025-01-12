@@ -6,8 +6,8 @@ export default class Search {
     }
 
     async init() {
-        this.initializeEventListeners();
         await this.loadIndices();
+        this.initializeEventListeners();
     }
 
     initializeEventListeners() {
@@ -34,14 +34,17 @@ export default class Search {
             
             indexSelector.innerHTML = '<option value="">Select an index</option>';
             
-            indices?.forEach(index => {
-                const option = document.createElement('option');
-                option.value = index.index;
-                option.textContent = index.index;
-                indexSelector.appendChild(option);
-            });
+            if (indices && indices.length > 0) {
+                indices.forEach(index => {
+                    const option = document.createElement('option');
+                    option.value = index.index;
+                    option.textContent = index.index;
+                    indexSelector.appendChild(option);
+                });
+            }
         } catch (error) {
             console.error('Failed to load indices:', error);
+            Toast.show('Failed to load indices', 'error');
         }
     }
 

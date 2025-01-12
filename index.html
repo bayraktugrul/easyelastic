@@ -18,6 +18,7 @@
     <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
     <script src="https://cdn.datatables.net/scroller/2.3.0/js/dataTables.scroller.min.js"></script>
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <link rel="stylesheet" href="styles/components/search.css">
 </head>
 <body>
     <div id="particles-js"></div>
@@ -297,39 +298,41 @@
                 </div>
 
                 <div class="search-content">
-                    <!-- Sol taraf: Query Editör -->
-                    <div class="query-container">
-                        <div class="editor-header">
-                            <span>Elasticsearch Query</span>
-                            <div class="editor-actions">
-                                <button class="btn-icon" id="formatQuery" title="Format Query">
-                                    <i class="fas fa-code"></i>
-                                </button>
-                                <button class="btn-icon" id="copyQuery" title="Copy Query">
-                                    <i class="fas fa-copy"></i>
-                                </button>
-                                <button id="executeQuery" class="primary">
+                    <div class="left-section">
+                        <div class="query-box">
+                            <div class="query-label">
+                                <span>Elasticsearch Query</span>
+                                <div class="editor-actions">
+                                    <button class="btn-icon" id="formatQuery" title="Format Query">
+                                        <i class="fas fa-code"></i>
+                                    </button>
+                                    <button class="btn-icon" id="copyQuery" title="Copy Query">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <pre id="queryInput" class="query-editor" contenteditable="true" spellcheck="false">{
+    "query": {
+        "match_all": {}
+    }
+}</pre>
+                            <div class="query-actions">
+                                <button id="executeQuery">
                                     <i class="fas fa-play"></i>
                                     Execute
                                 </button>
                             </div>
                         </div>
-                        <div class="query-editor" id="queryEditor">
-                            <pre id="queryInput" class="language-json" contenteditable="true" spellcheck="false">{
-    "query": {
-        "match_all": {}
-    }
-}</pre>
-                        </div>
                     </div>
 
-                    <!-- Sağ taraf: Sonuçlar -->
-                    <div class="results-container">
-                        <div class="results-header">
-                            <span>Response</span>
-                            <span class="results-count" id="searchResultsCount">0 results found</span>
+                    <div class="right-section">
+                        <div class="results-container">
+                            <div class="results-header">
+                                <span>Search Results</span>
+                                <span class="results-count" id="searchResultsCount">0 results found</span>
+                            </div>
+                            <pre id="searchResults" class="results-preview"></pre>
                         </div>
-                        <pre id="searchResults" class="results-preview"></pre>
                     </div>
                 </div>
             </div>
