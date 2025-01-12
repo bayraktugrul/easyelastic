@@ -100,7 +100,6 @@ export default class Search {
             copyBtn.addEventListener('click', () => this.copyQuery());
         }
 
-        // Popular Queries dropdown
         const popularQueriesBtn = document.querySelector('.popular-queries-btn');
         const popularQueriesMenu = document.querySelector('.popular-queries-menu');
         
@@ -111,19 +110,17 @@ export default class Search {
             });
         }
 
-        // Dropdown dışına tıklandığında kapanması için
         document.addEventListener('click', (e) => {
             if (!e.target.closest('.popular-queries')) {
                 popularQueriesMenu.classList.remove('show');
             }
         });
 
-        // Query seçildiğinde
         document.querySelectorAll('.query-item').forEach(item => {
             item.addEventListener('click', () => {
                 const query = item.dataset.query
                     .replace(/&quot;/g, '"')
-                    .replace(/\\n/g, '\n');  // Gerçek new line karakterine çevir
+                    .replace(/\\n/g, '\n');
                 this.editor.setValue(query);
                 popularQueriesMenu.classList.remove('show');
             });
@@ -136,7 +133,6 @@ export default class Search {
             const firstLine = query.split('\n')[0];
             const [httpMethod, endpoint] = firstLine.trim().split(' ');
             
-            // GET istekleri için body'yi kontrol etme (GET _cat ve GET settings/mapping gibi)
             if (httpMethod === 'GET') {
                 const results = await this.esService.executeQuery(httpMethod, endpoint, null);
                 this.displayResults(results);
@@ -164,15 +160,32 @@ export default class Search {
     formatQuery() {
         try {
             const query = this.editor.getValue().trim();
-            const [method, path, ...bodyLines] = query.split('\n');
-            
-            if (bodyLines.length > 0) {
-                const body = JSON.parse(bodyLines.join('\n'));
-                const formatted = `${method} ${path}\n${JSON.stringify(body, null, 2)}`;
-                this.editor.setValue(formatted);
+            const firstLine = query.split('\n')[0];
+            const bodyContent = query.substring(query.indexOf('\n') + 1).trim();
+
+            // Body varsa formatla
+            if (bodyContent) {
+                try {
+                    const body = JSON.parse(bodyContent);
+                    const formatted = `${firstLine}\n${JSON.stringify(body, null, 2)}`;
+                    
+                    // Monaco editor'ün setValue metodu yerine model üzerinden güncelleme yapalım
+                    const model = this.editor.getModel();
+                    const range = model.getFullModelRange();
+                    this.editor.executeEdits('format', [{
+                        range: range,
+                        text: formatted,
+                        forceMoveMarkers: true
+                    }]);
+
+                    // Cursor'ı başa al
+                    this.editor.setPosition({ lineNumber: 1, column: 1 });
+                } catch (e) {
+                    throw new Error('Invalid JSON in request body');
+                }
             }
         } catch (error) {
-            Toast.show('Invalid query format', 'error');
+            Toast.show(error.message, 'error');
         }
     }
 
@@ -187,15 +200,12 @@ export default class Search {
         const countElement = document.getElementById('searchResultsCount');
         
         if (results.result) {
-            // Text formatındaki sonuçlar için (_cat endpoints)
             countElement.textContent = 'Query executed';
             resultsElement.textContent = results.result;
         } else if (results.hits?.total?.value !== undefined) {
-            // Search sonuçları için
             countElement.textContent = `${results.hits.total.value} results found`;
             resultsElement.textContent = JSON.stringify(results, null, 2);
         } else {
-            // Diğer JSON sonuçları için
             countElement.textContent = 'Query executed';
             resultsElement.textContent = JSON.stringify(results, null, 2);
         }

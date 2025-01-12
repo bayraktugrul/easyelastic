@@ -392,7 +392,6 @@ class ElasticsearchService {
 
             const response = await fetch(`${this.baseUrl}/${endpoint}`, options);
             
-            // _cat endpoint'leri için text yanıt döndür
             if (endpoint.startsWith('_cat')) {
                 const text = await response.text();
                 if (!response.ok) {
@@ -401,7 +400,6 @@ class ElasticsearchService {
                 return { result: text };
             }
 
-            // Diğer endpoint'ler için JSON yanıt döndür
             const data = await response.json();
             if (!response.ok) {
                 throw new Error(data.error?.reason || 'Query execution failed');
