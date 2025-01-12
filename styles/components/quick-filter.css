@@ -1,18 +1,18 @@
 .quick-filter-panel {
     margin-bottom: 0;
-    background: var(--panel-background);
-    border: 1px solid var(--border-panel);
+    background: var(--panel-background) !important;
+    border: 1px solid var(--border-panel) !important;
     border-radius: 8px;
     overflow: hidden;
 }
 
 .panel-header {
     padding: 1.25rem;
-    border-bottom: 1px solid var(--border-panel);
+    border-bottom: 1px solid var(--border-panel) !important;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: var(--panel-header-background);
+    background: var(--panel-header-background) !important;
 }
 
 .panel-header h2 {
@@ -35,6 +35,7 @@
 }
 
 .quick-filter-content {
+    background: var(--panel-background) !important;
     padding: 1.5rem;
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -46,6 +47,7 @@
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    background: var(--panel-background) !important;
 }
 
 .quick-filters {
@@ -59,10 +61,10 @@
     grid-template-columns: 1.5fr 1fr auto;
     gap: 0.75rem;
     align-items: center;
-    background: var(--panel-background);
+    background: var(--panel-background) !important;
     padding: 1rem;
     border-radius: 6px;
-    border: 1px solid var(--border-panel);
+    border: 1px solid var(--border-panel) !important;
     transition: all 0.2s;
 }
 
@@ -72,14 +74,15 @@
 }
 
 .filter-item select,
-.filter-item input {
+.filter-item input,
+.field-select {
     padding: 0.75rem;
-    border: 1px solid var(--input-border);
+    border: 1px solid var(--input-border) !important;
     border-radius: 6px;
     font-size: 0.875rem;
-    color: var(--input-text);
+    color: var(--input-text) !important;
     transition: all 0.2s;
-    background: var(--input-background);
+    background: var(--input-background) !important;
 }
 
 .filter-item select:hover,
@@ -112,7 +115,7 @@
 /* Query Preview and Results */
 .query-preview-box,
 .results-container {
-    background: var(--panel-background);
+    background: var(--panel-background) !important;
     border-radius: 8px;
     border: 1px solid var(--border-panel);
     overflow: hidden;
@@ -138,10 +141,10 @@
     font-family: 'Monaco', 'Menlo', monospace;
     font-size: 0.875rem;
     line-height: 1.6;
-    color: var(--text-code);
+    color: var(--text-code) !important;
     overflow-x: auto;
     max-height: 400px;
-    background: var(--panel-background);
+    background: var(--panel-background) !important;
 }
 
 /* Index Selector */
@@ -149,9 +152,9 @@
     min-width: 250px;
     padding: 0.75rem 2.5rem 0.75rem 1rem;
     font-size: 0.875rem;
-    color: var(--input-text);
-    background: var(--input-background);
-    border: 1px solid var(--input-border);
+    color: var(--input-text) !important;
+    background: var(--input-background) !important;
+    border: 1px solid var(--input-border) !important;
     border-radius: 6px;
     appearance: none;
     background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
@@ -197,4 +200,43 @@
 #addQuickFilterBtn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+}
+
+.filter-item select option,
+.field-select option {
+    background: var(--input-background) !important;
+    color: var(--input-text) !important;
+    padding: 0.5rem;
+}
+
+.filter-item select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236B7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1rem;
+    padding-right: 2.5rem;
+    appearance: none;
+}
+
+.query-preview::-webkit-scrollbar,
+.results-preview::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.query-preview::-webkit-scrollbar-track,
+.results-preview::-webkit-scrollbar-track {
+    background: var(--background-color);
+    border-radius: 4px;
+}
+
+.query-preview::-webkit-scrollbar-thumb,
+.results-preview::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 4px;
+}
+
+.query-preview::-webkit-scrollbar-thumb:hover,
+.results-preview::-webkit-scrollbar-thumb:hover {
+    background: var(--text-secondary);
 } 
