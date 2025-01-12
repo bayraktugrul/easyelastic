@@ -1,109 +1,43 @@
+import Toast from '../utils/Toast.js';
+
 export default class Search {
     constructor(esService) {
         this.esService = esService;
-        this.selectedIndex = null;
         this.editor = null;
         this.init();
     }
 
     async init() {
-        await this.loadIndices();
         await this.initializeMonacoEditor();
         this.initializeEventListeners();
-    }
-
-    async loadIndices() {
-        try {
-            console.log('Loading indices...');
-            const indices = await this.esService.getIndicesInfo();
-            console.log('Received indices:', indices);
-            
-            const indexSelector = document.getElementById('searchIndexSelector');
-            console.log('Index selector element:', indexSelector);
-            
-            if (!indexSelector) {
-                console.error('Search index selector element not found');
-                return;
-            }
-            
-            // Mevcut seçenekleri temizle
-            indexSelector.innerHTML = '<option value="">Select an index</option>';
-            
-            if (Array.isArray(indices)) {
-                // İndeksleri sırala
-                const sortedIndices = indices.sort((a, b) => a.index.localeCompare(b.index));
-                
-                // İndeksleri select'e ekle
-                sortedIndices.forEach(index => {
-                    console.log('Adding index:', index.index);
-                    const option = document.createElement('option');
-                    option.value = index.index;
-                    option.textContent = index.index;
-                    indexSelector.appendChild(option);
-                });
-            } else {
-                console.error('Indices is not an array:', indices);
-            }
-        } catch (error) {
-            console.error('Failed to load indices:', error);
-            Toast.show('Failed to load indices', 'error');
-        }
     }
 
     async initializeMonacoEditor() {
         require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs' }});
         require(['vs/editor/editor.main'], () => {
-            monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
-                schemas: [{
-                    fileMatch: ["*"],
-                    schema: {
-                        type: "object",
-                        properties: {
-                            query: {
-                                type: "object",
-                                properties: {
-                                    match: { type: "object" },
-                                    match_all: { type: "object" },
-                                    term: { type: "object" },
-                                    terms: { type: "object" },
-                                    range: { type: "object" },
-                                    exists: { type: "object" },
-                                    prefix: { type: "object" },
-                                    wildcard: { type: "object" },
-                                    regexp: { type: "object" },
-                                    fuzzy: { type: "object" },
-                                    bool: {
-                                        type: "object",
-                                        properties: {
-                                            must: { type: "array" },
-                                            should: { type: "array" },
-                                            must_not: { type: "array" },
-                                            filter: { type: "array" }
-                                        }
-                                    }
-                                }
-                            },
-                            sort: { type: "array" },
-                            from: { type: "number" },
-                            size: { type: "number" },
-                            _source: {
-                                oneOf: [
-                                    { type: "array" },
-                                    { type: "boolean" }
-                                ]
-                            }
-                        }
-                    }
-                }]
+            monaco.languages.register({ id: 'elasticsearch' });
+            monaco.languages.setMonarchTokensProvider('elasticsearch', {
+                tokenizer: {
+                    root: [
+                        [/(GET|POST|PUT|DELETE)/, "keyword"],
+                        [/[a-zA-Z0-9_*-]+\//, "string"],
+                        [/{/, { token: "delimiter.curly", next: "@json" }],
+                    ],
+                    json: [
+                        [/[{}]/, "delimiter.curly"],
+                        [/".*?"/, "string"],
+                        [/[0-9]+/, "number"],
+                        [/[a-zA-Z_]\w*/, "identifier"],
+                        [/[,:]/, "delimiter"],
+                        [/\s+/, "white"],
+                        [/}/, { token: "delimiter.curly", next: "@pop" }]
+                    ]
+                }
             });
 
             this.editor = monaco.editor.create(document.getElementById('queryInput'), {
-                value: JSON.stringify({
-                    query: {
-                        match_all: {}
-                    }
-                }, null, 2),
-                language: 'json',
+                value: 'GET my-index/_search\n{\n  "query": {\n    "match_all": {}\n  }\n}',
+                language: 'elasticsearch',
                 theme: 'vs-light',
                 minimap: { enabled: false },
                 automaticLayout: true,
@@ -120,32 +54,27 @@ export default class Search {
                 }
             });
 
-            monaco.languages.registerCompletionItemProvider('json', {
+            // Snippet'leri ekle
+            monaco.languages.registerCompletionItemProvider('elasticsearch', {
                 provideCompletionItems: () => {
                     const suggestions = [
                         {
-                            label: 'match_all',
+                            label: 'GET index/_search',
                             kind: monaco.languages.CompletionItemKind.Snippet,
-                            insertText: {
-                                value: '{\n  "query": {\n    "match_all": {}\n  }\n}'
-                            },
-                            documentation: 'Match all documents query'
+                            insertText: 'GET ${1:my-index}/_search\n{\n  "query": {\n    "match": {\n      "${2:field}": "${3:value}"\n    }\n  }\n}',
+                            documentation: 'Search specific index'
                         },
                         {
-                            label: 'match',
+                            label: 'GET _search',
                             kind: monaco.languages.CompletionItemKind.Snippet,
-                            insertText: {
-                                value: '{\n  "query": {\n    "match": {\n      "${1:field}": "${2:value}"\n    }\n  }\n}'
-                            },
-                            documentation: 'Match query'
+                            insertText: 'GET _search\n{\n  "query": {\n    "match_all": {}\n  }\n}',
+                            documentation: 'Search all indices'
                         },
                         {
-                            label: 'bool',
+                            label: 'GET _cat/indices',
                             kind: monaco.languages.CompletionItemKind.Snippet,
-                            insertText: {
-                                value: '{\n  "query": {\n    "bool": {\n      "must": [\n        ${1}\n      ],\n      "should": [\n        ${2}\n      ],\n      "must_not": [\n        ${3}\n      ]\n    }\n  }\n}'
-                            },
-                            documentation: 'Bool query'
+                            insertText: 'GET _cat/indices?v',
+                            documentation: 'List all indices'
                         }
                     ];
                     return { suggestions };
@@ -155,17 +84,9 @@ export default class Search {
     }
 
     initializeEventListeners() {
-        const indexSelector = document.getElementById('searchIndexSelector');
         const executeBtn = document.getElementById('executeQuery');
         const formatBtn = document.getElementById('formatQuery');
         const copyBtn = document.getElementById('copyQuery');
-
-        if (indexSelector) {
-            indexSelector.addEventListener('change', (e) => {
-                this.selectedIndex = e.target.value;
-                console.log('Selected index:', this.selectedIndex);
-            });
-        }
 
         if (executeBtn) {
             executeBtn.addEventListener('click', () => this.executeSearch());
@@ -181,14 +102,25 @@ export default class Search {
     }
 
     async executeSearch() {
-        if (!this.selectedIndex) {
-            Toast.show('Please select an index', 'error');
-            return;
-        }
-
         try {
-            const query = JSON.parse(this.editor.getValue());
-            const results = await this.esService.searchDocuments(this.selectedIndex, query);
+            const query = this.editor.getValue().trim();
+            const firstLine = query.split('\n')[0];
+            const [httpMethod, endpoint] = firstLine.trim().split(' ');
+            
+            const bodyContent = query.substring(query.indexOf('\n') + 1).trim();
+            
+            let body = null;
+            if (bodyContent) {
+                try {
+                    body = JSON.parse(bodyContent);
+                } catch (e) {
+                    throw new Error('Invalid JSON in request body');
+                }
+            }
+
+            const actualMethod = (httpMethod === 'GET' && body) ? 'POST' : httpMethod;
+
+            const results = await this.esService.executeQuery(actualMethod, endpoint, body);
             this.displayResults(results);
         } catch (error) {
             Toast.show(error.message, 'error');
@@ -197,10 +129,16 @@ export default class Search {
 
     formatQuery() {
         try {
-            const query = JSON.parse(this.editor.getValue());
-            this.editor.setValue(JSON.stringify(query, null, 2));
+            const query = this.editor.getValue().trim();
+            const [method, path, ...bodyLines] = query.split('\n');
+            
+            if (bodyLines.length > 0) {
+                const body = JSON.parse(bodyLines.join('\n'));
+                const formatted = `${method} ${path}\n${JSON.stringify(body, null, 2)}`;
+                this.editor.setValue(formatted);
+            }
         } catch (error) {
-            Toast.show('Invalid JSON', 'error');
+            Toast.show('Invalid query format', 'error');
         }
     }
 
@@ -214,7 +152,12 @@ export default class Search {
         const resultsElement = document.getElementById('searchResults');
         const countElement = document.getElementById('searchResultsCount');
         
-        countElement.textContent = `${results.hits.total.value} results found`;
+        if (results.hits?.total?.value !== undefined) {
+            countElement.textContent = `${results.hits.total.value} results found`;
+        } else {
+            countElement.textContent = 'Query executed';
+        }
+        
         resultsElement.textContent = JSON.stringify(results, null, 2);
     }
 } 

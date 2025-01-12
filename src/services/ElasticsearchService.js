@@ -376,6 +376,32 @@ class ElasticsearchService {
             throw error;
         }
     }
+
+    async executeQuery(method, endpoint, body = null) {
+        try {
+            const options = {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            };
+
+            if (body) {
+                options.body = JSON.stringify(body);
+            }
+
+            const response = await fetch(`${this.baseUrl}/${endpoint}`, options);
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error?.reason || 'Query execution failed');
+            }
+
+            return data;
+        } catch (error) {
+            throw new Error(`Failed to execute query: ${error.message}`);
+        }
+    }
 }
 
 export default ElasticsearchService; 

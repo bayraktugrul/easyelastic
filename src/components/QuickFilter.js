@@ -4,13 +4,13 @@ export default class QuickFilter {
     constructor(esService) {
         this.esService = esService;
         this.selectedIndex = null;
-        this.fields = [];
+        this.filters = [];
         this.init();
     }
 
     async init() {
-        this.initializeEventListeners();
         await this.loadIndices();
+        this.initializeEventListeners();
     }
 
     initializeEventListeners() {
@@ -88,10 +88,7 @@ export default class QuickFilter {
         try {
             const mapping = await this.esService.getIndexMapping(this.selectedIndex);
             const properties = mapping[this.selectedIndex].mappings.properties || {};
-            
-            // Tüm field'ları düz bir liste haline getir
             this.fields = this.flattenFields(properties);
-            
         } catch (error) {
             console.error('Failed to load fields:', error);
             Toast.show('Failed to load fields', 'error');

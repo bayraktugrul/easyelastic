@@ -376,12 +376,6 @@ class ESMonitor {
 
     async updateDashboard() {
         try {
-            const clusterInfo = await this.esService.getClusterInfo();
-            document.getElementById('clusterName').textContent = clusterInfo.clusterName;
-            document.getElementById('nodeName').textContent = clusterInfo.nodeName;
-            document.getElementById('esVersion').textContent = clusterInfo.version;
-            document.getElementById('luceneVersion').textContent = clusterInfo.luceneVersion;
-
             const [health, stats, indices] = await Promise.all([
                 this.esService.getClusterHealth(),
                 this.esService.getClusterStats(),
@@ -406,7 +400,9 @@ class ESMonitor {
 
             if (!currentValue && indices.length > 0) {
                 indexSelector.value = indices[0].index;
-                await this.showSampleDataPreview(indices[0].index);
+                if (document.querySelector('#sample-data:not(.hidden)')) {
+                    await this.showSampleDataPreview(indices[0].index);
+                }
             }
 
         } catch (error) {

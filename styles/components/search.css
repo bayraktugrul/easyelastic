@@ -1,4 +1,3 @@
-/* Search Panel */
 body .search-panel {
     margin-bottom: 0;
     background: white;
@@ -9,7 +8,6 @@ body .search-panel {
     flex-direction: column;
 }
 
-/* Panel Header */
 body .search-panel .panel-header {
     background: #f8fafc;
     padding: 1.25rem;
@@ -19,7 +17,6 @@ body .search-panel .panel-header {
     align-items: center;
 }
 
-/* Search Content */
 body .search-panel .search-content {
     background: white;
     padding: 1.5rem;
@@ -29,7 +26,6 @@ body .search-panel .search-content {
     height: 100%;
 }
 
-/* Query Box */
 body .search-panel .query-box,
 body .search-panel .results-container {
     background: white;
@@ -40,7 +36,6 @@ body .search-panel .results-container {
     height: 100%;
 }
 
-/* Query Label */
 body .search-panel .query-label {
     padding: 1rem;
     font-size: 0.875rem;
@@ -53,7 +48,6 @@ body .search-panel .query-label {
     background: #f8fafc;
 }
 
-/* Monaco Editor Container */
 .query-editor {
     flex: 1;
     min-height: 400px;
@@ -61,7 +55,6 @@ body .search-panel .query-label {
     background: white;
 }
 
-/* Results Container */
 .results-container {
     display: flex;
     flex-direction: column;
@@ -93,7 +86,6 @@ body .search-panel .query-label {
     white-space: pre;
 }
 
-/* Index Selector */
 #searchIndexSelector {
     min-width: 250px;
     padding: 0.75rem 2.5rem 0.75rem 1rem;
@@ -121,7 +113,6 @@ body .search-panel .query-label {
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-/* Buttons */
 .btn-icon {
     padding: 0.5rem;
     border-radius: 6px;
@@ -169,14 +160,12 @@ body .search-panel .query-label {
     background: #f8fafc;
 }
 
-/* Editor Actions */
 .editor-actions {
     display: flex;
     gap: 0.5rem;
     z-index: 1001;
 }
 
-/* Tooltip */
 .btn-icon[title]::after {
     content: attr(title);
     position: absolute;
