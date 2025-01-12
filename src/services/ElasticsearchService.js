@@ -245,15 +245,11 @@ class ElasticsearchService {
 
     async getClusterInfo() {
         try {
-            const response = await fetch(`${this.baseUrl}`);
-            const data = await response.json();
-            
-            return {
-                clusterName: data.cluster_name,
-                nodeName: data.name,
-                version: data.version.number,
-                luceneVersion: data.version.lucene_version
-            };
+            const response = await fetch(this.baseUrl);
+            if (!response.ok) {
+                throw new Error('Failed to fetch cluster info');
+            }
+            return await response.json();
         } catch (error) {
             console.error('Error fetching cluster info:', error);
             throw error;

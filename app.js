@@ -376,12 +376,20 @@ class ESMonitor {
 
     async updateDashboard() {
         try {
-            const [health, stats, indices] = await Promise.all([
+            const [clusterInfo, health, stats, indices] = await Promise.all([
+                this.esService.getClusterInfo(),
                 this.esService.getClusterHealth(),
                 this.esService.getClusterStats(),
                 this.esService.getIndicesInfo()
             ]);
 
+            // Cluster bilgilerini güncelle
+            document.getElementById('clusterName').textContent = clusterInfo.cluster_name || '-';
+            document.getElementById('nodeName').textContent = clusterInfo.name || '-';
+            document.getElementById('esVersion').textContent = clusterInfo.version?.number || '-';
+            document.getElementById('luceneVersion').textContent = clusterInfo.version?.lucene_version || '-';
+
+            // Diğer dashboard güncellemeleri
             this.components.clusterHealth.render(health);
             this.metricsService.updateClusterMetrics(stats);
             await this.updateIndicesTable(indices);

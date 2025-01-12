@@ -163,13 +163,11 @@ export default class Search {
             const firstLine = query.split('\n')[0];
             const bodyContent = query.substring(query.indexOf('\n') + 1).trim();
 
-            // Body varsa formatla
             if (bodyContent) {
                 try {
                     const body = JSON.parse(bodyContent);
                     const formatted = `${firstLine}\n${JSON.stringify(body, null, 2)}`;
                     
-                    // Monaco editor'ün setValue metodu yerine model üzerinden güncelleme yapalım
                     const model = this.editor.getModel();
                     const range = model.getFullModelRange();
                     this.editor.executeEdits('format', [{
@@ -178,7 +176,6 @@ export default class Search {
                         forceMoveMarkers: true
                     }]);
 
-                    // Cursor'ı başa al
                     this.editor.setPosition({ lineNumber: 1, column: 1 });
                 } catch (e) {
                     throw new Error('Invalid JSON in request body');
