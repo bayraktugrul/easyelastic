@@ -99,6 +99,35 @@ export default class Search {
         if (copyBtn) {
             copyBtn.addEventListener('click', () => this.copyQuery());
         }
+
+        // Popular Queries dropdown
+        const popularQueriesBtn = document.querySelector('.popular-queries-btn');
+        const popularQueriesMenu = document.querySelector('.popular-queries-menu');
+        
+        if (popularQueriesBtn) {
+            popularQueriesBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                popularQueriesMenu.classList.toggle('show');
+            });
+        }
+
+        // Dropdown dışına tıklandığında kapanması için
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.popular-queries')) {
+                popularQueriesMenu.classList.remove('show');
+            }
+        });
+
+        // Query seçildiğinde
+        document.querySelectorAll('.query-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const query = item.dataset.query
+                    .replace(/&quot;/g, '"')
+                    .replace(/\\n/g, '\n');  // Gerçek new line karakterine çevir
+                this.editor.setValue(query);
+                popularQueriesMenu.classList.remove('show');
+            });
+        });
     }
 
     async executeSearch() {
@@ -106,6 +135,13 @@ export default class Search {
             const query = this.editor.getValue().trim();
             const firstLine = query.split('\n')[0];
             const [httpMethod, endpoint] = firstLine.trim().split(' ');
+            
+            // GET istekleri için body'yi kontrol etme (GET _cat ve GET settings/mapping gibi)
+            if (httpMethod === 'GET') {
+                const results = await this.esService.executeQuery(httpMethod, endpoint, null);
+                this.displayResults(results);
+                return;
+            }
             
             const bodyContent = query.substring(query.indexOf('\n') + 1).trim();
             
@@ -118,9 +154,7 @@ export default class Search {
                 }
             }
 
-            const actualMethod = (httpMethod === 'GET' && body) ? 'POST' : httpMethod;
-
-            const results = await this.esService.executeQuery(actualMethod, endpoint, body);
+            const results = await this.esService.executeQuery(httpMethod, endpoint, body);
             this.displayResults(results);
         } catch (error) {
             Toast.show(error.message, 'error');
@@ -152,12 +186,18 @@ export default class Search {
         const resultsElement = document.getElementById('searchResults');
         const countElement = document.getElementById('searchResultsCount');
         
-        if (results.hits?.total?.value !== undefined) {
-            countElement.textContent = `${results.hits.total.value} results found`;
-        } else {
+        if (results.result) {
+            // Text formatındaki sonuçlar için (_cat endpoints)
             countElement.textContent = 'Query executed';
+            resultsElement.textContent = results.result;
+        } else if (results.hits?.total?.value !== undefined) {
+            // Search sonuçları için
+            countElement.textContent = `${results.hits.total.value} results found`;
+            resultsElement.textContent = JSON.stringify(results, null, 2);
+        } else {
+            // Diğer JSON sonuçları için
+            countElement.textContent = 'Query executed';
+            resultsElement.textContent = JSON.stringify(results, null, 2);
         }
-        
-        resultsElement.textContent = JSON.stringify(results, null, 2);
     }
 } 
