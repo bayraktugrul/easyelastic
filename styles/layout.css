@@ -2,16 +2,16 @@
     max-width: 1600px;
     margin: 0 auto;
     padding: 1rem;
-    padding-top: 60px;
+    padding-top: calc(60px + 1rem);
 }
 
 .header {
-    margin-bottom: 20px;
+    margin-bottom: 1rem;
 }
 
 .header h1 {
     font-size: 24px;
-    margin-bottom: 20px;
+    margin-bottom: 1rem;
     color: #1e293b;
 }
 
@@ -21,7 +21,7 @@
 }
 
 .connection-panel {
-    margin-bottom: 0;
+    margin-bottom: 1rem;
     display: flex;
     gap: 12px;
     background: rgba(255, 255, 255, 0.9);
@@ -34,7 +34,7 @@
 
 .dashboard {
     display: grid;
-    gap: 24px;
+    gap: 1rem;
 }
 
 .hidden {
@@ -51,18 +51,20 @@
 }
 
 /* Status panel stilleri */
-.status-panel, .metrics-panel, .indices-panel {
+.status-panel, .metrics-panel, .indices-panel, 
+.sample-data-panel, .quick-filter-panel, .search-panel {
     background-color: var(--card-background);
     border: 1px solid var(--border-color);
     border-radius: 16px;
     padding: 1.25rem;
     box-shadow: var(--shadow-sm);
     transition: box-shadow 0.3s ease;
+    margin-bottom: 0;
 }
 
 .panel-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 1rem;
 } 

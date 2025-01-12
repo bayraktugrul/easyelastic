@@ -1,5 +1,5 @@
 body .search-panel {
-    margin-bottom: 2rem;
+    margin-bottom: 0;
     background: white !important;
     border: 1px solid #e5e7eb;
     border-radius: 12px;
@@ -70,7 +70,6 @@ body .search-panel .search-content {
     gap: 1.5rem;
 }
 
-/* Query Box Styles */
 body .search-panel .query-box {
     background: white !important;
     border: 1px solid #e5e7eb;
@@ -115,7 +114,6 @@ body .search-panel .query-label {
     background: #f8fafc;
 }
 
-/* Results Section */
 body .search-panel .results-container {
     background: white !important;
     border: 1px solid #e5e7eb;
@@ -152,7 +150,6 @@ body .search-panel .results-container {
     white-space: pre;
 }
 
-/* Button Styles */
 .btn-icon {
     padding: 0.5rem;
     border-radius: 6px;
@@ -192,7 +189,6 @@ body .search-panel .results-container {
     transform: translateY(0);
 }
 
-/* Scrollbar Styles */
 .query-editor::-webkit-scrollbar,
 .results-preview::-webkit-scrollbar {
     width: 8px;

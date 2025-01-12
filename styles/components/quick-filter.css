@@ -1,5 +1,5 @@
 .quick-filter-panel {
-    margin-bottom: 2rem;
+    margin-bottom: 0;
     background: var(--card-background);
     border: 1px solid var(--border-light);
     border-radius: 8px;
