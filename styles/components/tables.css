@@ -89,9 +89,10 @@
 }
 
 .dataTables_length select {
-    background: white;
+    background: var(--input-background);
+    color: var(--input-text);
     padding: 0.75rem 2.5rem 0.75rem 1rem;
-    border: 1px solid rgba(229, 231, 235, 0.6);
+    border: 1px solid var(--input-border);
     border-radius: 8px;
     font-size: 0.875rem;
     cursor: pointer;
@@ -122,8 +123,8 @@
     margin: 0 2px;
     transition: all 0.2s ease;
     color: var(--text-primary) !important;
-    background: white !important;
-    border: 1px solid rgba(229, 231, 235, 0.8) !important;
+    background: var(--button-bg) !important;
+    border: 1px solid var(--button-border) !important;
     font-weight: 500;
 }
 
@@ -135,9 +136,17 @@
 }
 
 .dataTables_paginate .paginate_button:hover:not(.current):not(.disabled) {
-    background: rgba(99, 102, 241, 0.03) !important;
-    border-color: rgba(99, 102, 241, 0.1) !important;
+    background: var(--button-hover-bg) !important;
+    border-color: var(--primary-color) !important;
     color: var(--primary-color) !important;
+}
+
+.dataTables_paginate .paginate_button.disabled {
+    background: var(--button-bg) !important;
+    border-color: var(--button-border) !important;
+    color: var(--text-secondary) !important;
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 .indices-table [title] {
@@ -280,4 +289,170 @@
 
 .dataTables_info {
     color: var(--text-secondary);
+}
+
+.dataTables_wrapper {
+    background: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 1rem;
+    box-shadow: var(--shadow-sm);
+    margin-top: 1rem;
+    overflow: visible !important;
+}
+
+.dataTables_length select {
+    background: var(--input-background);
+    color: var(--input-text);
+    padding: 0.75rem 2.5rem 0.75rem 1rem;
+    border: 1px solid var(--input-border);
+    border-radius: 8px;
+    font-size: 0.875rem;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236B7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1rem;
+}
+
+.dataTables_paginate .paginate_button {
+    padding: 6px 12px;
+    border-radius: 6px;
+    margin: 0 2px;
+    transition: all 0.2s ease;
+    color: var(--text-primary) !important;
+    background: var(--button-bg) !important;
+    border: 1px solid var(--button-border) !important;
+    font-weight: 500;
+}
+
+.dataTables_paginate .paginate_button.current {
+    background: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+    color: white !important;
+    font-weight: 600;
+}
+
+.dataTables_paginate .paginate_button:hover:not(.current):not(.disabled) {
+    background: var(--button-hover-bg) !important;
+    border-color: var(--primary-color) !important;
+    color: var(--primary-color) !important;
+}
+
+.dataTables_paginate .paginate_button.disabled {
+    background: var(--button-bg) !important;
+    border-color: var(--button-border) !important;
+    color: var(--text-secondary) !important;
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+#sampleDataTable {
+    background: var(--card-background) !important;
+    border-color: var(--border-panel) !important;
+}
+
+#sampleDataTable thead th {
+    background: var(--table-header-bg) !important;
+    color: var(--text-secondary) !important;
+    border-bottom: 1px solid var(--border-panel) !important;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+#sampleDataTable thead th .column-type {
+    color: var(--text-muted) !important;
+    font-size: 0.7rem;
+    opacity: 0.8;
+}
+
+#sampleDataTable th,
+#sampleDataTable td {
+    background: var(--card-background) !important;
+    color: var(--text-primary) !important;
+    border-right: 1px solid var(--border-panel) !important;
+}
+
+#sampleDataTable tbody tr:hover td {
+    background: var(--table-row-hover) !important;
+}
+
+.dataTables_scrollBody {
+    background: var(--card-background) !important;
+    border: 1px solid var(--border-panel) !important;
+}
+
+.sample-table-container {
+    border: 1px solid var(--border-panel) !important;
+    background: var(--card-background) !important;
+    border-radius: 8px;
+    overflow: hidden !important;
+}
+
+.dataTables_wrapper {
+    background: var(--card-background) !important;
+    border: none !important;
+}
+
+.dataTables_filter input {
+    background: var(--input-background) !important;
+    color: var(--input-text) !important;
+    border: 1px solid var(--input-border) !important;
+    border-radius: 6px !important;
+}
+
+.dataTables_info {
+    color: var(--text-secondary) !important;
+}
+
+#sampleDataTable thead th {
+    background: var(--table-header-bg) !important;
+    border-bottom: 1px solid var(--border-panel) !important;
+    border-right: 1px solid var(--border-panel) !important;
+    padding: 12px 24px !important;
+    color: var(--text-primary) !important;
+    font-weight: 500 !important;
+}
+
+#sampleDataTable thead th span {
+    display: block !important;
+    color: var(--primary-color) !important;
+    font-size: 0.7rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    opacity: 0.8 !important;
+    margin-top: 4px !important;
+}
+
+#sampleDataTable thead th div {
+    color: var(--text-primary) !important;
+    font-size: 0.875rem !important;
+    font-weight: 500 !important;
+}
+
+#sampleDataTable td {
+    background: var(--card-background) !important;
+    color: var(--text-primary) !important;
+    border-right: 1px solid var(--border-panel) !important;
+    padding: 12px 24px !important;
+}
+
+#sampleDataTable th:last-child,
+#sampleDataTable td:last-child {
+    border-right: none !important;
+}
+
+.dataTables_scrollBody {
+    background: var(--card-background) !important;
+    border: none !important;
+}
+
+#sampleDataTable tbody tr:hover td {
+    background: var(--table-row-hover) !important;
+}
+
+.dataTables_filter label {
+    color: var(--text-secondary) !important;
 } 
