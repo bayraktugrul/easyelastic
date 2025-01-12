@@ -10,41 +10,67 @@ export default class Search {
         this.initializeEventListeners();
     }
 
+    async loadIndices() {
+        try {
+            console.log('Loading indices...');
+            const indices = await this.esService.getIndicesInfo();
+            console.log('Received indices:', indices);
+            
+            const indexSelector = document.getElementById('searchIndexSelector');
+            console.log('Index selector element:', indexSelector);
+            
+            if (!indexSelector) {
+                console.error('Search index selector element not found');
+                return;
+            }
+            
+            // Mevcut seçenekleri temizle
+            indexSelector.innerHTML = '<option value="">Select an index</option>';
+            
+            if (Array.isArray(indices)) {
+                // İndeksleri sırala
+                const sortedIndices = indices.sort((a, b) => a.index.localeCompare(b.index));
+                
+                // İndeksleri select'e ekle
+                sortedIndices.forEach(index => {
+                    console.log('Adding index:', index.index);
+                    const option = document.createElement('option');
+                    option.value = index.index;
+                    option.textContent = index.index;
+                    indexSelector.appendChild(option);
+                });
+            } else {
+                console.error('Indices is not an array:', indices);
+            }
+        } catch (error) {
+            console.error('Failed to load indices:', error);
+            Toast.show('Failed to load indices', 'error');
+        }
+    }
+
     initializeEventListeners() {
         const indexSelector = document.getElementById('searchIndexSelector');
         const executeBtn = document.getElementById('executeQuery');
         const formatBtn = document.getElementById('formatQuery');
         const copyBtn = document.getElementById('copyQuery');
 
-        indexSelector?.addEventListener('change', (e) => {
-            this.selectedIndex = e.target.value;
-        });
+        if (indexSelector) {
+            indexSelector.addEventListener('change', (e) => {
+                this.selectedIndex = e.target.value;
+                console.log('Selected index:', this.selectedIndex);
+            });
+        }
 
-        executeBtn?.addEventListener('click', () => this.executeSearch());
-        formatBtn?.addEventListener('click', () => this.formatQuery());
-        copyBtn?.addEventListener('click', () => this.copyQuery());
-    }
+        if (executeBtn) {
+            executeBtn.addEventListener('click', () => this.executeSearch());
+        }
 
-    async loadIndices() {
-        try {
-            const indices = await this.esService.getIndicesInfo();
-            const indexSelector = document.getElementById('searchIndexSelector');
-            
-            if (!indexSelector) return;
-            
-            indexSelector.innerHTML = '<option value="">Select an index</option>';
-            
-            if (indices && indices.length > 0) {
-                indices.forEach(index => {
-                    const option = document.createElement('option');
-                    option.value = index.index;
-                    option.textContent = index.index;
-                    indexSelector.appendChild(option);
-                });
-            }
-        } catch (error) {
-            console.error('Failed to load indices:', error);
-            Toast.show('Failed to load indices', 'error');
+        if (formatBtn) {
+            formatBtn.addEventListener('click', () => this.formatQuery());
+        }
+
+        if (copyBtn) {
+            copyBtn.addEventListener('click', () => this.copyQuery());
         }
     }
 

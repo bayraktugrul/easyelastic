@@ -11,6 +11,7 @@ import { formatNumber } from './src/utils/formatters.js';
 import initParticles from './src/utils/background.js';
 import QuickFilter from './src/components/QuickFilter.js';
 import ThemeManager from './src/utils/ThemeManager.js';
+import Search from './src/components/Search.js';
 
 class ESMonitor {
     constructor() {
@@ -28,6 +29,7 @@ class ESMonitor {
         this.loadSavedConnection();
         this.loadSavedConnections();
         this.initializeConnectionHandlers();
+        this.search = null;
     }
 
     subscribeToEvents() {
@@ -334,6 +336,7 @@ class ESMonitor {
                 this.esService = null;
                 this.indicesRepository = null;
                 this.quickFilter = null;
+                this.search = null;
             }
 
             this.esService = new ElasticsearchService(url);
@@ -349,6 +352,7 @@ class ESMonitor {
                 document.getElementById('dashboard').classList.remove('hidden');
                 
                 this.quickFilter = new QuickFilter(this.esService);
+                this.search = new Search(this.esService);
                 
                 await this.updateDashboard();
                 Toast.show('Connected and data loaded successfully', 'success');
@@ -356,6 +360,7 @@ class ESMonitor {
                 this.esService = null;
                 this.indicesRepository = null;
                 this.quickFilter = null;
+                this.search = null;
                 document.getElementById('dashboard').classList.add('hidden');
                 Toast.show('Failed to connect to Elasticsearch', 'error');
             }
@@ -363,6 +368,7 @@ class ESMonitor {
             this.esService = null;
             this.indicesRepository = null;
             this.quickFilter = null;
+            this.search = null;
             document.getElementById('dashboard').classList.add('hidden');
             Toast.show(`Connection error: ${error.message}`, 'error');
         }
@@ -547,6 +553,7 @@ class ESMonitor {
                 if (isConnected) {
                     document.getElementById('dashboard').classList.remove('hidden');
                     this.quickFilter = new QuickFilter(this.esService);
+                    this.search = new Search(this.esService);
                     await this.updateDashboard();
                 } else {
                     localStorage.removeItem('lastConnection');
@@ -1154,6 +1161,19 @@ class ESMonitor {
 
     loadSavedConnections() {
         this.updateConnectionsList();
+    }
+
+    async initializeComponents() {
+        try {
+            // ... diğer bileşenlerin başlatılması
+            
+            // Search bileşenini başlat
+            this.search = new Search(this.esService);
+            
+        } catch (error) {
+            console.error('Failed to initialize components:', error);
+            Toast.show('Failed to initialize components', 'error');
+        }
     }
 }
 
