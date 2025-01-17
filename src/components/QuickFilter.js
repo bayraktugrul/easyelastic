@@ -4,7 +4,7 @@ export default class QuickFilter {
     constructor(esService) {
         this.esService = esService;
         this.selectedIndex = null;
-        this.filters = [];
+        this.fields = [];
         this.init();
     }
 
@@ -15,6 +15,8 @@ export default class QuickFilter {
 
     initializeEventListeners() {
         const indexSelector = document.getElementById('quickFilterIndexSelector');
+        const addFilterBtn = document.getElementById('addQuickFilterBtn');
+        const copyQueryBtn = document.getElementById('copyQuickFilterQuery');
 
         if (indexSelector) {
             indexSelector.addEventListener('change', (e) => {
@@ -27,12 +29,10 @@ export default class QuickFilter {
             });
         }
 
-        const addFilterBtn = document.getElementById('addQuickFilterBtn');
         if (addFilterBtn) {
             addFilterBtn.addEventListener('click', () => this.addFilter());
         }
 
-        const copyQueryBtn = document.getElementById('copyQuickFilterQuery');
         if (copyQueryBtn) {
             copyQueryBtn.addEventListener('click', () => this.copyQuery());
         }
@@ -57,19 +57,7 @@ export default class QuickFilter {
                     option.textContent = index.index;
                     indexSelector.appendChild(option);
                 });
-            } else {
-                console.log('No indices found');
             }
-
-            indexSelector.addEventListener('change', (e) => {
-                const selectedIndex = e.target.value;
-                if (selectedIndex) {
-                    this.selectIndex(selectedIndex);
-                } else {
-                    document.getElementById('addQuickFilterBtn').disabled = true;
-                }
-            });
-
         } catch (error) {
             console.error('Failed to load indices:', error);
             Toast.show('Failed to load indices', 'error');
@@ -129,31 +117,30 @@ export default class QuickFilter {
         container.insertAdjacentHTML('beforeend', filterHtml);
 
         const filterElement = container.lastElementChild;
-        
-        // Remove filter butonu için event listener
+        this.attachFilterListeners(filterElement);
+        this.updateQuery();
+    }
+
+    attachFilterListeners(filterElement) {
         filterElement.querySelector('.remove-filter').addEventListener('click', () => {
             filterElement.remove();
             this.updateQuery();
         });
 
-        // Field ve value değişikliklerini dinle
         filterElement.querySelectorAll('select, input').forEach(element => {
             element.addEventListener('change', () => this.updateQuery());
             element.addEventListener('input', () => this.updateQuery());
         });
-
-        this.updateQuery();
     }
 
     buildQuery() {
-        const filters = Array.from(document.querySelectorAll('.filter-item')).map(filter => {
-            const field = filter.querySelector('.field-select').value;
-            const value = filter.querySelector('.value-input').value;
-
-            if (!field || !value) return null;
-
-            return { match: { [field]: value } };
-        }).filter(Boolean);
+        const filters = Array.from(document.querySelectorAll('.filter-item'))
+            .map(filter => {
+                const field = filter.querySelector('.field-select').value;
+                const value = filter.querySelector('.value-input').value;
+                return field && value ? { match: { [field]: value } } : null;
+            })
+            .filter(Boolean);
 
         return {
             query: {
