@@ -27,13 +27,11 @@ export default class QuickFilter {
             });
         }
 
-        // Add filter button
         const addFilterBtn = document.getElementById('addQuickFilterBtn');
         if (addFilterBtn) {
             addFilterBtn.addEventListener('click', () => this.addFilter());
         }
 
-        // Copy query button
         const copyQueryBtn = document.getElementById('copyQuickFilterQuery');
         if (copyQueryBtn) {
             copyQueryBtn.addEventListener('click', () => this.copyQuery());
@@ -95,7 +93,6 @@ export default class QuickFilter {
         }
     }
 
-    // Nested field'ları düzleştirmek için yardımcı metod
     flattenFields(properties, prefix = '') {
         let fields = [];
         

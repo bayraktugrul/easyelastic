@@ -770,10 +770,8 @@ class ESMonitor {
                     let newMapping;
                     
                     if (activeTab === 'json') {
-                        // Get mapping from JSON editor
                         newMapping = JSON.parse(document.getElementById('mappingJson').value);
                     } else {
-                        // Build mapping from visual editor
                         newMapping = {
                             properties: {}
                         };

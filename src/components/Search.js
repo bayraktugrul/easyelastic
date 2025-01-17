@@ -74,7 +74,6 @@ export default class Search {
                 monaco.editor.setTheme(newTheme);
             });
 
-            // Snippet'leri ekle
             monaco.languages.registerCompletionItemProvider('elasticsearch', {
                 provideCompletionItems: () => {
                     const suggestions = [
