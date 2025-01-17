@@ -3,15 +3,30 @@ class ClusterHealth {
         this.element = document.getElementById(elementId);
     }
 
-    render(health) {
-        const statusClass = `health-${health.status.toLowerCase()}`;
-        const statusIcon = health.status === 'green' ? 'check-circle' : 
-                          health.status === 'yellow' ? 'exclamation-circle' : 'times-circle';
+    getStatusConfig(status) {
+        const configs = {
+            green: {
+                icon: 'check-circle',
+                class: 'health-green'
+            },
+            yellow: {
+                icon: 'exclamation-circle',
+                class: 'health-yellow'
+            },
+            red: {
+                icon: 'times-circle',
+                class: 'health-red'
+            }
+        };
+        return configs[status.toLowerCase()] || configs.red;
+    }
 
-        this.element.innerHTML = `
-            <div class="health-status ${statusClass}">
+    createHealthTemplate(health) {
+        const config = this.getStatusConfig(health.status);
+        return `
+            <div class="health-status ${config.class}">
                 <div class="status-icon">
-                    <i class="fas fa-${statusIcon}"></i>
+                    <i class="fas fa-${config.icon}"></i>
                 </div>
                 <div class="status-details">
                     <div class="status-label">Cluster Status</div>
@@ -20,6 +35,10 @@ class ClusterHealth {
                 </div>
             </div>
         `;
+    }
+
+    render(health) {
+        this.element.innerHTML = this.createHealthTemplate(health);
     }
 }
 

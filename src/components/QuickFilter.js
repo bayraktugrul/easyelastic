@@ -103,7 +103,6 @@ export default class QuickFilter {
                 fields.push(fieldName);
             }
             
-            // Nested veya object tipindeki field'ları da işle
             if (value.properties) {
                 fields = fields.concat(this.flattenFields(value.properties, fieldName));
             }

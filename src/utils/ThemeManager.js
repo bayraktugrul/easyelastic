@@ -22,14 +22,11 @@ export default class ThemeManager {
     }
 
     toggleTheme() {
-        const currentTheme = document.documentElement.getAttribute('data-theme');
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-        
-        document.documentElement.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
+        this.theme = this.theme === 'dark' ? 'light' : 'dark';
+        this.applyTheme();
         
         document.dispatchEvent(new CustomEvent('themeChanged', { 
-            detail: { theme: newTheme } 
+            detail: { theme: this.theme } 
         }));
     }
 } 
