@@ -3,30 +3,31 @@ class ElasticsearchService {
         this.baseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
     }
 
-    async makeRequest(endpoint) {
-        try {
-            const response = await fetch(this.baseUrl + endpoint, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                mode: 'cors'
-            });
+    async fetchWithOptions(url, options = {}) {
+        const defaultOptions = {
+            headers: { 'Content-Type': 'application/json' },
+            mode: 'cors'
+        };
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
+        const requestOptions = {
+            ...defaultOptions,
+            ...options,
+            headers: { ...defaultOptions.headers, ...options.headers }
+        };
 
-            return await response.json();
-        } catch (error) {
-            console.error(`Error fetching ${endpoint}:`, error);
-            throw error;
+        const response = await fetch(url, requestOptions);
+        
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error?.reason || `Request failed with status ${response.status}`);
         }
+
+        return response;
     }
 
     async checkConnection() {
         try {
-            const response = await fetch(this.baseUrl);
+            const response = await this.fetchWithOptions(this.baseUrl);
             const data = await response.json();
             return data.tagline === "You Know, for Search";
         } catch (error) {
@@ -36,8 +37,7 @@ class ElasticsearchService {
     }
 
     async getClusterHealth() {
-        const response = await fetch(`${this.baseUrl}/_cluster/health`);
-        if (!response.ok) throw new Error('Failed to fetch cluster health');
+        const response = await this.fetchWithOptions(`${this.baseUrl}/_cluster/health`);
         return await response.json();
     }
 
@@ -49,75 +49,86 @@ class ElasticsearchService {
                 fetch(`${this.baseUrl}/_nodes/stats/os,jvm,fs`).then(r => r.json())
             ]);
 
-            let totalMemory = 0;
-            let usedMemory = 0;
-            let cpuPercent = 0;
-            let nodeCount = 0;
-            let totalSystemMemory = 0;
-            let usedSystemMemory = 0;
-            let totalDiskSpace = 0;
-            let usedDiskSpace = 0;
-
-            Object.values(nodes.nodes).forEach(node => {
-                totalMemory += node.jvm.mem.heap_max_in_bytes;
-                usedMemory += node.jvm.mem.heap_used_in_bytes;
-                cpuPercent += node.process?.cpu?.percent || 0;
-                
-                if (node.os && node.os.mem) {
-                    const systemTotal = node.os.mem.total_in_bytes || 0;
-                    const systemFree = node.os.mem.free_in_bytes || 0;
-                    const systemUsed = node.os.mem.used_in_bytes || (systemTotal - systemFree);
-                    
-                    totalSystemMemory += systemTotal;
-                    usedSystemMemory += systemUsed;
-                }
-
-                if (node.fs && node.fs.total) {
-                    totalDiskSpace += node.fs.total.total_in_bytes || 0;
-                    usedDiskSpace += node.fs.total.total_in_bytes - (node.fs.total.free_in_bytes || 0);
-                }
-                
-                nodeCount++;
-            });
-
-            const jvmPercent = totalMemory > 0 ? ((usedMemory / totalMemory) * 100).toFixed(1) : "0.0";
-            const systemPercent = totalSystemMemory > 0 ? ((usedSystemMemory / totalSystemMemory) * 100).toFixed(1) : "0.0";
-            const diskPercent = totalDiskSpace > 0 ? ((usedDiskSpace / totalDiskSpace) * 100).toFixed(1) : "0.0";
-
-            return {
-                ...stats,
-                health,
-                nodes: {
-                    total: nodeCount,
-                    master: stats.nodes.master,
-                    data: stats.nodes.data,
-                    cpu_percent: nodeCount ? (cpuPercent / nodeCount).toFixed(1) : "0.0",
-                    memory: {
-                        total_bytes: totalMemory,
-                        used_bytes: usedMemory,
-                        system_total_bytes: totalSystemMemory,
-                        system_used_bytes: usedSystemMemory,
-                        percent: jvmPercent,
-                        system_percent: systemPercent
-                    },
-                    storage: {
-                        total_bytes: totalDiskSpace,
-                        used_bytes: usedDiskSpace,
-                        percent: diskPercent
-                    }
-                },
-                shards: {
-                    total: health.active_shards,
-                    active: health.active_shards,
-                    relocating: health.relocating_shards,
-                    initializing: health.initializing_shards,
-                    unassigned: health.unassigned_shards
-                }
-            };
+            return this.processClusterStats(stats, health, nodes);
         } catch (error) {
             console.error('Error fetching cluster stats:', error);
             throw new Error('Failed to fetch cluster stats');
         }
+    }
+
+    processClusterStats(stats, health, nodes) {
+        const nodeMetrics = this.calculateNodeMetrics(nodes);
+        
+        return {
+            ...stats,
+            health,
+            nodes: {
+                total: nodeMetrics.count,
+                master: stats.nodes.master,
+                data: stats.nodes.data,
+                cpu_percent: this.calculateAverageCpu(nodeMetrics),
+                memory: this.calculateMemoryStats(nodeMetrics),
+                storage: this.calculateStorageStats(nodeMetrics)
+            },
+            shards: this.extractShardStats(health)
+        };
+    }
+
+    calculateNodeMetrics(nodes) {
+        const metrics = {
+            count: 0,
+            totalMemory: 0,
+            usedMemory: 0,
+            cpuPercent: 0,
+            totalDiskSpace: 0,
+            usedDiskSpace: 0
+        };
+
+        Object.values(nodes.nodes).forEach(node => {
+            metrics.count++;
+            metrics.totalMemory += node.jvm.mem.heap_max_in_bytes;
+            metrics.usedMemory += node.jvm.mem.heap_used_in_bytes;
+            metrics.cpuPercent += node.process?.cpu?.percent || 0;
+            
+            if (node.fs?.total) {
+                metrics.totalDiskSpace += node.fs.total.total_in_bytes || 0;
+                metrics.usedDiskSpace += node.fs.total.total_in_bytes - (node.fs.total.free_in_bytes || 0);
+            }
+        });
+
+        return metrics;
+    }
+
+    calculateAverageCpu(metrics) {
+        return metrics.count ? (metrics.cpuPercent / metrics.count).toFixed(1) : "0.0";
+    }
+
+    calculateMemoryStats(metrics) {
+        return {
+            total_bytes: metrics.totalMemory,
+            used_bytes: metrics.usedMemory,
+            percent: metrics.totalMemory > 0 ? 
+                ((metrics.usedMemory / metrics.totalMemory) * 100).toFixed(1) : "0.0"
+        };
+    }
+
+    calculateStorageStats(metrics) {
+        return {
+            total_bytes: metrics.totalDiskSpace,
+            used_bytes: metrics.usedDiskSpace,
+            percent: metrics.totalDiskSpace > 0 ? 
+                ((metrics.usedDiskSpace / metrics.totalDiskSpace) * 100).toFixed(1) : "0.0"
+        };
+    }
+
+    extractShardStats(health) {
+        return {
+            total: health.active_shards,
+            active: health.active_shards,
+            relocating: health.relocating_shards,
+            initializing: health.initializing_shards,
+            unassigned: health.unassigned_shards
+        };
     }
 
     async getIndicesInfo() {
