@@ -7,7 +7,8 @@
 
 <h4 align="center">A modern, user-friendly dashboard for managing and monitoring Elasticsearch clusters</h4>
 
----
+
+
 
 ## 🌟 Overview
 
@@ -17,29 +18,29 @@
 ## ⚡ Key Features
 
 ###  **Advanced Monitoring & Analytics**
-- **Real-Time Metrics**: Monitor essential metrics like CPU, memory usage, and disk space.
-- **Cluster Health Monitoring**: Detailed health overviews for clusters and indices, enabling proactive issue resolution.
+- Real-Time Metrics: Monitor essential metrics like CPU, memory usage, and disk space.
+- Cluster Health Monitoring: Detailed health overviews for clusters and indices, enabling proactive issue resolution.
 
 ###  **Index Management**
-- **Visual Index Creation**: Seamlessly create and configure indices with a user-friendly interface.
-- **Mapping Management**: Easily manage field mappings and templates for structured data.
-- **Alias Management**: Simplify alias configuration and updates with centralized tools.
+- Visual Index Creation: Seamlessly create and configure indices with a user-friendly interface.
+- Mapping Management: Easily manage field mappings and templates for structured data.
+- Alias Management: Simplify alias configuration and updates with centralized tools.
 
 ###  **Data Exploration & Insights**
-- **Dynamic Query Builder**: Craft and execute queries with a robust editor and interactive visualizations using auto-complete and syntax highlighting.
-- **Sample Data Preview**: Quickly preview index data for faster analysis.
-- **Structured Data Viewer**: View JSON data in an organized, readable format.
+- Dynamic Query Builder: Craft and execute queries with a robust editor and interactive visualizations using auto-complete and syntax highlighting.
+- Sample Data Preview: Quickly preview index data for faster analysis.
+- Structured Data Viewer: View JSON data in an organized, readable format.
 
 
 ## 🤝 Contributing
 
 We welcome contributions from the community! To get started:
 
-1. **Fork the repository**  
-2. **Create a feature branch**: `git checkout -b feature/AmazingFeature`  
-3. **Commit your changes**: `git commit -m 'Add AmazingFeature'`  
-4. **Push to the branch**: `git push origin feature/AmazingFeature`  
-5. **Open a Pull Request**  
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/AmazingFeature`  
+3. Commit your changes: `git commit -m 'Add AmazingFeature'`  
+4. Push to the branch: `git push origin feature/AmazingFeature`  
+5. Open a Pull Request  
 
 Your contributions make EasyElastic better for everyone. Thank you for your support.
 
