@@ -80,12 +80,12 @@
 
 .modal-footer {
     padding: 20px;
-    background: var(--modal-background); /* footer background değişti */
+    background: var(--modal-background);
     border-top: 1px solid var(--border-color);
     display: flex;
     justify-content: flex-end;
     gap: 12px;
-    border-radius: 0 0 20px 20px; /* Alt köşeleri yuvarlatma */
+    border-radius: 0 0 20px 20px;
 }
 
 .modal-footer button {
@@ -95,21 +95,23 @@
     transition: all 0.2s;
 }
 
-.modal-footer .btn-secondary {
+.modal-footer .btn-secondary,
+.modal-footer .secondary {
     background: var(--input-background);
     color: var(--text-primary);
     border: 1px solid var(--border-color);
 }
 
-.modal-footer .btn-secondary:hover {
-    background: var(--button-hover-bg);
-    border-color: var(--button-hover-border);
-}
-
-.modal-footer .btn-primary {
+.modal-footer .btn-primary,
+.modal-footer button:not(.btn-secondary):not(.secondary) {
     background: var(--primary-color);
     color: white;
     border: none;
+}
+
+.modal-footer .btn-secondary:hover {
+    background: var(--button-hover-bg);
+    border-color: var(--button-hover-border);
 }
 
 .modal-footer .btn-primary:hover {

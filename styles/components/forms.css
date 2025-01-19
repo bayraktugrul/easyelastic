@@ -213,8 +213,8 @@
 
 #createIndexModal .modal-footer {
     padding: 1.25rem;
-    background: rgba(249, 250, 251, 0.8);
-    border-top: 1px solid rgba(229, 231, 235, 0.4);
+    background: var(--modal-background);
+    border-top: 1px solid var(--border-color);
     display: flex;
     justify-content: flex-end;
     gap: 0.75rem;
