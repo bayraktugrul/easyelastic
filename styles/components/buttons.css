@@ -1,5 +1,5 @@
 button {
-    padding: 12px 24px;
+    padding: var(--space-sm) var(--space-lg);
     background-color: var(--primary-color);
     color: white;
     border: none;
@@ -113,4 +113,12 @@ button.danger:hover {
     transform: translateX(-50%);
     border: 6px solid transparent;
     border-top-color: var(--text-primary);
+}
+
+.modal-header {
+    padding: var(--space-lg);
+}
+
+.panel-header {
+    padding: var(--space-md);
 } 
