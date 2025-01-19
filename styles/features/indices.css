@@ -14,3 +14,44 @@
     margin-bottom: 20px;
     color: var(--text-primary);
 }
+
+.indices-panel .panel-header button {
+    padding: 0.625rem 1rem;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+
+.indices-panel .panel-header button#createIndexBtn {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.indices-panel .panel-header button#createIndexBtn i {
+    font-size: 0.875rem;
+}
+
+.indices-panel .panel-header button#createIndexBtn:hover {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .indices-panel .panel-header button#createIndexBtn {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+}
+
+[data-theme="light"] .indices-panel .panel-header button#createIndexBtn:hover {
+    background: var(--primary-hover);
+}
