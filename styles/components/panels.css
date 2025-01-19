@@ -771,4 +771,25 @@ h2 i {
 
 .stat-value.changing {
     animation: value-change 0.3s ease-out;
+}
+
+.refresh-control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-right: 12px;
+}
+
+.refresh-control select {
+    min-width: 80px;
+    padding: 6px 8px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    background: var(--background-color);
+    color: var(--text-primary);
+    cursor: pointer;
+}
+
+.refresh-control select:hover {
+    border-color: var(--primary-color);
 } 

@@ -60,6 +60,16 @@
     <div class="container">
         <div id="connection" class="header">
             <div class="connection-panel">
+                <div class="refresh-control">
+                    <select id="refreshInterval" class="secondary">
+                        <option value="off">Off</option>
+                        <option value="5s" selected>5s</option>
+                        <option value="10s">10s</option>
+                        <option value="30s">30s</option>
+                        <option value="1m">1m</option>
+                        <option value="5m">5m</option>
+                    </select>
+                </div>
                 <div class="saved-connections">
                     <div class="connection-dropdown">
                         <button class="connection-select-btn" id="connectionSelectBtn">

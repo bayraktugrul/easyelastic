@@ -12,6 +12,7 @@ import initParticles from './src/utils/background.js';
 import QuickFilter from './src/components/QuickFilter.js';
 import ThemeManager from './src/utils/ThemeManager.js';
 import Search from './src/components/Search.js';
+import AutoRefresh from './src/components/AutoRefresh.js';
 
 class ESMonitor {
     constructor() {
@@ -30,6 +31,7 @@ class ESMonitor {
         this.loadSavedConnections();
         this.initializeConnectionHandlers();
         this.search = null;
+        this.autoRefresh = null;
     }
 
     subscribeToEvents() {
@@ -355,6 +357,12 @@ class ESMonitor {
                 this.search = new Search(this.esService);
                 
                 await this.updateDashboard();
+                
+                if (this.autoRefresh) {
+                    this.autoRefresh.destroy();
+                }
+                this.autoRefresh = new AutoRefresh(this);
+                
                 Toast.show('Connected and data loaded successfully', 'success');
             } else {
                 this.esService = null;
@@ -573,6 +581,11 @@ class ESMonitor {
         document.getElementById('dashboard').classList.add('hidden');
         this.esService = null;
         this.quickFilter = null;
+        this.search = null;
+        if (this.autoRefresh) {
+            this.autoRefresh.destroy();
+            this.autoRefresh = null;
+        }
         Toast.show('Connection cleared', 'info');
     }
 
