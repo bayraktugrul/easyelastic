@@ -38,10 +38,4 @@ A sleek, modern dashboard for monitoring Elasticsearch clusters with real-time i
 
 Contributions, issues and feature requests are welcome! Feel free to check [issues page](https://github.com/yourusername/easyelastic/issues).
 
-## 📝 License
-
-This project is [MIT](LICENSE) licensed.
-
-
-
 <p align="center">Made with ❤️ for the Elasticsearch community</p>
