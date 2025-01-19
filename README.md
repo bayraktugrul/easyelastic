@@ -10,29 +10,29 @@
 
 
 
-## 🌟 Overview
+### 🌟 Overview
 
 **EasyElastic** offers a powerful and intuitive dashboard tailored for Elasticsearch users. With real-time monitoring, index management, EasyElastic empowers you to gain actionable insights and maintain cluster effortlessly.
 
 
-## ⚡ Key Features
+### ⚡ Key Features
 
-###  **Advanced Monitoring & Analytics**
+####  **Advanced Monitoring & Analytics**
 - Real-Time Metrics: Monitor essential metrics like CPU, memory usage, and disk space.
 - Cluster Health Monitoring: Detailed health overviews for clusters and indices, enabling proactive issue resolution.
 
-###  **Index Management**
+####  **Index Management**
 - Visual Index Creation: Seamlessly create and configure indices with a user-friendly interface.
 - Mapping Management: Easily manage field mappings and templates for structured data.
 - Alias Management: Simplify alias configuration and updates with centralized tools.
 
-###  **Data Exploration & Insights**
+####  **Data Exploration & Insights**
 - Dynamic Query Builder: Craft and execute queries with a robust editor and interactive visualizations using auto-complete and syntax highlighting.
 - Sample Data Preview: Quickly preview index data for faster analysis.
 - Structured Data Viewer: View JSON data in an organized, readable format.
 
 
-## 🤝 Contributing
+### 🤝 Contributing
 
 We welcome contributions from the community! To get started:
 
@@ -45,7 +45,7 @@ We welcome contributions from the community! To get started:
 Your contributions make EasyElastic better for everyone. Thank you for your support.
 
 
-## 📝 License
+### 📝 License
 
 This project is licensed under the **EasyElastic License**. Please refer to the [LICENSE](LICENSE) file for more details.
 
