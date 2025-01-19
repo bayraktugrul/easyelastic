@@ -261,6 +261,22 @@
     padding-bottom: 0.5rem;
 }
 
+.mapping-tab {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    color: var(--text-primary);
+    background: var(--input-background);
+    border: 1px solid var(--border-color);
+    transition: all 0.2s;
+}
+
+.mapping-tab.active {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
 .code-editor {
     width: 100%;
     min-height: 300px;
@@ -268,8 +284,9 @@
     font-size: 0.875rem;
     line-height: 1.5;
     padding: 1rem;
-    background: white;
-    border: 1px solid rgba(229, 231, 235, 0.8);
+    background: var(--input-background);
+    color: var(--input-text);
+    border: 1px solid var(--border-color);
     border-radius: 10px;
     resize: vertical;
 }
@@ -277,13 +294,16 @@
 .code-editor:focus {
     outline: none;
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    box-shadow: 0 0 0 3px var(--input-focus-ring);
 }
 
 .visual-mapping-editor {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    background: var(--modal-background);
+    padding: 1rem;
+    border-radius: 8px;
 }
 
 .mapping-fields {
@@ -296,13 +316,12 @@
 
 .mapping-field {
     display: flex;
+    gap: 1rem;
     align-items: center;
-    padding: 0.5rem 0.75rem;
-    background: white;
-    border: 1px solid rgba(229, 231, 235, 0.8);
-    border-radius: 6px;
-    justify-content: space-between;
-    font-size: 0.875rem;
+    padding: 1rem;
+    background: var(--input-background);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
 }
 
 .field-info {
@@ -333,8 +352,8 @@
 
 .add-field-form {
     padding: 0.75rem;
-    background: rgba(249, 250, 251, 0.8);
-    border: 1px solid rgba(229, 231, 235, 0.8);
+    background: var(--input-background);
+    border: 1px solid var(--border-color);
     border-radius: 8px;
 }
 
@@ -346,11 +365,31 @@
 .add-field-form select {
     padding: 0.5rem 0.75rem;
     font-size: 0.875rem;
+    background: var(--input-background);
+    color: var(--input-text);
+    border: 1px solid var(--border-color);
+}
+
+.add-field-form select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236B7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1rem;
+    padding-right: 2.5rem;
 }
 
 .add-field-form button {
     padding: 0.5rem 0.75rem;
     font-size: 0.875rem;
+    background: var(--input-background);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.add-field-form button:hover {
+    background: var(--button-hover-bg);
+    border-color: var(--button-hover-border);
 }
 
 .remove-field {
@@ -684,4 +723,46 @@
     background: var(--button-hover-bg);
     border-color: var(--primary-color);
     color: var(--primary-color);
+}
+
+.mapping-field select,
+.mapping-field input {
+    background: var(--input-background);
+    color: var(--input-text);
+    border: 1px solid var(--border-color);
+    padding: 0.5rem;
+    border-radius: 4px;
+}
+
+.mapping-field select:focus,
+.mapping-field input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px var(--input-focus-ring);
+}
+
+.mapping-field-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.mapping-field-actions button {
+    padding: 0.5rem;
+    border-radius: 4px;
+    background: var(--input-background);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.mapping-field-actions button:hover {
+    background: var(--button-hover-bg);
+    border-color: var(--button-hover-border);
+}
+
+.mapping-field-actions button.delete-field {
+    color: var(--error-color);
+}
+
+.mapping-field-actions button.delete-field:hover {
+    background: var(--error-bg);
+    border-color: var(--error-color);
 } 
