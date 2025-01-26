@@ -1178,11 +1178,7 @@ class ESMonitor {
 
     async initializeComponents() {
         try {
-            // ... diğer bileşenlerin başlatılması
-            
-            // Search bileşenini başlat
             this.search = new Search(this.esService);
-            
         } catch (error) {
             console.error('Failed to initialize components:', error);
             Toast.show('Failed to initialize components', 'error');
@@ -1194,4 +1190,4 @@ document.addEventListener('DOMContentLoaded', () => {
     initParticles();
     new ThemeManager();
     window.esMonitor = new ESMonitor();
-}); 
+});
