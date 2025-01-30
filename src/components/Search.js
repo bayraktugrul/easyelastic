@@ -4,12 +4,155 @@ export default class Search {
     constructor(esService) {
         this.esService = esService;
         this.editor = null;
+        this.savedQueries = this.loadSavedQueries();
         this.init();
     }
 
     async init() {
         await this.initializeMonacoEditor();
         this.initializeEventListeners();
+        this.initializeSavedQueries();
+    }
+
+    loadSavedQueries() {
+        return JSON.parse(localStorage.getItem('savedQueries') || '[]');
+    }
+
+    saveQuery() {
+        try {
+            localStorage.setItem('savedQueries', JSON.stringify(this.savedQueries));
+        } catch (error) {
+            Toast.show('Error saving query', 'error');
+        }
+    }
+
+    initializeSavedQueries() {
+        this.toggleBtn = document.querySelector('.saved-queries-btn');
+        this.menu = document.querySelector('.saved-queries-menu');
+        this.queriesList = document.querySelector('#savedQueriesList');
+
+        this.toggleBtn.addEventListener('click', () => {
+            this.menu.classList.toggle('show');
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.saved-queries') && this.menu.classList.contains('show')) {
+                this.menu.classList.remove('show');
+            }
+        });
+
+        this.renderSavedQueries();
+    }
+
+    renderSavedQueries() {
+        if (!this.queriesList) return;
+
+        if (this.savedQueries.length === 0) {
+            this.queriesList.innerHTML = `
+                <div class="saved-query-item no-queries">
+                    <span class="saved-query-name">No saved queries</span>
+                </div>`;
+            return;
+        }
+
+        this.queriesList.innerHTML = this.savedQueries.map(query => `
+            <div class="saved-query-item" data-id="${query.id}">
+                <span class="saved-query-name" style="cursor: pointer;">${this.escapeHtml(query.name)}</span>
+                <div class="saved-query-actions">
+                    <button class="query-action-btn rename">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="query-action-btn delete">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </div>
+            </div>
+        `).join('');
+
+        this.queriesList.querySelectorAll('.saved-query-item').forEach(item => {
+            const id = parseInt(item.dataset.id);
+            const query = this.savedQueries.find(q => q.id === id);
+            const nameElement = item.querySelector('.saved-query-name');
+
+            if (!query) return;
+
+            nameElement.addEventListener('click', () => {
+                this.editor.setValue(query.query);
+                this.menu.classList.remove('show');
+            });
+
+            item.querySelector('.rename').addEventListener('click', () => {
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.value = query.name;
+                input.className = 'rename-input';
+
+                nameElement.style.display = 'none';
+                nameElement.parentNode.insertBefore(input, nameElement.nextSibling);
+                input.focus();
+                input.select();
+
+                const handleRename = () => {
+                    const newName = input.value.trim();
+                    if (newName && newName !== query.name) {
+                        query.name = newName;
+                        this.saveQuery();
+                        Toast.show('Query renamed successfully', 'success');
+                    }
+                    input.remove();
+                    nameElement.style.display = '';
+                    this.renderSavedQueries();
+                };
+
+                input.addEventListener('blur', handleRename);
+                input.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        handleRename();
+                    }
+                });
+            });
+
+            item.querySelector('.delete').addEventListener('click', () => {
+                this.deleteSavedQuery(id);
+            });
+        });
+    }
+
+    deleteSavedQuery(id) {
+        if (confirm('Are you sure you want to delete this saved query?')) {
+            this.savedQueries = this.savedQueries.filter(q => q.id !== id);
+            this.saveQuery();
+            this.renderSavedQueries();
+            Toast.show('Query deleted successfully', 'success');
+        }
+    }
+
+    quickSave(name, query) {
+        if (!query) {
+            Toast.show('Query is empty', 'error');
+            return;
+        }
+
+        const newQuery = {
+            id: Date.now(),
+            name,
+            query
+        };
+
+        this.savedQueries.push(newQuery);
+        this.saveQuery();
+        this.renderSavedQueries();
+        Toast.show('Query saved successfully', 'success');
+    }
+
+    escapeHtml(unsafe) {
+        return unsafe
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
     }
 
     async initializeMonacoEditor() {
@@ -106,6 +249,9 @@ export default class Search {
         const executeBtn = document.getElementById('executeQuery');
         const formatBtn = document.getElementById('formatQuery');
         const copyBtn = document.getElementById('copyQuery');
+        const saveBtn = document.getElementById('saveQueryIcon');
+        const popularQueriesBtn = document.querySelector('.popular-queries-btn');
+        const popularQueriesMenu = document.querySelector('.popular-queries-menu');
 
         if (executeBtn) {
             executeBtn.addEventListener('click', () => this.executeSearch());
@@ -119,12 +265,22 @@ export default class Search {
             copyBtn.addEventListener('click', () => this.copyQuery());
         }
 
-        const popularQueriesBtn = document.querySelector('.popular-queries-btn');
-        const popularQueriesMenu = document.querySelector('.popular-queries-menu');
+        if (saveBtn) {
+            saveBtn.addEventListener('click', () => {
+                try {
+                    const queryText = this.editor.getValue();
+                    const firstLine = queryText.split('\n')[0].trim();
+                    this.quickSave(firstLine, queryText);
+                } catch (error) {
+                    Toast.show('Error saving query: ' + error.message, 'error');
+                }
+            });
+        }
         
         if (popularQueriesBtn) {
             popularQueriesBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
+                this.menu.classList.remove('show');
                 popularQueriesMenu.classList.toggle('show');
             });
         }

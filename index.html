@@ -380,6 +380,17 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="saved-queries">
+                            <button class="saved-queries-btn">
+                                <i class="fas fa-bookmark"></i>
+                                Saved Queries
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <div class="saved-queries-menu">
+                                <div class="saved-queries-list" id="savedQueriesList">
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -389,6 +400,9 @@
                             <div class="query-label">
                                 <span>Elasticsearch Query</span>
                                 <div class="editor-actions">
+                                    <button class="btn-icon" id="saveQueryIcon" title="Save Query">
+                                        <i class="fas fa-save"></i>
+                                    </button>
                                     <button class="btn-icon" id="formatQuery" title="Format Query">
                                         <i class="fas fa-code"></i>
                                     </button>

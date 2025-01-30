@@ -175,6 +175,14 @@ body .search-panel .query-label {
     z-index: 1001;
 }
 
+.editor-actions .btn-icon#saveQueryIcon {
+    color: var(--text-secondary);
+}
+
+.editor-actions .btn-icon#saveQueryIcon:hover {
+    color: var(--primary-color);
+}
+
 .btn-icon[title]::after {
     content: attr(title);
     position: absolute;
@@ -190,7 +198,7 @@ body .search-panel .query-label {
     opacity: 0;
     visibility: hidden;
     transition: all 0.2s ease;
-    z-index: 1002;
+    z-index: 1010;
     pointer-events: none;
 }
 
@@ -205,7 +213,7 @@ body .search-panel .query-label {
     opacity: 0;
     visibility: hidden;
     transition: all 0.2s ease;
-    z-index: 1002;
+    z-index: 1010;
     pointer-events: none;
 }
 
@@ -219,11 +227,19 @@ body .search-panel .query-label {
     transform: translateX(-50%) translateY(-4px);
 }
 
-.popular-queries {
+.search-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.popular-queries,
+.saved-queries {
     position: relative;
 }
 
-.popular-queries-btn {
+.popular-queries-btn,
+.saved-queries-btn {
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -237,12 +253,14 @@ body .search-panel .query-label {
     transition: all 0.2s;
 }
 
-.popular-queries-btn:hover {
+.popular-queries-btn:hover,
+.saved-queries-btn:hover {
     border-color: var(--primary-color);
     color: var(--primary-color);
 }
 
-.popular-queries-menu {
+.popular-queries-menu,
+.saved-queries-menu {
     position: absolute;
     top: 100%;
     right: 0;
@@ -256,11 +274,25 @@ body .search-panel .query-label {
     visibility: hidden;
     transition: all 0.2s;
     z-index: 1000;
+    padding: 0.5rem 0;
 }
 
-.popular-queries-menu.show {
+.popular-queries-menu.show,
+.saved-queries-menu.show {
     opacity: 1;
     visibility: visible;
+}
+
+.saved-queries-btn {
+    white-space: nowrap;
+}
+
+.saved-queries-menu {
+    display: none;
+}
+
+.saved-queries-menu.show {
+    display: block;
 }
 
 .query-category {
@@ -310,4 +342,113 @@ body .search-panel .query-label {
 
 .query-item:hover i {
     color: var(--primary-color);
-} 
+}
+
+.saved-queries {
+    position: relative;
+    display: inline-block;
+}
+
+.saved-queries-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.saved-query-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.saved-query-item:hover {
+    background: var(--surface-hover-color);
+}
+
+.saved-query-name {
+    flex: 1;
+    font-size: 0.875rem;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.saved-query-name:hover {
+    color: var(--primary-color);
+    background: var(--dropdown-item-hover);
+}
+
+.saved-query-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.query-action-btn {
+    padding: 0.25rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-secondary-color);
+    transition: color 0.2s ease;
+}
+
+.query-action-btn:hover {
+    color: var(--text-primary-color);
+}
+
+.query-action-btn.delete:hover {
+    color: var(--danger-color);
+}
+
+.query-action-btn.delete {
+    position: relative;
+}
+
+.rename-input {
+    flex: 1;
+    font-size: 0.875rem;
+    padding: 0.25rem;
+    border: 1px solid var(--primary-color);
+    border-radius: 4px;
+    background: var(--dropdown-bg);
+    color: var(--text-primary);
+    margin-right: 0.5rem;
+    outline: none;
+}
+
+.rename-input:focus {
+    box-shadow: 0 0 0 2px var(--primary-color-transparent);
+}
+
+.query-action-btn.rename:hover {
+    color: var(--primary-color);
+}
+
+.saved-query-item:last-child {
+    border-bottom: none;
+}
+
+.saved-query-item.no-queries {
+    color: var(--text-secondary);
+    font-style: italic;
+    cursor: default;
+}
+
+.saved-query-item.no-queries:hover {
+    background: none;
+}
+
+.saved-query-item.no-queries .saved-query-name {
+    cursor: default;
+}
+
+.saved-query-item.no-queries .saved-query-name:hover {
+    color: inherit;
+    background: none;
+}
+
+.query-action-btn.load {
+    display: none;
+}
