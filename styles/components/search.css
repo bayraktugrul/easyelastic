@@ -132,7 +132,7 @@ body .search-panel .query-label {
     cursor: pointer;
     transition: all 0.2s;
     position: relative;
-    z-index: 1001;
+    z-index: 1;
 }
 
 .btn-icon:hover {
@@ -172,7 +172,7 @@ body .search-panel .query-label {
 .editor-actions {
     display: flex;
     gap: 0.5rem;
-    z-index: 1001;
+    z-index: 1;
 }
 
 .editor-actions .btn-icon#saveQueryIcon {
@@ -198,7 +198,7 @@ body .search-panel .query-label {
     opacity: 0;
     visibility: hidden;
     transition: all 0.2s ease;
-    z-index: 1010;
+    z-index: 2;
     pointer-events: none;
 }
 
@@ -213,7 +213,7 @@ body .search-panel .query-label {
     opacity: 0;
     visibility: hidden;
     transition: all 0.2s ease;
-    z-index: 1010;
+    z-index: 2;
     pointer-events: none;
 }
 
@@ -273,7 +273,7 @@ body .search-panel .query-label {
     opacity: 0;
     visibility: hidden;
     transition: all 0.2s;
-    z-index: 1000;
+    z-index: 2;
     padding: 0.5rem 0;
 }
 

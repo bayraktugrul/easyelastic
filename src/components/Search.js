@@ -114,18 +114,25 @@ export default class Search {
             });
 
             item.querySelector('.delete').addEventListener('click', () => {
-                this.deleteSavedQuery(id);
+                const modal = document.getElementById('deleteConfirmationModal');
+                const modalTitle = document.getElementById('deleteConfirmationModalTitle');
+                const modalItemType = document.getElementById('deleteConformationModalItemType');
+                
+                modalTitle.textContent = 'Delete Query';
+                modalItemType.textContent = 'query';
+                document.getElementById('deleteConformationModalItemName').textContent = query.name;
+                modal.dataset.queryId = id;
+                modal.dataset.type = 'query';
+                modal.classList.remove('hidden');
             });
         });
     }
 
     deleteSavedQuery(id) {
-        if (confirm('Are you sure you want to delete this saved query?')) {
-            this.savedQueries = this.savedQueries.filter(q => q.id !== id);
-            this.saveQuery();
-            this.renderSavedQueries();
-            Toast.show('Query deleted successfully', 'success');
-        }
+        this.savedQueries = this.savedQueries.filter(q => q.id !== id);
+        this.saveQuery();
+        this.renderSavedQueries();
+        Toast.show('Query deleted successfully', 'success');
     }
 
     quickSave(name, query) {
@@ -252,6 +259,9 @@ export default class Search {
         const saveBtn = document.getElementById('saveQueryIcon');
         const popularQueriesBtn = document.querySelector('.popular-queries-btn');
         const popularQueriesMenu = document.querySelector('.popular-queries-menu');
+        const deleteModal = document.getElementById('deleteConfirmationModal');
+        const confirmDeleteBtn = document.getElementById('confirmDelete');
+        const cancelDeleteBtn = document.getElementById('cancelDelete');
 
         if (executeBtn) {
             executeBtn.addEventListener('click', () => this.executeSearch());
@@ -299,6 +309,23 @@ export default class Search {
                 this.editor.setValue(query);
                 popularQueriesMenu.classList.remove('show');
             });
+        });
+
+        confirmDeleteBtn.addEventListener('click', () => {
+            const type = deleteModal.dataset.type;
+            if (type === 'query') {
+                const queryId = parseInt(deleteModal.dataset.queryId);
+                this.deleteSavedQuery(queryId);
+                deleteModal.classList.add('hidden');
+            }
+        });
+
+        cancelDeleteBtn.addEventListener('click', () => {
+            deleteModal.classList.add('hidden');
+        });
+
+        deleteModal.querySelector('.close-modal').addEventListener('click', () => {
+            deleteModal.classList.add('hidden');
         });
     }
 

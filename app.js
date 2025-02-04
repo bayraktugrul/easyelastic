@@ -59,13 +59,6 @@ class ESMonitor {
             const shardsInput = document.getElementById('shardCount');
             const replicasInput = document.getElementById('replicaCount');
             
-            console.log('Modal opened - Input elements:', {
-                shardsElement: shardsInput,
-                replicasElement: replicasInput,
-                shardsValue: shardsInput?.value,
-                replicasValue: replicasInput?.value
-            });
-
             if (shardsInput) shardsInput.value = '1';
             if (replicasInput) replicasInput.value = '1';
         });
@@ -79,10 +72,10 @@ class ESMonitor {
 
         confirmBtn.addEventListener('click', () => this.handleCreateIndex());
 
-        const deleteModal = document.getElementById('deleteIndexModal');
+        const deleteModal = document.getElementById('deleteConfirmationModal');
         const closeDeleteBtn = deleteModal.querySelector('.close-modal');
-        const cancelDeleteBtn = document.getElementById('cancelDeleteIndex');
-        const confirmDeleteBtn = document.getElementById('confirmDeleteIndex');
+        const cancelDeleteBtn = document.getElementById('cancelDelete');
+        const confirmDeleteBtn = document.getElementById('confirmDelete');
 
         document.addEventListener('click', (e) => {
             if (e.target.closest('.delete-index')) {
@@ -97,7 +90,12 @@ class ESMonitor {
             });
         });
 
-        confirmDeleteBtn.addEventListener('click', () => this.handleDeleteIndex());
+        confirmDeleteBtn.addEventListener('click', () => {
+            const type = deleteModal.dataset.type;
+            if (type === 'index') {
+                this.handleDeleteIndex();
+            }
+        });
 
         const aliasModal = document.getElementById('aliasModal');
         const closeAliasBtn = document.getElementById('closeAliasModal');
@@ -589,15 +587,21 @@ class ESMonitor {
         Toast.show('Connection cleared', 'info');
     }
 
-    showDeleteConfirmation(indexName) {
-        const modal = document.getElementById('deleteIndexModal');
-        document.getElementById('deleteIndexName').textContent = indexName;
-        modal.dataset.indexName = indexName;
+    showDeleteConfirmation(itemName) {
+        const modal = document.getElementById('deleteConfirmationModal');
+        const modalTitle = document.getElementById('deleteConfirmationModalTitle');
+        const modalItemType = document.getElementById('deleteConformationModalItemType');
+        
+        modalTitle.textContent = 'Delete Index';
+        modalItemType.textContent = 'index';
+        document.getElementById('deleteConformationModalItemName').textContent = itemName;
+        modal.dataset.indexName = itemName;
+        modal.dataset.type = 'index';
         modal.classList.remove('hidden');
     }
 
     async handleDeleteIndex() {
-        const modal = document.getElementById('deleteIndexModal');
+        const modal = document.getElementById('deleteConfirmationModal');
         const indexName = modal.dataset.indexName;
 
         try {
