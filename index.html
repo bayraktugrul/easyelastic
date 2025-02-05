@@ -61,14 +61,22 @@
         <div id="connection" class="header">
             <div class="connection-panel">
                 <div class="refresh-control">
-                    <select id="refreshInterval" class="secondary">
-                        <option value="off">Off</option>
-                        <option value="5s" selected>5s</option>
-                        <option value="10s">10s</option>
-                        <option value="30s">30s</option>
-                        <option value="1m">1m</option>
-                        <option value="5m">5m</option>
-                    </select>
+                    <div class="connection-dropdown">
+                        <button class="connection-select-btn" id="refreshIntervalBtn">
+                            <span id="selectedRefreshText">5s</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="connection-dropdown-menu" id="refreshDropdownMenu">
+                            <div class="connection-list">
+                                <div class="connection-item" data-value="off">Off</div>
+                                <div class="connection-item" data-value="5s">5s</div>
+                                <div class="connection-item" data-value="10s">10s</div>
+                                <div class="connection-item" data-value="30s">30s</div>
+                                <div class="connection-item" data-value="1m">1m</div>
+                                <div class="connection-item" data-value="5m">5m</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="saved-connections">
                     <div class="connection-dropdown">
