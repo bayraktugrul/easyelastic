@@ -9,11 +9,14 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
+    opacity: 1;
+    visibility: visible;
+    z-index: 9999;
 }
 
 .modal.hidden {
-    display: none;
+    opacity: 0;
+    visibility: hidden;
 }
 
 .modal-content {
@@ -26,6 +29,8 @@
     max-width: 500px;
     max-height: 90vh;
     overflow-y: auto;
+    position: relative;
+    z-index: 10000;
 }
 
 .modal-header {
@@ -122,17 +127,17 @@
     transform: translateY(1px);
 }
 
-#deleteIndexModal .modal-body {
+#deleteConfirmationModal .modal-body {
     text-align: center;
     padding: 2rem;
 }
 
-#deleteIndexModal .modal-body p:first-child {
+#deleteConfirmationModal .modal-body p:first-child {
     font-size: 1.1rem;
     margin-bottom: 0.5rem;
 }
 
-#deleteIndexName {
+#deleteResourceName {
     font-weight: 600;
     color: var(--text-primary);
 }
