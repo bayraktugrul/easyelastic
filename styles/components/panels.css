@@ -531,9 +531,9 @@ h2 i {
     min-width: 250px;
     padding: 0.6rem 2rem 0.6rem 1rem;
     font-size: 0.875rem;
-    color: #475569;
-    background-color: white;
-    border: 1px solid rgba(229, 231, 235, 0.8);
+    color: var(--input-text) !important;
+    background-color: var(--input-background) !important;
+    border: 1px solid var(--input-border) !important;
     border-radius: 8px;
     appearance: none;
     background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
@@ -545,13 +545,13 @@ h2 i {
 }
 
 #indexSelector:hover {
-    border-color: #94a3b8;
+    border-color: var(--button-hover-border);
 }
 
 #indexSelector:focus {
     outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px var(--input-focus-ring);
 }
 
 #indexSelector option {
