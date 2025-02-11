@@ -45,6 +45,30 @@ class ESMonitor {
         document.getElementById('connectBtn').addEventListener('click', () => this.connect());
         document.getElementById('testBtn').addEventListener('click', () => this.testConnection());
         document.getElementById('disconnectBtn').addEventListener('click', () => this.clearConnection());
+
+        const refreshBtn = document.getElementById('refreshIntervalBtn');
+        const refreshMenu = document.getElementById('refreshDropdownMenu');
+        
+        refreshBtn.addEventListener('click', () => {
+            refreshMenu.classList.toggle('show');
+        });
+        
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.refresh-control')) {
+                refreshMenu.classList.remove('show');
+            }
+        });
+
+        refreshMenu.querySelectorAll('.connection-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const value = item.dataset.value;
+                document.getElementById('selectedRefreshText').textContent = item.textContent;
+                refreshMenu.classList.remove('show');
+                if (this.autoRefresh) {
+                    this.autoRefresh.setInterval(value);
+                }
+            });
+        });
     }
 
     initializeModalHandlers() {
@@ -241,7 +265,6 @@ class ESMonitor {
         document.getElementById('shardCountInput').value = '1';
         document.getElementById('replicaCountInput').value = '1';
         
-        // Input değerlerini kontrol edelim
         console.log('Reset form values:', {
             indexName: document.getElementById('indexName').value,
             shards: document.getElementById('shardCountInput').value,

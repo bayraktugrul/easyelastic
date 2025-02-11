@@ -189,6 +189,7 @@
 
 .form-group input[type="number"] {
     -moz-appearance: textfield;
+    appearance: textfield;
 }
 
 .form-group input[type="number"]::-webkit-outer-spin-button,
@@ -489,6 +490,7 @@
 
 .document-field input[type="number"] {
     -moz-appearance: textfield;
+    appearance: textfield;
 }
 
 .document-field input[type="number"]::-webkit-outer-spin-button,
@@ -524,10 +526,88 @@
     font-size: 0.875rem;
 }
 
+.refresh-control {
+    min-width: 120px;
+    position: relative;
+    z-index: 2;
+    margin-right: -0.5rem;
+}
+
+.refresh-control .connection-dropdown {
+    position: relative;
+    z-index: 1001;
+}
+
+.refresh-control .connection-select-btn {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: var(--input-background);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    font-size: 0.925rem;
+    transition: all 0.2s ease;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    gap: 0.5rem;
+}
+
+.refresh-control .connection-select-btn:hover {
+    border-color: var(--primary-color);
+    background: var(--button-hover-bg);
+}
+
+.refresh-control .connection-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    background: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    box-shadow: var(--shadow-lg);
+    display: none;
+    z-index: 1002;
+    backdrop-filter: blur(8px);
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.refresh-control .connection-dropdown-menu.show {
+    display: block;
+    animation: dropdownFadeIn 0.2s ease;
+}
+
+.refresh-control .connection-list {
+    position: relative;
+}
+
+.refresh-control .connection-item {
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-bottom: 1px solid var(--border-panel);
+    color: var(--text-primary);
+}
+
+.refresh-control .connection-item:last-child {
+    border-bottom: none;
+}
+
+.refresh-control .connection-item:hover {
+    background: var(--button-hover-bg);
+}
+
 .saved-connections {
     min-width: 200px;
     position: relative;
     z-index: 2;
+    margin-left: -0.5rem;
 }
 
 .connection-dropdown {
@@ -765,4 +845,36 @@
 .mapping-field-actions button.delete-field:hover {
     background: var(--error-bg);
     border-color: var(--error-color);
+}
+
+.form-select {
+    appearance: none;
+    background-color: var(--input-background);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    cursor: pointer;
+    font-size: var(--text-sm);
+    padding: 0.75rem 2.5rem 0.75rem 1rem;
+    transition: all 0.2s ease;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1em;
+}
+
+.form-select:hover {
+    border-color: rgba(99, 102, 241, 0.4);
+}
+
+.form-select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.form-select option {
+    background-color: var(--background);
+    color: var(--text-primary);
+    padding: 0.5rem;
 } 
