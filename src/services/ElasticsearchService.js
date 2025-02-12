@@ -417,6 +417,48 @@ class ElasticsearchService {
             throw new Error(`Failed to execute query: ${error.message}`);
         }
     }
+
+    async getShardDistribution() {
+        try {
+            const response = await fetch(`${this.baseUrl}/_cat/shards?format=json`);
+            if (!response.ok) throw new Error('Failed to fetch shard distribution');
+            const shards = await response.json();
+            
+            const distribution = {};
+            const indices = new Set();
+            
+            shards.forEach(shard => {
+                const nodeId = shard.node || 'unassigned';
+                const indexName = shard.index;
+                const shardNum = shard.shard;
+                const type = shard.prirep === 'p' ? 'primary' : 'replica';
+                const state = shard.state;
+                
+                indices.add(indexName);
+                
+                if (!distribution[nodeId]) {
+                    distribution[nodeId] = {};
+                }
+                
+                if (!distribution[nodeId][indexName]) {
+                    distribution[nodeId][indexName] = [];
+                }
+                
+                distribution[nodeId][indexName].push({
+                    number: shardNum,
+                    type: type,
+                    state: state
+                });
+            });
+            
+            return {
+                distribution,
+                indices: Array.from(indices)
+            };
+        } catch (error) {
+            throw new Error('Failed to fetch shard distribution');
+        }
+    }
 }
 
 export default ElasticsearchService; 

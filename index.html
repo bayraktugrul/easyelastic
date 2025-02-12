@@ -20,6 +20,7 @@
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <link rel="stylesheet" href="styles/components/search.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.js"></script>
+    <link rel="stylesheet" href="styles/components/shards.css">
 </head>
 <body>
     <div id="particles-js"></div>
@@ -40,6 +41,7 @@
                 <li><a href="#search">Search</a></li>
                 <li><a href="#sample-data">Sample Data</a></li>
                 <li><a href="#quick-filter">Quick Filter</a></li>
+                <li><a href="#shards">Shards</a></li>
             </ul>
             <div class="nav-actions">
                 <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
@@ -434,6 +436,26 @@
                         </div>
                         <pre id="quickFilterResults" class="results-preview"></pre>
                     </div>
+                </div>
+            </div>
+
+            <div id="shards" class="sample-data-panel">
+                <div class="panel-header">
+                    <h2>
+                        <i class="fas fa-puzzle-piece"></i>
+                        Shards Distribution
+                    </h2>
+                </div>
+                <div class="sample-table-container">
+                    <table class="shards-table">
+                        <thead>
+                            <tr>
+                                <th class="node-column">Node</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
