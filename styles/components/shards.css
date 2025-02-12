@@ -115,25 +115,82 @@
     font-size: 12px;
     font-weight: 600;
     margin: 2px;
+    position: relative;
 }
 
 .shard-badge.p {
-    background: #1a7f37;
-    color: white;
+    background: transparent;
+    border: 2px solid #1a7f37;
+    color: #1a7f37;
+    padding: 3px 7px;
 }
 
 .shard-badge.r {
-    background: #2f81f7;
-    color: white;
+    background: transparent;
+    border: 2px solid #2f81f7; 
+    color: #2f81f7;
+    padding: 3px 7px;
 }
 
 .shard-badge.unassigned {
-    background: #7d8590;
-    opacity: 0.6;
+    background: transparent;
+    border: 2px dashed #cf222e;
+    color: #cf222e;
+    opacity: 1;
+    padding: 3px 7px;
+}
+
+[data-theme="dark"] .shard-badge.p {
+    border-color: #2ea043;
+    color: #2ea043;
+}
+
+[data-theme="dark"] .shard-badge.r {
+    border-color: #4184e4;
+    color: #4184e4;
+}
+
+[data-theme="dark"] .shard-badge.unassigned {
+    border-color: #ff4d4f;
+    color: #ff4d4f;
 }
 
 .shard-badge.relocating {
     border: 1px dashed currentColor;
+}
+
+.shard-badge::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-4px);
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+    pointer-events: none;
+    
+    background: #24292f;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.shard-badge:hover::after {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(-8px);
+}
+
+[data-theme="dark"] .shard-badge::after {
+    background: #2d333b;
+    color: #ffffff;
+    border: 1px solid #444c56;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .sample-data-panel {
@@ -193,11 +250,6 @@
 [data-theme="dark"] .node-cell,
 [data-theme="dark"] .node-column {
     background: var(--panel-header-background) !important;
-}
-
-[data-theme="dark"] .shard-badge.unassigned {
-    background: var(--card-background);
-    border-color: var(--error-color);
 }
 
 [data-theme="dark"] .shard-count {
