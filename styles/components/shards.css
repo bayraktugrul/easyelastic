@@ -193,7 +193,7 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
-.sample-data-panel {
+.shards-data-panel {
     background: var(--panel-background);
     border: 1px solid var(--border-color);
     border-radius: 16px;
@@ -226,7 +226,7 @@
     font-size: 1.1rem;
 }
 
-.sample-table-container {
+.shards-table-container {
     background: var(--card-background);
     border: 1px solid var(--border-color);
     border-radius: 8px;
