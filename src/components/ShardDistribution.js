@@ -32,24 +32,20 @@ export default class ShardDistribution {
             thead.appendChild(th);
         });
         
-        // Node'ları sırala
         const nodes = Object.keys(data.distribution).sort((a, b) => {
             if (a === 'unassigned') return 1;
             if (b === 'unassigned') return -1;
             return a.localeCompare(b);
         });
         
-        // Node satırları
         nodes.forEach(nodeId => {
             const tr = document.createElement('tr');
             
-            // Node hücresi
             const nodeTd = document.createElement('td');
             nodeTd.className = 'node-cell';
             nodeTd.innerHTML = this.formatNodeName(nodeId);
             tr.appendChild(nodeTd);
             
-            // Her index için shard hücresi
             sortedIndices.forEach(indexName => {
                 const td = document.createElement('td');
                 td.className = 'shard-cell';
@@ -67,7 +63,6 @@ export default class ShardDistribution {
     }
     
     renderShards(shards) {
-        // Shardları sırala (önce primary'ler, sonra replica'lar)
         const sortedShards = [...shards].sort((a, b) => {
             if (a.type === b.type) {
                 return parseInt(a.number) - parseInt(b.number);
