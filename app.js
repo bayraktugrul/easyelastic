@@ -13,6 +13,7 @@ import QuickFilter from './src/components/QuickFilter.js';
 import ThemeManager from './src/utils/ThemeManager.js';
 import Search from './src/components/Search.js';
 import AutoRefresh from './src/components/AutoRefresh.js';
+import ShardDistribution from './src/components/ShardDistribution.js';
 
 class ESMonitor {
     constructor() {
@@ -21,7 +22,8 @@ class ESMonitor {
         this.indicesRepository = null;
         this.eventBus = EventBus;
         this.components = {
-            clusterHealth: new ClusterHealth('clusterHealth')
+            clusterHealth: new ClusterHealth('clusterHealth'),
+            shardDistribution: new ShardDistribution('shards')
         };
         
         this.initializeEventListeners();
@@ -405,11 +407,12 @@ class ESMonitor {
 
     async updateDashboard() {
         try {
-            const [clusterInfo, health, stats, indices] = await Promise.all([
+            const [clusterInfo, health, stats, indices, shardDistribution] = await Promise.all([
                 this.esService.getClusterInfo(),
                 this.esService.getClusterHealth(),
                 this.esService.getClusterStats(),
-                this.esService.getIndicesInfo()
+                this.esService.getIndicesInfo(),
+                this.esService.getShardDistribution()
             ]);
 
             document.getElementById('clusterName').textContent = clusterInfo.cluster_name || '-';
@@ -439,6 +442,8 @@ class ESMonitor {
                     await this.showSampleDataPreview(indices[0].index);
                 }
             }
+
+            this.components.shardDistribution.render(shardDistribution);
 
         } catch (error) {
             Toast.show(`Failed to update dashboard: ${error.message}`, 'error');
