@@ -373,7 +373,6 @@ class ESMonitor {
                 return;
             }
 
-            // Create auth object only if both username and password are provided
             const auth = username && password ? { username, password } : null;
             
             this.esService = new ElasticsearchService(url, auth);

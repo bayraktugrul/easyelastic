@@ -52,18 +52,3 @@ This project is licensed under the **EasyElastic License**. Please refer to the 
 
 
 <p align="center">Crafted with ❤️ for the Elasticsearch community</p>
-
-## 🌐 Online Demo
-You can try EasyElastic directly in your browser without installing anything:
-[https://bayraktugrul.github.io/easyelastic/](https://bayraktugrul.github.io/easyelastic/)
-
-### Using with Your Elasticsearch Cluster
-1. Make sure your Elasticsearch cluster has CORS enabled with these settings:
-```yaml
-http.cors.enabled=true
-http.cors.allow-origin="/.*/"
-http.cors.allow-headers=X-Requested-With,Content-Type,Content-Length,Authorization
-```
-
-2. If you're using authentication, make sure you have the correct credentials
-3. Enter your Elasticsearch URL and credentials in the connection form
