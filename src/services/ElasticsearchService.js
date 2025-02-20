@@ -1,6 +1,7 @@
 class ElasticsearchService {
-    constructor(baseUrl) {
+    constructor(baseUrl, auth = null) {
         this.baseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
+        this.auth = auth;
     }
 
     async fetchWithOptions(url, options = {}) {
@@ -8,6 +9,11 @@ class ElasticsearchService {
             headers: { 'Content-Type': 'application/json' },
             mode: 'cors'
         };
+
+        if (this.auth?.username && this.auth?.password) {
+            const base64Credentials = btoa(`${this.auth.username}:${this.auth.password}`);
+            defaultOptions.headers['Authorization'] = `Basic ${base64Credentials}`;
+        }
 
         const requestOptions = {
             ...defaultOptions,

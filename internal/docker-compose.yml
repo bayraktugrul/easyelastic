@@ -10,10 +10,8 @@ services:
       - cluster.name=docker-cluster
       - bootstrap.memory_lock=true
       - http.cors.enabled=true
-      - http.cors.allow-origin="*"
-      - http.cors.allow-credentials=false
-      - http.cors.allow-methods="OPTIONS, HEAD, GET, POST, PUT, DELETE"
-      - http.cors.allow-headers="X-Requested-With, X-Auth-Token, Content-Type, Content-Length, Authorization, Access-Control-Allow-Headers, Accept"
+      - http.cors.allow-origin="/.*/"
+      - http.cors.allow-headers=X-Requested-With,Content-Type,Content-Length,Authorization
     ports:
       - "9200:9200"
     volumes:
@@ -21,8 +19,34 @@ services:
     networks:
       - elastic
 
+  elasticsearch-secure:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.12.1
+    container_name: elasticsearch-secure
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=true
+      # Default built-in superuser
+      # username: elastic
+      # password: elastic123
+      - ELASTIC_PASSWORD=elastic123
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - cluster.name=secure-cluster
+      - bootstrap.memory_lock=true
+      - http.cors.enabled=true
+      - http.cors.allow-origin="/.*/"
+      - http.cors.allow-credentials=true
+      - http.cors.allow-methods="OPTIONS, HEAD, GET, POST, PUT, DELETE"
+      - http.cors.allow-headers=X-Requested-With,Content-Type,Content-Length,Authorization
+    ports:
+      - "9201:9200"
+    volumes:
+      - elasticsearch-secure-data:/usr/share/elasticsearch/data
+    networks:
+      - elastic
+
 volumes:
   elasticsearch-data:
+  elasticsearch-secure-data:
 
 networks:
   elastic:

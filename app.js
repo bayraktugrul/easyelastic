@@ -28,6 +28,7 @@ class ESMonitor {
         
         this.initializeEventListeners();
         this.initializeModalHandlers();
+        this.initializePasswordToggle();
         this.subscribeToEvents();
         this.loadSavedConnection();
         this.loadSavedConnections();
@@ -262,6 +263,19 @@ class ESMonitor {
         });
     }
 
+    initializePasswordToggle() {
+        const passwordToggle = document.querySelector('.password-toggle');
+        const passwordInput = document.getElementById('esPassword');
+        
+        if (passwordToggle && passwordInput) {
+            passwordToggle.addEventListener('click', () => {
+                const type = passwordInput.type === 'password' ? 'text' : 'password';
+                passwordInput.type = type;
+                passwordToggle.classList.toggle('visible');
+            });
+        }
+    }
+
     resetIndexForm() {
         document.getElementById('indexName').value = '';
         document.getElementById('shardCountInput').value = '1';
@@ -351,9 +365,22 @@ class ESMonitor {
     async connect() {
         try {
             const url = document.getElementById('esUrl').value.trim();
-            console.log('Connecting to URL:', url);
+            const username = document.getElementById('esUsername').value.trim();
+            const password = document.getElementById('esPassword').value.trim();
+
             if (!url) {
                 Toast.show('Please enter Elasticsearch URL', 'error');
+                return;
+            }
+
+            // Create auth object only if both username and password are provided
+            const auth = username && password ? { username, password } : null;
+            
+            this.esService = new ElasticsearchService(url, auth);
+            const isConnected = await this.esService.checkConnection();
+
+            if (!isConnected) {
+                Toast.show('Failed to connect to Elasticsearch', 'error');
                 return;
             }
 
@@ -364,44 +391,29 @@ class ESMonitor {
                 this.search = null;
             }
 
-            this.esService = new ElasticsearchService(url);
+            this.esService = new ElasticsearchService(url, auth);
             this.indicesRepository = new IndicesRepository(this.esService);
             
-            const isConnected = await this.esService.checkConnection();
-            if (isConnected) {
-                localStorage.setItem('esUrl', url);
-                const name = document.getElementById('connectionName').value.trim();
-                if (name) {
-                    localStorage.setItem('lastConnection', name);
-                }
-                document.getElementById('dashboard').classList.remove('hidden');
-                
-                this.quickFilter = new QuickFilter(this.esService);
-                this.search = new Search(this.esService);
-                
-                await this.updateDashboard();
-                
-                if (this.autoRefresh) {
-                    this.autoRefresh.destroy();
-                }
-                this.autoRefresh = new AutoRefresh(this);
-                
-                Toast.show('Connected and data loaded successfully', 'success');
-            } else {
-                this.esService = null;
-                this.indicesRepository = null;
-                this.quickFilter = null;
-                this.search = null;
-                document.getElementById('dashboard').classList.add('hidden');
-                Toast.show('Failed to connect to Elasticsearch', 'error');
+            const name = document.getElementById('connectionName').value.trim();
+            if (name) {
+                localStorage.setItem('lastConnection', name);
             }
+            document.getElementById('dashboard').classList.remove('hidden');
+            
+            this.quickFilter = new QuickFilter(this.esService);
+            this.search = new Search(this.esService);
+            
+            await this.updateDashboard();
+            
+            if (this.autoRefresh) {
+                this.autoRefresh.destroy();
+            }
+            this.autoRefresh = new AutoRefresh(this);
+            
+            Toast.show('Connected and data loaded successfully', 'success');
         } catch (error) {
-            this.esService = null;
-            this.indicesRepository = null;
-            this.quickFilter = null;
-            this.search = null;
-            document.getElementById('dashboard').classList.add('hidden');
-            Toast.show(`Connection error: ${error.message}`, 'error');
+            console.error('Connection error:', error);
+            Toast.show(error.message, 'error');
         }
     }
 
@@ -580,9 +592,11 @@ class ESMonitor {
             if (lastConnection) {
                 document.getElementById('connectionName').value = lastConnection.name;
                 document.getElementById('esUrl').value = lastConnection.url;
+                document.getElementById('esUsername').value = lastConnection.auth?.username || '';
+                document.getElementById('esPassword').value = lastConnection.auth?.password || '';
                 document.getElementById('selectedConnectionText').textContent = lastConnection.name;
                 
-                this.esService = new ElasticsearchService(lastConnection.url);
+                this.esService = new ElasticsearchService(lastConnection.url, lastConnection.auth);
                 this.indicesRepository = new IndicesRepository(this.esService);
                 
                 const isConnected = await this.esService.checkConnection();
@@ -603,6 +617,8 @@ class ESMonitor {
         localStorage.removeItem('lastConnection');
         document.getElementById('esUrl').value = '';
         document.getElementById('connectionName').value = '';
+        document.getElementById('esUsername').value = '';
+        document.getElementById('esPassword').value = '';
         document.getElementById('selectedConnectionText').textContent = 'Select a connection';
         document.getElementById('dashboard').classList.add('hidden');
         this.esService = null;
@@ -1118,9 +1134,10 @@ class ESMonitor {
                     if (connection) {
                         document.getElementById('connectionName').value = connection.name;
                         document.getElementById('esUrl').value = connection.url;
+                        document.getElementById('esUsername').value = connection.auth?.username || '';
+                        document.getElementById('esPassword').value = connection.auth?.password || '';
                         document.getElementById('selectedConnectionText').textContent = connection.name;
                         dropdownMenu.classList.remove('show');
-                        // Otomatik connect
                         await this.connect();
                     }
                 }
@@ -1135,6 +1152,8 @@ class ESMonitor {
                 if (connection) {
                     document.getElementById('connectionName').value = connection.name;
                     document.getElementById('esUrl').value = connection.url;
+                    document.getElementById('esUsername').value = connection.auth?.username || '';
+                    document.getElementById('esPassword').value = connection.auth?.password || '';
                     document.getElementById('selectedConnectionText').textContent = connection.name;
                     dropdownMenu.classList.remove('show');
                 }
@@ -1159,6 +1178,8 @@ class ESMonitor {
     saveConnection() {
         const name = document.getElementById('connectionName').value.trim();
         const url = document.getElementById('esUrl').value.trim();
+        const username = document.getElementById('esUsername').value.trim();
+        const password = document.getElementById('esPassword').value.trim();
 
         if (!url) {
             Toast.show('Please enter Elasticsearch URL', 'error');
@@ -1171,14 +1192,18 @@ class ESMonitor {
         }
 
         const connections = this.getSavedConnections();
+        const connectionData = {
+            name,
+            url,
+            auth: username && password ? { username, password } : null
+        };
         
-        // Eğer connection zaten varsa güncelle
         const existingIndex = connections.findIndex(c => c.name === name);
         if (existingIndex !== -1) {
-            connections[existingIndex] = { name, url };
+            connections[existingIndex] = connectionData;
             Toast.show('Connection updated successfully', 'success');
         } else {
-            connections.push({ name, url });
+            connections.push(connectionData);
             Toast.show('Connection saved successfully', 'success');
         }
 
@@ -1200,6 +1225,8 @@ class ESMonitor {
         this.updateConnectionsList();
         document.getElementById('connectionName').value = '';
         document.getElementById('esUrl').value = '';
+        document.getElementById('esUsername').value = '';
+        document.getElementById('esPassword').value = '';
         document.getElementById('selectedConnectionText').textContent = 'Select a connection';
         Toast.show('Connection deleted successfully', 'success');
     }
