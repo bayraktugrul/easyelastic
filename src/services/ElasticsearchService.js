@@ -145,15 +145,6 @@ class ElasticsearchService {
 
     async createIndex(indexName, settings) {
         try {
-            const exists = await this.fetchWithOptions(`${this.baseUrl}/${indexName}`);
-            if (exists.ok) {
-                throw new Error('Index already exists');
-            }
-
-            console.log('Creating index:', indexName);
-            console.log('Settings object:', settings);
-            console.log('Settings JSON:', JSON.stringify(settings, null, 2));
-
             const response = await this.fetchWithOptions(`${this.baseUrl}/${indexName}`, {
                 method: 'PUT',
                 body: JSON.stringify(settings)
@@ -169,6 +160,9 @@ class ElasticsearchService {
             return responseData;
         } catch (error) {
             console.error('Error creating index:', error);
+            if (error.message.includes('resource_already_exists_exception')) {
+                throw new Error('Index already exists');
+            }
             throw error;
         }
     }
