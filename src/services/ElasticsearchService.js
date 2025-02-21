@@ -2,6 +2,7 @@ class ElasticsearchService {
     constructor(baseUrl, auth = null) {
         this.baseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
         this.auth = auth;
+        console.log('ElasticsearchService initialized with auth:', auth);
     }
 
     async fetchWithOptions(url, options = {}) {
@@ -50,9 +51,9 @@ class ElasticsearchService {
     async getClusterStats() {
         try {
             const [stats, health, nodes] = await Promise.all([
-                fetch(`${this.baseUrl}/_cluster/stats`).then(r => r.json()),
-                fetch(`${this.baseUrl}/_cluster/health`).then(r => r.json()),
-                fetch(`${this.baseUrl}/_nodes/stats/os,jvm,fs`).then(r => r.json())
+                this.fetchWithOptions(`${this.baseUrl}/_cluster/stats`).then(r => r.json()),
+                this.fetchWithOptions(`${this.baseUrl}/_cluster/health`).then(r => r.json()),
+                this.fetchWithOptions(`${this.baseUrl}/_nodes/stats/os,jvm,fs`).then(r => r.json())
             ]);
 
             return this.processClusterStats(stats, health, nodes);
@@ -138,14 +139,14 @@ class ElasticsearchService {
     }
 
     async getIndicesInfo() {
-        const response = await fetch(`${this.baseUrl}/_cat/indices?format=json&bytes=b`);
+        const response = await this.fetchWithOptions(`${this.baseUrl}/_cat/indices?format=json&bytes=b`);
         if (!response.ok) throw new Error('Failed to fetch indices info');
         return await response.json();
     }
 
     async createIndex(indexName, settings) {
         try {
-            const exists = await fetch(`${this.baseUrl}/${indexName}`);
+            const exists = await this.fetchWithOptions(`${this.baseUrl}/${indexName}`);
             if (exists.ok) {
                 throw new Error('Index already exists');
             }
@@ -154,12 +155,8 @@ class ElasticsearchService {
             console.log('Settings object:', settings);
             console.log('Settings JSON:', JSON.stringify(settings, null, 2));
 
-            const response = await fetch(`${this.baseUrl}/${indexName}`, {
+            const response = await this.fetchWithOptions(`${this.baseUrl}/${indexName}`, {
                 method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                mode: 'cors',
                 body: JSON.stringify(settings)
             });
 
@@ -178,7 +175,7 @@ class ElasticsearchService {
     }
 
     async deleteIndex(indexName) {
-        const response = await fetch(`${this.baseUrl}/${indexName}`, {
+        const response = await this.fetchWithOptions(`${this.baseUrl}/${indexName}`, {
             method: 'DELETE'
         });
 
@@ -192,7 +189,7 @@ class ElasticsearchService {
 
     async getAliases(indexName) {
         try {
-            const response = await fetch(`${this.baseUrl}/${indexName}/_alias`);
+            const response = await this.fetchWithOptions(`${this.baseUrl}/${indexName}/_alias`);
             
             if (!response.ok) {
                 throw new Error('Failed to fetch aliases');
@@ -207,11 +204,8 @@ class ElasticsearchService {
     }
 
     async addAlias(indexName, aliasName) {
-        const response = await fetch(`${this.baseUrl}/_aliases`, {
+        const response = await this.fetchWithOptions(`${this.baseUrl}/_aliases`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
             body: JSON.stringify({
                 "actions": [
                     { "add": { "index": indexName, "alias": aliasName } }
@@ -228,11 +222,8 @@ class ElasticsearchService {
     }
 
     async removeAlias(indexName, aliasName) {
-        const response = await fetch(`${this.baseUrl}/_aliases`, {
+        const response = await this.fetchWithOptions(`${this.baseUrl}/_aliases`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
             body: JSON.stringify({
                 "actions": [
                     { "remove": { "index": indexName, "alias": aliasName } }
@@ -249,20 +240,20 @@ class ElasticsearchService {
     }
 
     async getIndexSettings(indexName) {
-        const response = await fetch(`${this.baseUrl}/${indexName}/_settings`);
+        const response = await this.fetchWithOptions(`${this.baseUrl}/${indexName}/_settings`);
         if (!response.ok) throw new Error('Failed to fetch index settings');
         return await response.json();
     }
 
     async getIndexMapping(indexName) {
-        const response = await fetch(`${this.baseUrl}/${indexName}/_mapping`);
+        const response = await this.fetchWithOptions(`${this.baseUrl}/${indexName}/_mapping`);
         if (!response.ok) throw new Error('Failed to fetch index mapping');
         return await response.json();
     }
 
     async getClusterInfo() {
         try {
-            const response = await fetch(this.baseUrl);
+            const response = await this.fetchWithOptions(this.baseUrl);
             if (!response.ok) {
                 throw new Error('Failed to fetch cluster info');
             }
@@ -275,11 +266,8 @@ class ElasticsearchService {
 
     async updateMapping(indexName, mapping) {
         try {
-            const response = await fetch(`${this.baseUrl}/${indexName}/_mapping`, {
+            const response = await this.fetchWithOptions(`${this.baseUrl}/${indexName}/_mapping`, {
                 method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
                 body: JSON.stringify(mapping)
             });
 
@@ -307,11 +295,8 @@ class ElasticsearchService {
                 docData
             });
 
-            const response = await fetch(url, {
+            const response = await this.fetchWithOptions(url, {
                 method: method,
-                headers: {
-                    'Content-Type': 'application/json',
-                },
                 body: JSON.stringify(docData)
             });
 
@@ -331,7 +316,7 @@ class ElasticsearchService {
 
     async refreshIndex(indexName) {
         try {
-            const response = await fetch(`${this.baseUrl}/${indexName}/_refresh`, {
+            const response = await this.fetchWithOptions(`${this.baseUrl}/${indexName}/_refresh`, {
                 method: 'POST'
             });
 
@@ -348,7 +333,7 @@ class ElasticsearchService {
 
     async searchDocuments(indexName, params = {}) {
         try {
-            const indexExists = await fetch(`${this.baseUrl}/${indexName}`);
+            const indexExists = await this.fetchWithOptions(`${this.baseUrl}/${indexName}`);
             if (!indexExists.ok) {
                 throw new Error(`Index ${indexName} not found`);
             }
@@ -364,11 +349,8 @@ class ElasticsearchService {
                 params: searchParams
             });
 
-            const response = await fetch(`${this.baseUrl}/${indexName}/_search`, {
+            const response = await this.fetchWithOptions(`${this.baseUrl}/${indexName}/_search`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
                 body: JSON.stringify(searchParams)
             });
 
@@ -394,16 +376,13 @@ class ElasticsearchService {
         try {
             const options = {
                 method: method,
-                headers: {
-                    'Content-Type': 'application/json'
-                }
             };
 
             if (body) {
                 options.body = JSON.stringify(body);
             }
 
-            const response = await fetch(`${this.baseUrl}/${endpoint}`, options);
+            const response = await this.fetchWithOptions(`${this.baseUrl}/${endpoint}`, options);
             
             if (endpoint.startsWith('_cat')) {
                 const text = await response.text();
@@ -426,7 +405,7 @@ class ElasticsearchService {
 
     async getShardDistribution() {
         try {
-            const response = await fetch(`${this.baseUrl}/_cat/shards?format=json`);
+            const response = await this.fetchWithOptions(`${this.baseUrl}/_cat/shards?format=json`);
             if (!response.ok) throw new Error('Failed to fetch shard distribution');
             const shards = await response.json();
             

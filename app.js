@@ -367,19 +367,8 @@ class ESMonitor {
             const url = document.getElementById('esUrl').value.trim();
             const username = document.getElementById('esUsername').value.trim();
             const password = document.getElementById('esPassword').value.trim();
-
             if (!url) {
                 Toast.show('Please enter Elasticsearch URL', 'error');
-                return;
-            }
-
-            const auth = username && password ? { username, password } : null;
-            
-            this.esService = new ElasticsearchService(url, auth);
-            const isConnected = await this.esService.checkConnection();
-
-            if (!isConnected) {
-                Toast.show('Failed to connect to Elasticsearch', 'error');
                 return;
             }
 
@@ -390,29 +379,46 @@ class ESMonitor {
                 this.search = null;
             }
 
+            const auth = username && password ? { username, password } : null;
+
             this.esService = new ElasticsearchService(url, auth);
             this.indicesRepository = new IndicesRepository(this.esService);
-            
-            const name = document.getElementById('connectionName').value.trim();
-            if (name) {
-                localStorage.setItem('lastConnection', name);
+
+            const isConnected = await this.esService.checkConnection();
+            if (isConnected) {
+                localStorage.setItem('esUrl', url);
+                const name = document.getElementById('connectionName').value.trim();
+                if (name) {
+                    localStorage.setItem('lastConnection', name);
+                }
+                document.getElementById('dashboard').classList.remove('hidden');
+
+                this.quickFilter = new QuickFilter(this.esService);
+                this.search = new Search(this.esService);
+
+                await this.updateDashboard();
+
+                if (this.autoRefresh) {
+                    this.autoRefresh.destroy();
+                }
+                this.autoRefresh = new AutoRefresh(this);
+
+                Toast.show('Connected and data loaded successfully', 'success');
+            } else {
+                this.esService = null;
+                this.indicesRepository = null;
+                this.quickFilter = null;
+                this.search = null;
+                document.getElementById('dashboard').classList.add('hidden');
+                Toast.show('Failed to connect to Elasticsearch', 'error');
             }
-            document.getElementById('dashboard').classList.remove('hidden');
-            
-            this.quickFilter = new QuickFilter(this.esService);
-            this.search = new Search(this.esService);
-            
-            await this.updateDashboard();
-            
-            if (this.autoRefresh) {
-                this.autoRefresh.destroy();
-            }
-            this.autoRefresh = new AutoRefresh(this);
-            
-            Toast.show('Connected and data loaded successfully', 'success');
         } catch (error) {
-            console.error('Connection error:', error);
-            Toast.show(error.message, 'error');
+            this.esService = null;
+            this.indicesRepository = null;
+            this.quickFilter = null;
+            this.search = null;
+            document.getElementById('dashboard').classList.add('hidden');
+            Toast.show(`Connection error: ${error.message}`, 'error');
         }
     }
 
