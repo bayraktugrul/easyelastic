@@ -2,7 +2,6 @@ class ElasticsearchService {
     constructor(baseUrl, auth = null) {
         this.baseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
         this.auth = auth;
-        console.log('ElasticsearchService initialized with auth:', auth);
     }
 
     async fetchWithOptions(url, options = {}) {
