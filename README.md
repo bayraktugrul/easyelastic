@@ -1,38 +1,25 @@
-<p align="center">
-  <h1 align="center">
-    <span style="color: #F59E0B;">⚡</span>
-    <span style="background: linear-gradient(135deg, #006BB4 0%, #3B82F6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Easy</span><span style="background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 700;">Elastic</span>
-  </h1>
-</p>
-
-<h4 align="center">A modern, user-friendly dashboard for managing and monitoring Elasticsearch clusters</h4>
-
-
+<pre><code>   
+#   _____          / You Know, for Search
+#  |  O  O  |  - - 
+#  |   --      |
+#  |_______|
+#      ||
+#  / /
+</code></pre>
 
 
-### 🌟 Overview
-
-**EasyElastic** offers a powerful and intuitive dashboard tailored for Elasticsearch users. With real-time monitoring, index management, EasyElastic empowers you to gain actionable insights and maintain cluster effortlessly.
+EasyElastic offers a powerful and intuitive dashboard tailored for Elasticsearch users. 
 
 
-### ⚡ Key Features
+## ⚡ Key Features  
 
-####  **Advanced Monitoring & Analytics**
-- Real-Time Metrics: Monitor essential metrics like CPU, memory usage, and disk space.
-- Cluster Health Monitoring: Detailed health overviews for clusters and indices, enabling proactive issue resolution.
-
-####  **Index Management**
-- Visual Index Creation: Seamlessly create and configure indices with a user-friendly interface.
-- Mapping Management: Easily manage field mappings and templates for structured data.
-- Alias Management: Simplify alias configuration and updates with centralized tools.
-
-####  **Data Exploration & Insights**
-- Dynamic Query Builder: Craft and execute queries with a robust editor and interactive visualizations using auto-complete and syntax highlighting.
-- Sample Data Preview: Quickly preview index data for faster analysis.
-- Structured Data Viewer: View JSON data in an organized, readable format.
-
-
-### 🤝 Contributing
+- **Cluster Monitoring** – Keep track of your cluster’s health and performance.  
+- **Index Management** – View, create, and manage your Elasticsearch indices.  
+- **Data Exploration & Insights** – Interactively explore and analyze your data.  
+- **Search & Query Builder** – Includes auto-complete, syntax highlighting, and visual query results.  
+- **Saved Queries** – Store and reuse your most important queries for quick access.  
+- **Shard Distribution Visualization** – Gain insights into how data is distributed across shards.  
+## 🤝 Contributing
 
 We welcome contributions from the community! To get started:
 
@@ -45,10 +32,7 @@ We welcome contributions from the community! To get started:
 Your contributions make EasyElastic better for everyone. Thank you for your support.
 
 
-### 📝 License
+## 📝 License
 
 This project is licensed under the **EasyElastic License**. Please refer to the [LICENSE](LICENSE) file for more details.
 
-
-
-<p align="center">Crafted with ❤️ for the Elasticsearch community</p>
