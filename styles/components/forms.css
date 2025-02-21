@@ -877,4 +877,97 @@
     background-color: var(--background);
     color: var(--text-primary);
     padding: 0.5rem;
+}
+
+.auth-group {
+    margin-top: 1rem;
+    width: 100%;
+    padding: 1rem;
+    background: var(--input-background);
+    border-radius: 8px;
+    border: 1px solid var(--border-light);
+}
+
+.auth-header {
+    margin-bottom: 0.75rem;
+}
+
+.auth-label {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.auth-optional {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    opacity: 0.7;
+    margin-left: 0.5rem;
+    font-weight: normal;
+}
+
+.auth-inputs {
+    display: flex;
+    gap: 1rem;
+    max-width: 600px;
+}
+
+.password-input-wrapper {
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-input-wrapper input {
+    width: 100%;
+    padding-right: 40px;
+}
+
+.password-toggle {
+    background: none;
+    border: none;
+    padding: 0;
+    width: 40px;
+    color: var(--text-secondary);
+    opacity: 0.7;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+}
+
+.password-toggle:hover {
+    opacity: 0.9;
+}
+
+.password-toggle.visible i::before {
+    content: "\f070";
+}
+
+.auth-inputs input {
+    flex: 1;
+    padding: 0.6rem 1rem;
+    background: var(--input-background);
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+    color: var(--text-primary);
+}
+
+.auth-inputs input:hover {
+    border-color: rgba(99, 102, 241, 0.4);
+}
+
+.auth-inputs input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
 } 
