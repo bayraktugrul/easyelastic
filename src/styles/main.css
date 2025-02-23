@@ -1,0 +1,34 @@
+.status-panel,
+.indices-panel,
+.shards-data-panel,
+.search-panel,
+.sample-data-panel,
+.quick-filter-panel {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+    margin-bottom: 1.5rem;
+}
+
+.quick-filter-panel {
+    margin-bottom: 0;
+}
+
+.panel-header {
+    padding: 1.25rem;
+    border-bottom: 1px solid #e5e7eb;
+    border-radius: 12px 12px 0 0;
+    background: #f8fafc;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.status-panel-content,
+.indices-table,
+.shards-table-container,
+.search-content,
+.sample-table-container,
+.quick-filter-content {
+    padding: 1.5rem;
+} 

@@ -792,4 +792,8 @@ h2 i {
 
 .refresh-control select:hover {
     border-color: var(--primary-color);
+}
+
+.shards-data-panel {
+    margin-bottom: 1.5rem;
 } 

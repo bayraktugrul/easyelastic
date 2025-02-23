@@ -1,4 +1,5 @@
 body .search-panel {
+    margin-top: 0;
     margin-bottom: 0;
     background: var(--panel-background);
     border: 1px solid var(--border-panel);
