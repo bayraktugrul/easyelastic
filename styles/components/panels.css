@@ -519,6 +519,8 @@ h2 i {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
 }
 
 .sample-actions {
@@ -796,4 +798,96 @@ h2 i {
 
 .shards-data-panel {
     margin-bottom: 1.5rem;
+}
+
+.panel-toggle {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    margin-right: 0.5rem;
+}
+
+.panel-toggle:hover {
+    background: var(--info-bg);
+    color: var(--primary-color);
+}
+
+.panel-toggle i {
+    transition: transform 0.3s ease;
+    font-size: 14px;
+}
+
+.panel-toggle.collapsed i {
+    transform: rotate(-90deg);
+}
+
+.panel-content {
+    transition: all 0.3s ease;
+    opacity: 1;
+    max-height: 2000px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.panel-content.collapsed {
+    max-height: 0;
+    opacity: 0;
+    padding: 0;
+    margin: 0;
+    pointer-events: none;
+    border: none !important;
+}
+
+.search-panel {
+    display: flex;
+    flex-direction: column;
+    min-height: 600px;
+    transition: min-height 0.3s ease;
+    background: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+}
+
+.search-panel.collapsed {
+    min-height: auto;
+    height: auto;
+}
+
+.search-panel .panel-header {
+    padding: 1.25rem;
+    margin-bottom: 0;
+    background: var(--panel-header-background);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.search-panel .panel-content {
+    flex: 1;
+    display: flex;
+    padding: 1.5rem;
+    gap: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.search-panel .panel-content.collapsed {
+    flex: 0;
+    padding: 0;
+    margin: 0;
+    height: 0;
+    min-height: 0;
+    border: none;
+}
+
+.search-panel .panel-content > * {
+    flex: 1;
+    min-width: 0;
 } 

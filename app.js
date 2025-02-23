@@ -29,6 +29,7 @@ class ESMonitor {
         this.initializeEventListeners();
         this.initializeModalHandlers();
         this.initializePasswordToggle();
+        this.initializePanelToggles();
         this.subscribeToEvents();
         this.loadSavedConnection();
         this.loadSavedConnections();
@@ -1094,18 +1095,22 @@ class ESMonitor {
         const dropdownBtn = document.getElementById('connectionSelectBtn');
         const dropdownMenu = document.getElementById('connectionDropdownMenu');
         
-        document.getElementById('saveConnectionBtn').addEventListener('click', () => {
+        if (dropdownBtn && dropdownMenu) {
+            dropdownBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                dropdownMenu.classList.toggle('show');
+            });
+            
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.connection-dropdown') && dropdownMenu.classList.contains('show')) {
+                    dropdownMenu.classList.remove('show');
+                }
+            });
+        }
+        
+        document.getElementById('saveConnectionBtn')?.addEventListener('click', () => {
             this.saveConnection();
-        });
-        
-        dropdownBtn.addEventListener('click', () => {
-            dropdownMenu.classList.toggle('show');
-        });
-        
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('.connection-dropdown')) {
-                dropdownMenu.classList.remove('show');
-            }
         });
     }
 
@@ -1247,6 +1252,102 @@ class ESMonitor {
             console.error('Failed to initialize components:', error);
             Toast.show('Failed to initialize components', 'error');
         }
+    }
+
+    initializePanelToggles() {
+        const panels = document.querySelectorAll('.status-panel, .metrics-panel, .indices-panel, .sample-data-panel, .quick-filter-panel, .search-panel, .shards-data-panel, .connection-panel, .cluster-health-panel');
+        
+        panels.forEach(panel => {
+            const header = panel.querySelector('.panel-header');
+            if (!header) return;
+            
+            const title = header.querySelector('h2');
+            if (!title) return;
+            
+            const toggleBtn = document.createElement('button');
+            toggleBtn.className = 'panel-toggle';
+            toggleBtn.innerHTML = '<i class="fas fa-chevron-down"></i>';
+            toggleBtn.setAttribute('title', 'Toggle Panel');
+            
+            title.insertBefore(toggleBtn, title.firstChild);
+            
+            let content = panel.querySelector('.panel-content');
+            
+            if (!content) {
+                const contentElement = 
+                    panel.querySelector('.status-panel-content') ||
+                    panel.querySelector('.indices-table') ||
+                    panel.querySelector('.shards-table-container') ||
+                    panel.querySelector('.search-content') ||
+                    panel.querySelector('.sample-table-container') ||
+                    panel.querySelector('.quick-filter-content') ||
+                    panel.querySelector('.cluster-stats') ||
+                    panel.querySelector('.health-status') || 
+                    panel.querySelector('.search-panel > div:not(.panel-header)');
+
+                if (contentElement && contentElement.parentNode === panel) {
+                    content = document.createElement('div');
+                    content.className = 'panel-content';
+                    
+                    if (panel.classList.contains('search-panel')) {
+                        while (panel.children.length > 1) { 
+                            content.appendChild(panel.children[1]);
+                        }
+                        panel.appendChild(content);
+                    } else {
+                        contentElement.parentNode.insertBefore(content, contentElement);
+                        content.appendChild(contentElement);
+                    }
+                }
+            }
+            
+            if (content) {
+                const panelId = panel.id || panel.className.split(' ')[0];
+                const isCollapsed = localStorage.getItem(`panel_${panelId}_collapsed`) === 'true';
+                
+                if (isCollapsed) {
+                    content.classList.add('collapsed');
+                    toggleBtn.classList.add('collapsed');
+                    
+                    if (panel.classList.contains('search-panel')) {
+                        panel.classList.add('collapsed');
+                        panel.style.minHeight = 'auto';
+                        panel.style.height = 'auto';
+                    }
+                }
+                
+                toggleBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    content.classList.toggle('collapsed');
+                    toggleBtn.classList.toggle('collapsed');
+                    
+                    if (panel.classList.contains('search-panel')) {
+                        panel.classList.toggle('collapsed');
+                        if (content.classList.contains('collapsed')) {
+                            setTimeout(() => {
+                                panel.style.minHeight = 'auto';
+                                panel.style.height = 'auto';
+                            }, 300);
+                        } else {
+                            panel.style.minHeight = '600px';
+                            panel.style.height = null;
+                        }
+                    }
+                    
+                    localStorage.setItem(
+                        `panel_${panelId}_collapsed`,
+                        content.classList.contains('collapsed')
+                    );
+
+                    if (window.$.fn.DataTable) {
+                        setTimeout(() => {
+                            $('.dataTable').DataTable().columns.adjust();
+                        }, 300);
+                    }
+                });
+            }
+        });
     }
 }
 
