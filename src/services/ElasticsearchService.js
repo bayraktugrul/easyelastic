@@ -138,9 +138,40 @@ class ElasticsearchService {
     }
 
     async getIndicesInfo() {
-        const response = await this.fetchWithOptions(`${this.baseUrl}/_cat/indices?format=json&bytes=b`);
-        if (!response.ok) throw new Error('Failed to fetch indices info');
-        return await response.json();
+        try {
+            const response = await this.fetchWithOptions(`${this.baseUrl}/_stats`);
+            if (!response.ok) throw new Error('Failed to fetch indices info');
+            const stats = await response.json();
+            
+            const catResponse = await this.fetchWithOptions(`${this.baseUrl}/_cat/indices?format=json&bytes=b`);
+            if (!catResponse.ok) throw new Error('Failed to fetch cat indices info');
+            const catIndices = await catResponse.json();
+            
+            return catIndices.map(index => {
+                const indexStats = stats.indices[index.index];
+                return {
+                    ...index,
+                    docs: {
+                        count: indexStats?.total?.docs?.count || 0,
+                        deleted: indexStats?.total?.docs?.deleted || 0
+                    },
+                    store: {
+                        size: indexStats?.total?.store?.size_in_bytes || 0,
+                        size_string: this.formatBytes(indexStats?.total?.store?.size_in_bytes || 0)
+                    }
+                };
+            });
+        } catch (error) {
+            console.error('Error in getIndicesInfo:', error);
+            throw error;
+        }
+    }
+
+    formatBytes(bytes) {
+        if (bytes === 0) return '0b';
+        const sizes = ['b', 'kb', 'mb', 'gb', 'tb'];
+        const i = Math.floor(Math.log(bytes) / Math.log(1024));
+        return `${(bytes / Math.pow(1024, i)).toFixed(2)}${sizes[i]}`;
     }
 
     async createIndex(indexName, settings) {

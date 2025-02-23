@@ -11,23 +11,22 @@ class IndicesRepository {
             for (let index of indices) {
                 try {
                     const settings = await this.service.getIndexSettings(index.index);
-                    const creationDate = settings[index.index]?.settings?.index?.creation_date || '';
                     const aliases = await this.service.getAliases(index.index);
 
                     formattedIndices.push({
                         index: index.index,
-                        docs_count: index.docs?.count || 0,
-                        store_size: index.store?.size || '0b',
+                        docs_count: index.docs.count || 0,
+                        store_size: index.store.size_string || '0b',
                         health: index.health,
-                        creation_date: creationDate,
+                        creation_date: settings[index.index]?.settings?.index?.creation_date || '',
                         aliases: aliases
                     });
                 } catch (error) {
                     console.error(`Error processing index ${index.index}:`, error);
                     formattedIndices.push({
                         index: index.index,
-                        docs_count: index.docs?.count || 0,
-                        store_size: index.store?.size || '0b',
+                        docs_count: index.docs.count || 0,
+                        store_size: index.store.size_string || '0b',
                         health: index.health,
                         creation_date: '',
                         aliases: []
