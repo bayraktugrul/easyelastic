@@ -36,7 +36,6 @@ export default class Search {
             this.menu.classList.toggle('show');
         });
 
-        // Close menu when clicking outside
         document.addEventListener('click', (e) => {
             if (!e.target.closest('.saved-queries') && this.menu.classList.contains('show')) {
                 this.menu.classList.remove('show');

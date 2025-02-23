@@ -158,7 +158,6 @@ class ESMonitor {
 
         addAliasBtn.addEventListener('click', () => this.handleAddAlias());
 
-        // Index details modal handlers
         const detailsModal = document.getElementById('indexDetailsModal');
         const closeDetailsBtn = document.getElementById('closeIndexDetails');
         const tabButtons = document.querySelectorAll('.tab-button');
@@ -758,7 +757,7 @@ class ESMonitor {
         try {
             const details = await this.indicesRepository.getIndexDetails(indexName);
             const currentMapping = details.mapping;
-            const originalMapping = JSON.parse(JSON.stringify(details.mapping)); // Deep copy original mapping
+            const originalMapping = JSON.parse(JSON.stringify(details.mapping));
             
             document.getElementById('mappingJson').value = JSON.stringify(currentMapping, null, 2);
             
@@ -784,7 +783,6 @@ class ESMonitor {
             
             refreshVisualFields();
             
-            // Add field handler
             addFieldBtn.addEventListener('click', () => {
                 const fieldName = document.getElementById('fieldName').value.trim();
                 const fieldType = document.getElementById('fieldType').value;
@@ -811,7 +809,6 @@ class ESMonitor {
             modal.classList.remove('hidden');
             modal.dataset.indexName = indexName;
             
-            // Tab switching
             mappingTabs.forEach(tab => {
                 tab.addEventListener('click', () => {
                     const tabId = tab.dataset.tab;
@@ -994,7 +991,6 @@ class ESMonitor {
 
     async showSampleDataPreview(indexName) {
         try {
-            // Önce mapping bilgisini alalım
             const indexDetails = await this.esService.getIndexMapping(indexName);
             const mapping = indexDetails[indexName].mappings.properties || {};
 
@@ -1013,13 +1009,11 @@ class ESMonitor {
                 return;
             }
 
-            // Tüm alanları mapping'den alalım
             const fieldArray = Object.keys(mapping);
 
             const data = response.hits.hits.map(hit => {
                 const row = {};
                 row.id = hit._id;
-                // Tüm mapping alanlarını döngüye al
                 fieldArray.forEach(field => {
                     row[field] = hit._source[field] !== undefined ? 
                         typeof hit._source[field] === 'object' ? 
@@ -1135,7 +1129,6 @@ class ESMonitor {
                 </div>
             `).join('');
 
-        // Add click handlers
         connectionList.querySelectorAll('.connection-item').forEach(item => {
             item.addEventListener('click', async (e) => {
                 if (!e.target.closest('.connection-action-btn')) {
