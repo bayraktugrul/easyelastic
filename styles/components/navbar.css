@@ -20,7 +20,6 @@
     justify-content: space-between;
 }
 
-/* Logo styles */
 .nav-logo {
     display: flex;
     align-items: center;
@@ -60,13 +59,11 @@
     margin-left: -1px;
 }
 
-/* Ensure logo doesn't get hover effects from nav links */
 .nav-logo:hover {
     transform: translateY(-1px);
     background: var(--info-bg);
 }
 
-/* Existing styles */
 .nav-links {
     display: flex;
     list-style: none;

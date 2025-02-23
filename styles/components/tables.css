@@ -248,7 +248,6 @@
     border: 1px solid rgba(229, 231, 235, 0.6);
 }
 
-/* Sample Data Table */
 #sampleDataTable thead th {
     background: var(--table-header-bg);
     color: var(--text-primary);

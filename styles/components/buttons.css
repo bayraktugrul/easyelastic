@@ -84,7 +84,6 @@ button.danger:hover {
     background: var(--error-bg);
 }
 
-/* Action button tooltip stilleri */
 .action-button i[title] {
     cursor: default;
     position: relative;

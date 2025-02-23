@@ -842,7 +842,6 @@ h2 i {
     pointer-events: none;
 }
 
-/* Search panel özel stilleri */
 .search-panel {
     display: flex;
     flex-direction: column;

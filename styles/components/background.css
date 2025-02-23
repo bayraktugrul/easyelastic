@@ -14,7 +14,6 @@
         var(--gradient-overlay);
 }
 
-/* Subtle grid pattern */
 #particles-js::before {
     content: '';
     position: absolute;
