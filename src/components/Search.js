@@ -1,4 +1,5 @@
 import Toast from '../utils/Toast.js';
+import { httpMethods, queryDSL } from '../utils/ElasticsearchSuggestions.js';
 
 export default class Search {
     constructor(esService) {
@@ -216,6 +217,12 @@ export default class Search {
                 padding: { top: 8, bottom: 8 },
                 suggest: {
                     snippets: 'inline'
+                },
+                suggestOnTriggerCharacters: true,
+                quickSuggestions: {
+                    other: true,
+                    comments: true,
+                    strings: true
                 }
             });
 
@@ -225,29 +232,32 @@ export default class Search {
             });
 
             monaco.languages.registerCompletionItemProvider('elasticsearch', {
-                provideCompletionItems: () => {
-                    const suggestions = [
-                        {
-                            label: 'GET index/_search',
-                            kind: monaco.languages.CompletionItemKind.Snippet,
-                            insertText: 'GET ${1:my-index}/_search\n{\n  "query": {\n    "match": {\n      "${2:field}": "${3:value}"\n    }\n  }\n}',
-                            documentation: 'Search specific index'
-                        },
-                        {
-                            label: 'GET _search',
-                            kind: monaco.languages.CompletionItemKind.Snippet,
-                            insertText: 'GET _search\n{\n  "query": {\n    "match_all": {}\n  }\n}',
-                            documentation: 'Search all indices'
-                        },
-                        {
-                            label: 'GET _cat/indices',
-                            kind: monaco.languages.CompletionItemKind.Snippet,
-                            insertText: 'GET _cat/indices?v',
-                            documentation: 'List all indices'
-                        }
-                    ];
-                    return { suggestions };
-                }
+                provideCompletionItems: (model, position) => {
+                    const textUntilPosition = model.getValueInRange({
+                        startLineNumber: position.lineNumber,
+                        startColumn: 1,
+                        endLineNumber: position.lineNumber,
+                        endColumn: position.column
+                    });
+
+                    if (position.lineNumber === 1) {
+                        return {
+                            suggestions: httpMethods.map(method => ({
+                                ...method,
+                                kind: monaco.languages.CompletionItemKind[method.kind]
+                            }))
+                        };
+                    }
+
+                    return {
+                        suggestions: queryDSL.map(suggestion => ({
+                            ...suggestion,
+                            kind: monaco.languages.CompletionItemKind[suggestion.kind],
+                            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
+                        }))
+                    };
+                },
+                triggerCharacters: ['"', '{', '[', '.', ' ']
             });
         });
     }
