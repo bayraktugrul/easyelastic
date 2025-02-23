@@ -150,86 +150,90 @@
         </div>
         
         <div class="dashboard hidden" id="dashboard">
-            <div id="cluster-health" class="status-panel">
-                <h2><i class="fas fa-server"></i> Cluster</h2>
-                <div class="cluster-overview">
-                    <div class="cluster-details">
-                        <div class="info-grid">
-                            <div class="info-item">
-                                <span class="info-label">Cluster Name</span>
-                                <span class="info-value" id="clusterName">-</span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">Node Name</span>
-                                <span class="info-value" id="nodeName">-</span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">Elasticsearch Version</span>
-                                <span class="info-value" id="esVersion">-</span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">Lucene Version</span>
-                                <span class="info-value" id="luceneVersion">-</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="cluster-status">
-                        <div id="clusterHealth" class="health-card"></div>
-                    </div>
-                    <div class="cluster-stats">
-                        <div class="stat-card">
-                            <div class="stat-icon">
-                                <i class="fas fa-database"></i>
-                            </div>
-                            <div class="stat-content">
-                                <div class="stat-label">Indices & Documents</div>
-                                <div class="stat-value" id="indicesCount">-</div>
-                                <div class="stat-details">
-                                    <span id="docCount">-</span> documents
-                                    <br>
-                                    Storage: <span id="usedStorage">-</span> of <span id="totalStorage">-</span>
-                                    (<span id="storagePercent">-</span>)
+            <div id="cluster-health" class="cluster-health-panel">
+                <div class="panel-header">
+                    <h2><i class="fas fa-heartbeat"></i> Cluster</h2>
+                </div>
+                <div class="panel-content">
+                    <div class="cluster-overview">
+                        <div class="cluster-details">
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <span class="info-label">Cluster Name</span>
+                                    <span class="info-value" id="clusterName">-</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Node Name</span>
+                                    <span class="info-value" id="nodeName">-</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Elasticsearch Version</span>
+                                    <span class="info-value" id="esVersion">-</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Lucene Version</span>
+                                    <span class="info-value" id="luceneVersion">-</span>
                                 </div>
                             </div>
                         </div>
-                        <div class="stat-card">
-                            <div class="stat-icon">
-                                <i class="fas fa-server"></i>
-                            </div>
-                            <div class="stat-content">
-                                <div class="stat-label">Nodes</div>
-                                <div class="stat-value" id="nodeCount">-</div>
-                                <div class="stat-details">
-                                    <span id="masterNodes">-</span> master
-                                    · <span id="dataNodes">-</span> data
+                        <div class="cluster-status">
+                            <div id="clusterHealth" class="health-card"></div>
+                        </div>
+                        <div class="cluster-stats">
+                            <div class="stat-card">
+                                <div class="stat-icon">
+                                    <i class="fas fa-database"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <div class="stat-label">Indices & Documents</div>
+                                    <div class="stat-value" id="indicesCount">-</div>
+                                    <div class="stat-details">
+                                        <span id="docCount">-</span> documents
+                                        <br>
+                                        Storage: <span id="usedStorage">-</span> of <span id="totalStorage">-</span>
+                                        (<span id="storagePercent">-</span>)
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-icon">
-                                <i class="fas fa-puzzle-piece"></i>
-                            </div>
-                            <div class="stat-content">
-                                <div class="stat-label">Shards</div>
-                                <div class="stat-value" id="shardCount">-</div>
-                                <div class="stat-details">
-                                    <span id="activeShards">-</span> active
-                                    · <span id="relocatingShards">-</span> relocating
+                            <div class="stat-card">
+                                <div class="stat-icon">
+                                    <i class="fas fa-server"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <div class="stat-label">Nodes</div>
+                                    <div class="stat-value" id="nodeCount">-</div>
+                                    <div class="stat-details">
+                                        <span id="masterNodes">-</span> master
+                                        · <span id="dataNodes">-</span> data
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-icon">
-                                <i class="fas fa-microchip"></i>
+                            <div class="stat-card">
+                                <div class="stat-icon">
+                                    <i class="fas fa-puzzle-piece"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <div class="stat-label">Shards</div>
+                                    <div class="stat-value" id="shardCount">-</div>
+                                    <div class="stat-details">
+                                        <span id="activeShards">-</span> active
+                                        · <span id="relocatingShards">-</span> relocating
+                                    </div>
+                                </div>
                             </div>
-                            <div class="stat-content">
-                                <div class="stat-label">System</div>
-                                <div class="stat-value" id="cpuUsage">-</div>
-                                <div class="stat-details">
-                                    JVM: <span id="memoryUsage">-</span> of <span id="heapUsage">-</span>
-                                    <br>
-                                    System: <span id="systemMemoryUsed">-</span> of <span id="systemMemory">-</span>
-                                    (<span id="systemMemoryPercent">-</span>)
+                            <div class="stat-card">
+                                <div class="stat-icon">
+                                    <i class="fas fa-microchip"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <div class="stat-label">System</div>
+                                    <div class="stat-value" id="cpuUsage">-</div>
+                                    <div class="stat-details">
+                                        JVM: <span id="memoryUsage">-</span> of <span id="heapUsage">-</span>
+                                        <br>
+                                        System: <span id="systemMemoryUsed">-</span> of <span id="systemMemory">-</span>
+                                        (<span id="systemMemoryPercent">-</span>)
+                                    </div>
                                 </div>
                             </div>
                         </div>

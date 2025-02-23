@@ -5,7 +5,7 @@
     padding: 1.25rem;
     box-shadow: var(--shadow-sm);
     backdrop-filter: blur(6px);
-    background: var(--card-background);
+    margin-bottom: 1.5rem;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -518,9 +518,10 @@ h2 i {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1rem;
-    padding-bottom: 1rem;
+    padding: 1.25rem;
+    margin-bottom: 0;
     border-bottom: 1px solid var(--border-color);
+    background: var(--panel-header-background);
 }
 
 .sample-actions {
@@ -830,12 +831,7 @@ h2 i {
 }
 
 .panel-content {
-    transition: all 0.3s ease;
-    opacity: 1;
-    max-height: 2000px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
+    padding: 1.25rem;
 }
 
 .panel-content.collapsed {
@@ -844,14 +840,14 @@ h2 i {
     padding: 0;
     margin: 0;
     pointer-events: none;
-    border: none !important;
 }
 
+/* Search panel özel stilleri */
 .search-panel {
     display: flex;
     flex-direction: column;
     min-height: 600px;
-    transition: min-height 0.3s ease;
+    transition: all 0.3s ease;
     background: var(--card-background);
     border: 1px solid var(--border-color);
     border-radius: 8px;
@@ -859,7 +855,7 @@ h2 i {
 }
 
 .search-panel.collapsed {
-    min-height: auto;
+    min-height: unset;
     height: auto;
 }
 
@@ -868,14 +864,26 @@ h2 i {
     margin-bottom: 0;
     background: var(--panel-header-background);
     border-bottom: 1px solid var(--border-color);
+    border-radius: 8px 8px 0 0;
 }
 
 .search-panel .panel-content {
     flex: 1;
     display: flex;
-    padding: 1.5rem;
-    gap: 1.5rem;
+    padding: 0;
+    margin-top: 0;
     transition: all 0.3s ease;
+}
+
+.search-panel .search-content {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    background: var(--card-background);
+    border-top: 1px solid var(--border-color);
+    border-radius: 0 0 8px 8px;
 }
 
 .search-panel .panel-content.collapsed {
@@ -884,10 +892,105 @@ h2 i {
     margin: 0;
     height: 0;
     min-height: 0;
-    border: none;
+    opacity: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.search-panel .panel-content.collapsed .search-content {
+    display: none;
 }
 
 .search-panel .panel-content > * {
     flex: 1;
     min-width: 0;
+}
+
+.cluster-health-panel {
+    background: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cluster-health-panel .panel-header {
+    padding: 1.25rem;
+    margin-bottom: 0;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--panel-header-background);
+}
+
+.cluster-health-panel .panel-header h2 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.cluster-health-panel .panel-header h2 i {
+    color: var(--primary-color);
+}
+
+.cluster-health-panel .health-status {
+    padding: 1.25rem;
+}
+
+.cluster-health-panel .panel-content {
+    padding: 1.25rem;
+}
+
+.cluster-health-panel .panel-content.collapsed {
+    max-height: 0;
+    opacity: 0;
+    padding: 0;
+    margin: 0;
+    pointer-events: none;
+}
+
+.cluster-health-panel:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.cluster-overview {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    padding: 1rem;
+    background: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.info-label {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.info-value {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.cluster-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
 } 

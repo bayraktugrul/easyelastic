@@ -1275,24 +1275,19 @@ class ESMonitor {
             
             if (!content) {
                 const contentElement = 
-                    panel.querySelector('.status-panel-content') ||
+                    panel.querySelector('.cluster-overview') ||
                     panel.querySelector('.indices-table') ||
                     panel.querySelector('.shards-table-container') ||
                     panel.querySelector('.search-content') ||
                     panel.querySelector('.sample-table-container') ||
-                    panel.querySelector('.quick-filter-content') ||
-                    panel.querySelector('.cluster-stats') ||
-                    panel.querySelector('.health-status') || 
-                    panel.querySelector('.search-panel > div:not(.panel-header)');
+                    panel.querySelector('.quick-filter-content');
 
                 if (contentElement && contentElement.parentNode === panel) {
                     content = document.createElement('div');
                     content.className = 'panel-content';
                     
                     if (panel.classList.contains('search-panel')) {
-                        while (panel.children.length > 1) { 
-                            content.appendChild(panel.children[1]);
-                        }
+                        content.appendChild(contentElement);
                         panel.appendChild(content);
                     } else {
                         contentElement.parentNode.insertBefore(content, contentElement);
@@ -1308,11 +1303,8 @@ class ESMonitor {
                 if (isCollapsed) {
                     content.classList.add('collapsed');
                     toggleBtn.classList.add('collapsed');
-                    
                     if (panel.classList.contains('search-panel')) {
                         panel.classList.add('collapsed');
-                        panel.style.minHeight = 'auto';
-                        panel.style.height = 'auto';
                     }
                 }
                 
@@ -1324,27 +1316,12 @@ class ESMonitor {
                     
                     if (panel.classList.contains('search-panel')) {
                         panel.classList.toggle('collapsed');
-                        if (content.classList.contains('collapsed')) {
-                            setTimeout(() => {
-                                panel.style.minHeight = 'auto';
-                                panel.style.height = 'auto';
-                            }, 300);
-                        } else {
-                            panel.style.minHeight = '600px';
-                            panel.style.height = null;
-                        }
                     }
                     
                     localStorage.setItem(
                         `panel_${panelId}_collapsed`,
                         content.classList.contains('collapsed')
                     );
-
-                    if (window.$.fn.DataTable) {
-                        setTimeout(() => {
-                            $('.dataTable').DataTable().columns.adjust();
-                        }, 300);
-                    }
                 });
             }
         });
