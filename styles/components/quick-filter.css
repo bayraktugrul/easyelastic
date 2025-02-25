@@ -42,7 +42,6 @@
     gap: 1.5rem;
 }
 
-/* Filter Items */
 .filters-container {
     display: flex;
     flex-direction: column;
@@ -112,7 +111,6 @@
     background: var(--error-bg);
 }
 
-/* Query Preview and Results */
 .query-preview-box,
 .results-container {
     background: var(--panel-background) !important;
@@ -147,7 +145,6 @@
     background: var(--panel-background) !important;
 }
 
-/* Index Selector */
 #quickFilterIndexSelector {
     min-width: 250px;
     padding: 0.75rem 2.5rem 0.75rem 1rem;
@@ -175,7 +172,6 @@
     box-shadow: 0 0 0 3px var(--input-focus-ring);
 }
 
-/* Add Filter Button */
 #addQuickFilterBtn {
     padding: 0.75rem 1.25rem;
     background: var(--button-bg);

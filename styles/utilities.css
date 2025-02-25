@@ -19,7 +19,6 @@
     to { transform: rotate(360deg); }
 }
 
-/* Tooltip styles */
 [title] {
     cursor: help;
     position: relative;

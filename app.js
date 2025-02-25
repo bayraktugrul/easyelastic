@@ -29,6 +29,7 @@ class ESMonitor {
         this.initializeEventListeners();
         this.initializeModalHandlers();
         this.initializePasswordToggle();
+        this.initializePanelToggles();
         this.subscribeToEvents();
         this.loadSavedConnection();
         this.loadSavedConnections();
@@ -157,7 +158,6 @@ class ESMonitor {
 
         addAliasBtn.addEventListener('click', () => this.handleAddAlias());
 
-        // Index details modal handlers
         const detailsModal = document.getElementById('indexDetailsModal');
         const closeDetailsBtn = document.getElementById('closeIndexDetails');
         const tabButtons = document.querySelectorAll('.tab-button');
@@ -757,7 +757,7 @@ class ESMonitor {
         try {
             const details = await this.indicesRepository.getIndexDetails(indexName);
             const currentMapping = details.mapping;
-            const originalMapping = JSON.parse(JSON.stringify(details.mapping)); // Deep copy original mapping
+            const originalMapping = JSON.parse(JSON.stringify(details.mapping));
             
             document.getElementById('mappingJson').value = JSON.stringify(currentMapping, null, 2);
             
@@ -783,7 +783,6 @@ class ESMonitor {
             
             refreshVisualFields();
             
-            // Add field handler
             addFieldBtn.addEventListener('click', () => {
                 const fieldName = document.getElementById('fieldName').value.trim();
                 const fieldType = document.getElementById('fieldType').value;
@@ -810,7 +809,6 @@ class ESMonitor {
             modal.classList.remove('hidden');
             modal.dataset.indexName = indexName;
             
-            // Tab switching
             mappingTabs.forEach(tab => {
                 tab.addEventListener('click', () => {
                     const tabId = tab.dataset.tab;
@@ -993,7 +991,6 @@ class ESMonitor {
 
     async showSampleDataPreview(indexName) {
         try {
-            // Önce mapping bilgisini alalım
             const indexDetails = await this.esService.getIndexMapping(indexName);
             const mapping = indexDetails[indexName].mappings.properties || {};
 
@@ -1012,13 +1009,11 @@ class ESMonitor {
                 return;
             }
 
-            // Tüm alanları mapping'den alalım
             const fieldArray = Object.keys(mapping);
 
             const data = response.hits.hits.map(hit => {
                 const row = {};
                 row.id = hit._id;
-                // Tüm mapping alanlarını döngüye al
                 fieldArray.forEach(field => {
                     row[field] = hit._source[field] !== undefined ? 
                         typeof hit._source[field] === 'object' ? 
@@ -1094,18 +1089,22 @@ class ESMonitor {
         const dropdownBtn = document.getElementById('connectionSelectBtn');
         const dropdownMenu = document.getElementById('connectionDropdownMenu');
         
-        document.getElementById('saveConnectionBtn').addEventListener('click', () => {
+        if (dropdownBtn && dropdownMenu) {
+            dropdownBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                dropdownMenu.classList.toggle('show');
+            });
+            
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.connection-dropdown') && dropdownMenu.classList.contains('show')) {
+                    dropdownMenu.classList.remove('show');
+                }
+            });
+        }
+        
+        document.getElementById('saveConnectionBtn')?.addEventListener('click', () => {
             this.saveConnection();
-        });
-        
-        dropdownBtn.addEventListener('click', () => {
-            dropdownMenu.classList.toggle('show');
-        });
-        
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('.connection-dropdown')) {
-                dropdownMenu.classList.remove('show');
-            }
         });
     }
 
@@ -1130,7 +1129,6 @@ class ESMonitor {
                 </div>
             `).join('');
 
-        // Add click handlers
         connectionList.querySelectorAll('.connection-item').forEach(item => {
             item.addEventListener('click', async (e) => {
                 if (!e.target.closest('.connection-action-btn')) {
@@ -1247,6 +1245,78 @@ class ESMonitor {
             console.error('Failed to initialize components:', error);
             Toast.show('Failed to initialize components', 'error');
         }
+    }
+
+    initializePanelToggles() {
+        const panels = document.querySelectorAll('.status-panel, .metrics-panel, .indices-panel, .sample-data-panel, .quick-filter-panel, .search-panel, .shards-data-panel, .connection-panel, .cluster-health-panel');
+        
+        panels.forEach(panel => {
+            const header = panel.querySelector('.panel-header');
+            if (!header) return;
+            
+            const title = header.querySelector('h2');
+            if (!title) return;
+            
+            const toggleBtn = document.createElement('button');
+            toggleBtn.className = 'panel-toggle';
+            toggleBtn.innerHTML = '<i class="fas fa-chevron-down"></i>';
+            
+            title.insertBefore(toggleBtn, title.firstChild);
+            
+            let content = panel.querySelector('.panel-content');
+            
+            if (!content) {
+                const contentElement = 
+                    panel.querySelector('.cluster-overview') ||
+                    panel.querySelector('.indices-table') ||
+                    panel.querySelector('.shards-table-container') ||
+                    panel.querySelector('.search-content') ||
+                    panel.querySelector('.sample-table-container') ||
+                    panel.querySelector('.quick-filter-content');
+
+                if (contentElement && contentElement.parentNode === panel) {
+                    content = document.createElement('div');
+                    content.className = 'panel-content';
+                    
+                    if (panel.classList.contains('search-panel')) {
+                        content.appendChild(contentElement);
+                        panel.appendChild(content);
+                    } else {
+                        contentElement.parentNode.insertBefore(content, contentElement);
+                        content.appendChild(contentElement);
+                    }
+                }
+            }
+            
+            if (content) {
+                const panelId = panel.id || panel.className.split(' ')[0];
+                const isCollapsed = localStorage.getItem(`panel_${panelId}_collapsed`) === 'true';
+                
+                if (isCollapsed) {
+                    content.classList.add('collapsed');
+                    toggleBtn.classList.add('collapsed');
+                    if (panel.classList.contains('search-panel')) {
+                        panel.classList.add('collapsed');
+                    }
+                }
+                
+                toggleBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    content.classList.toggle('collapsed');
+                    toggleBtn.classList.toggle('collapsed');
+                    
+                    if (panel.classList.contains('search-panel')) {
+                        panel.classList.toggle('collapsed');
+                    }
+                    
+                    localStorage.setItem(
+                        `panel_${panelId}_collapsed`,
+                        content.classList.contains('collapsed')
+                    );
+                });
+            }
+        });
     }
 }
 
