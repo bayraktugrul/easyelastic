@@ -454,4 +454,17 @@
 
 .dataTables_filter label {
     color: var(--text-secondary) !important;
-} 
+}
+
+[data-theme="dark"] .column-header span {
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .dataTables_wrapper thead th {
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .field-type {
+    background: #2d333b !important;
+    color: #8b949e !important;
+}
