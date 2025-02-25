@@ -1260,7 +1260,6 @@ class ESMonitor {
             const toggleBtn = document.createElement('button');
             toggleBtn.className = 'panel-toggle';
             toggleBtn.innerHTML = '<i class="fas fa-chevron-down"></i>';
-            toggleBtn.setAttribute('title', 'Toggle Panel');
             
             title.insertBefore(toggleBtn, title.firstChild);
             
