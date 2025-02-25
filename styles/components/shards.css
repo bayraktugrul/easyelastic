@@ -187,8 +187,8 @@
 }
 
 [data-theme="dark"] .shard-badge::after {
-    background: #2d333b;
-    color: #ffffff;
+    background: #1e2228 !important;
+    color: #ffffff !important;
     border: 1px solid #444c56;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
@@ -254,4 +254,12 @@
 
 [data-theme="dark"] .shard-count {
     background: var(--card-background);
+}
+
+.node-name[title]::after {
+    display: none !important;
+}
+
+.node-name[title]:hover::after {
+    display: none !important;
 }

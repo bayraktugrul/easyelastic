@@ -6,7 +6,7 @@
 
 A modern, lightweight web interface for Elasticsearch cluster monitoring and management.
 
-## 🚀 Features
+### 🚀 Features
 
 - **🔍 Cluster Health**: Real-time visualization of cluster health and key metrics
 - **📊 Index Management**: Create, delete, and manage indices with a user-friendly interface
@@ -19,37 +19,37 @@ A modern, lightweight web interface for Elasticsearch cluster monitoring and man
 - **🌓 Dark/Light Theme**: Toggle between dark and light themes for comfortable viewing
 
 
-## 📖 Usage
+### 📖 Usage
 
-### 🔗 Connecting to Elasticsearch
+#### 🔗 Connecting to Elasticsearch
 
 Enter your Elasticsearch URL, username, and password (if required). You can save multiple connections for quick access.
 
-### 📈 Monitoring Cluster Health
+#### 📈 Monitoring Cluster Health
 
 The dashboard provides an overview of your cluster's health status and various metrics.
 
-### 📚 Managing Indices
+#### 📚 Managing Indices
 
 Create new indices with custom settings, view index details including mappings and settings, add or remove aliases, delete indices when needed
 
-### 🔎 Searching Documents
+#### 🔎 Searching Documents
 
 Use the built-in search interface to write and execute queries, save frequently used queries, use popular queries, view search results in a formatted table
 
-### 🧪 Quick Filtering
+#### 🧪 Quick Filtering
 
 Build complex queries without writing JSON, select fields and operators from dropdown menus, preview the generated Elasticsearch query, execute the query and view results
 
-### 💡 EasyElastic vs other Elasticsearch management tools
+#### 💡 EasyElastic vs other Elasticsearch management tools
 
 EasyElastic does not require any installation, it is a simple HTML file that can be run from any web server. It not an browser extension, nor a desktop application.
 
-## 👥 Contributing
+### 👥 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
-## 📄 License
+### 📄 License
 
 This project is licensed under the EasyElastic License - see the LICENSE file for details.
 
