@@ -280,12 +280,6 @@ class ESMonitor {
         document.getElementById('indexName').value = '';
         document.getElementById('shardCountInput').value = '1';
         document.getElementById('replicaCountInput').value = '1';
-        
-        console.log('Reset form values:', {
-            indexName: document.getElementById('indexName').value,
-            shards: document.getElementById('shardCountInput').value,
-            replicas: document.getElementById('replicaCountInput').value
-        });
     }
 
     async handleCreateIndex() {
@@ -294,15 +288,8 @@ class ESMonitor {
             const shardsInput = document.getElementById('shardCountInput');
             const replicasInput = document.getElementById('replicaCountInput');
 
-            console.log('Raw input values:', {
-                shards: shardsInput.value,
-                replicas: replicasInput.value
-            });
-
             const shards = parseInt(shardsInput.value) || 1;
             const replicas = parseInt(replicasInput.value) || 1;
-
-            console.log('Parsed values:', { shards, replicas });
 
             if (!indexName) {
                 Toast.show('Please enter an index name', 'error');
@@ -327,8 +314,6 @@ class ESMonitor {
                     }
                 }
             };
-
-            console.log('Final settings to be sent:', JSON.stringify(settings, null, 2));
 
             await this.esService.createIndex(indexName, settings);
             Toast.show('Index created successfully', 'success');
@@ -586,7 +571,6 @@ class ESMonitor {
 
     showError(message) {
         alert(message);
-        console.error(message);
     }
 
     async loadSavedConnection() {
@@ -748,11 +732,29 @@ class ESMonitor {
 
     async showUpdateMapping(indexName) {
         const modal = document.getElementById('updateMappingModal');
+        const modalTitle = modal.querySelector('.modal-header h3');
         const mappingTabs = modal.querySelectorAll('.mapping-tabs .tab-button');
         const closeBtn = modal.querySelector('.close-modal');
         const cancelBtn = document.getElementById('cancelUpdateMapping');
         const confirmBtn = document.getElementById('confirmUpdateMapping');
         const addFieldBtn = document.getElementById('addFieldBtn');
+        
+        if (modalTitle) {
+            modalTitle.innerHTML = `<i class="fas fa-code"></i> Update Mapping: <span class="index-name">${indexName}</span>`;
+        }
+        
+        const newAddFieldBtn = addFieldBtn.cloneNode(true);
+        addFieldBtn.parentNode.replaceChild(newAddFieldBtn, addFieldBtn);
+        
+        const newConfirmBtn = confirmBtn.cloneNode(true);
+        confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+        
+        mappingTabs.forEach(tab => {
+            const newTab = tab.cloneNode(true);
+            tab.parentNode.replaceChild(newTab, tab);
+        });
+        
+        const updatedMappingTabs = modal.querySelectorAll('.mapping-tabs .tab-button');
         
         try {
             const details = await this.indicesRepository.getIndexDetails(indexName);
@@ -783,7 +785,9 @@ class ESMonitor {
             
             refreshVisualFields();
             
-            addFieldBtn.addEventListener('click', () => {
+            modal.dataset.indexName = indexName;
+            
+            document.getElementById('addFieldBtn').addEventListener('click', () => {
                 const fieldName = document.getElementById('fieldName').value.trim();
                 const fieldType = document.getElementById('fieldType').value;
                 
@@ -807,12 +811,11 @@ class ESMonitor {
             });
             
             modal.classList.remove('hidden');
-            modal.dataset.indexName = indexName;
             
-            mappingTabs.forEach(tab => {
+            updatedMappingTabs.forEach(tab => {
                 tab.addEventListener('click', () => {
                     const tabId = tab.dataset.tab;
-                    mappingTabs.forEach(t => t.classList.remove('active'));
+                    updatedMappingTabs.forEach(t => t.classList.remove('active'));
                     tab.classList.add('active');
                     
                     modal.querySelectorAll('.tab-pane').forEach(pane => {
@@ -828,7 +831,7 @@ class ESMonitor {
                 });
             });
             
-            confirmBtn.addEventListener('click', async () => {
+            document.getElementById('confirmUpdateMapping').addEventListener('click', async () => {
                 try {
                     const activeTab = modal.querySelector('.mapping-tabs .tab-button.active').dataset.tab;
                     let newMapping;
@@ -847,8 +850,10 @@ class ESMonitor {
                         });
                     }
                     
-                    await this.esService.updateMapping(indexName, newMapping);
-                    Toast.show('Mapping updated successfully', 'success');
+                    const targetIndexName = modal.dataset.indexName;
+                    
+                    await this.esService.updateMapping(targetIndexName, newMapping);
+                    Toast.show(`Mapping updated successfully for index "${targetIndexName}"`, 'success');
                     modal.classList.add('hidden');
                     
                     await this.updateDashboard();
@@ -1242,7 +1247,6 @@ class ESMonitor {
         try {
             this.search = new Search(this.esService);
         } catch (error) {
-            console.error('Failed to initialize components:', error);
             Toast.show('Failed to initialize components', 'error');
         }
     }

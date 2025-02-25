@@ -50,7 +50,6 @@ class AutoRefresh {
                     this.destroy();
                 }
             } catch (error) {
-                console.error('Refresh failed:', error);
                 this.destroy();
             }
         }, this.intervalTime);

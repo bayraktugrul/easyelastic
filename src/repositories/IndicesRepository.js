@@ -22,7 +22,6 @@ class IndicesRepository {
                         aliases: aliases
                     });
                 } catch (error) {
-                    console.error(`Error processing index ${index.index}:`, error);
                     formattedIndices.push({
                         index: index.index,
                         docs_count: index.docs.count || 0,

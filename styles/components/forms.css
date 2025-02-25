@@ -969,4 +969,10 @@
     outline: none;
     border-color: var(--primary-color);
     box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+#updateMappingModal .modal-header h3 .index-name {
+    color: var(--primary-color);
+    font-weight: 600;
+    margin-left: 0.25rem;
 } 

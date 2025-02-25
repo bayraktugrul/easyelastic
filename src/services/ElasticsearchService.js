@@ -184,13 +184,11 @@ class ElasticsearchService {
             const responseData = await response.json();
 
             if (!response.ok) {
-                console.error('Elasticsearch error response:', responseData);
                 throw new Error(responseData.error?.reason || 'Failed to create index');
             }
 
             return responseData;
         } catch (error) {
-            console.error('Error creating index:', error);
             if (error.message.includes('resource_already_exists_exception')) {
                 throw new Error('Index already exists');
             }
@@ -313,12 +311,6 @@ class ElasticsearchService {
                 `${this.baseUrl}/${indexName}/_doc/${id}` : 
                 `${this.baseUrl}/${indexName}/_doc`;
 
-            console.log('Adding document:', {
-                url,
-                method,
-                docData
-            });
-
             const response = await this.fetchWithOptions(url, {
                 method: method,
                 body: JSON.stringify(docData)
@@ -330,10 +322,8 @@ class ElasticsearchService {
             }
 
             const result = await response.json();
-            console.log('Document added response:', result);
             return result;
         } catch (error) {
-            console.error('Error adding document:', error);
             throw new Error(`Failed to add document: ${error.message}`);
         }
     }
@@ -381,17 +371,14 @@ class ElasticsearchService {
             const result = await response.json();
 
             if (!response.ok) {
-                console.error('Search error response:', result);
                 if (result.error?.root_cause?.[0]?.reason) {
                     throw new Error(result.error.root_cause[0].reason);
                 }
                 throw new Error(result.error?.reason || 'Failed to search documents');
             }
 
-            console.log('Search response:', result);
             return result;
         } catch (error) {
-            console.error('Search error:', error);
             throw error;
         }
     }

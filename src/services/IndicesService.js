@@ -17,7 +17,6 @@ class IndicesService {
                 const aliases = await this.esService.getAliases(index.index);
                 index.aliases = aliases;
             } catch (error) {
-                console.error(`Failed to fetch aliases for ${index.index}:`, error);
                 index.aliases = [];
             }
         }

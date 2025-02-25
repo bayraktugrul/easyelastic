@@ -59,7 +59,6 @@ export default class QuickFilter {
                 });
             }
         } catch (error) {
-            console.error('Failed to load indices:', error);
             Toast.show('Failed to load indices', 'error');
         }
     }
@@ -76,7 +75,6 @@ export default class QuickFilter {
             const properties = mapping[this.selectedIndex].mappings.properties || {};
             this.fields = this.flattenFields(properties);
         } catch (error) {
-            console.error('Failed to load fields:', error);
             Toast.show('Failed to load fields', 'error');
         }
     }

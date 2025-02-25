@@ -8,7 +8,6 @@ export default class ShardDistribution {
     }
     
     render(data) {
-        console.log('Distribution Data Structure:', JSON.stringify(data.distribution, null, 2));
         
         const thead = this.table.querySelector('thead tr');
         const tbody = this.table.querySelector('tbody');
