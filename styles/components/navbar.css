@@ -42,21 +42,16 @@
     margin-right: 0.5rem;
 }
 
-.logo-text .easy {
-    background: linear-gradient(135deg, var(--primary-color) 0%, #3B82F6 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+.logo-text .easy,
+.logo-text .elastic {
+    color: var(--primary-color);
     font-weight: 700;
     letter-spacing: -0.02em;
 }
 
-.logo-text .elastic {
-    background: linear-gradient(135deg, #3B82F6 0%, var(--primary-hover) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    margin-left: -1px;
+[data-theme="dark"] .logo-text .easy,
+[data-theme="dark"] .logo-text .elastic {
+    color: var(--primary-color);
 }
 
 .nav-logo:hover {

@@ -60,7 +60,7 @@ body .search-panel .query-label {
     min-height: 0;
     height: 0;
     border: none;
-    background: var(--panel-background);
+    background-color: #1a1a1a !important;
 }
 
 .results-container {
@@ -453,3 +453,52 @@ body .search-panel .query-label {
 .query-action-btn.load {
     display: none;
 }
+
+[data-theme="dark"] .monaco-editor,
+[data-theme="dark"] .monaco-editor-background,
+[data-theme="dark"] .monaco-editor .inputarea,
+[data-theme="dark"] .monaco-editor .margin,
+[data-theme="dark"] .monaco-editor .monaco-editor-background {
+    background-color: #1a1a1a !important;
+}
+
+[data-theme="dark"] .monaco-editor .overflow-guard,
+[data-theme="dark"] .monaco-editor .monaco-scrollable-element,
+[data-theme="dark"] .monaco-editor .editor-scrollable,
+[data-theme="dark"] .monaco-editor .lines-content {
+    background-color: #1a1a1a !important;
+}
+
+[data-theme="dark"] .monaco-editor iframe {
+    background-color: #1a1a1a !important;
+}
+
+[data-theme="dark"] .monaco-editor .suggest-widget,
+[data-theme="dark"] .monaco-editor .parameter-hints-widget,
+[data-theme="dark"] .monaco-editor .find-widget,
+[data-theme="dark"] .monaco-editor .rename-box {
+    background-color: #252525 !important;
+    border-color: #333333 !important;
+    color: #f0f0f0 !important;
+}
+
+[data-theme="dark"] .monaco-editor .scrollbar {
+    background-color: #1a1a1a !important;
+}
+
+[data-theme="dark"] .monaco-editor .scrollbar .slider {
+    background-color: #444444 !important;
+}
+
+[data-theme="dark"] .monaco-editor .current-line {
+    background-color: #252525 !important;
+}
+
+[data-theme="dark"] .monaco-editor .mtk1 { color: #f0f0f0 !important; } /* Varsayılan metin */
+[data-theme="dark"] .monaco-editor .mtk2 { color: #569cd6 !important; } /* Anahtar kelimeler */
+[data-theme="dark"] .monaco-editor .mtk3 { color: #ce9178 !important; } /* Stringler */
+[data-theme="dark"] .monaco-editor .mtk4 { color: #b5cea8 !important; } /* Sayılar */
+[data-theme="dark"] .monaco-editor .mtk5 { color: #608b4e !important; } /* Yorumlar */
+[data-theme="dark"] .monaco-editor .mtk6 { color: #9cdcfe !important; } /* Özellikler */
+[data-theme="dark"] .monaco-editor .mtk7 { color: #d7ba7d !important; } /* Operatörler */
+[data-theme="dark"] .monaco-editor .mtk8 { color: #4ec9b0 !important; } /* Tipler */

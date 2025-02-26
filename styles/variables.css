@@ -103,82 +103,82 @@
 }
 
 [data-theme="dark"] {
-    --background-color: #0f172a;
-    --card-background: #1e293b;
-    --navbar-background: #0f172a;
-    --modal-background: #1e293b;
-    --panel-background: #1e293b;
-    --panel-header-background: #0f172a;
+    --background-color: #121212;
+    --card-background: #1e1e1e;
+    --navbar-background: #121212;
+    --modal-background: #1e1e1e;
+    --panel-background: #1e1e1e;
+    --panel-header-background: #181818;
     
-    --text-primary: #e2e8f0;
-    --text-secondary: #94a3b8;
-    --text-muted: #64748b;
-    --text-code: #e2e8f0;
+    --text-primary: #f0f0f0;
+    --text-secondary: #a0a0a0;
+    --text-muted: #707070;
+    --text-code: #f0f0f0;
     
-    --border-color: #334155;
-    --border-light: #334155;
-    --border-hover: #4f46e5;
-    --border-panel: #334155;
+    --border-color: #2c2c2c;
+    --border-light: #2c2c2c;
+    --border-hover: #3f51b5;
+    --border-panel: #2c2c2c;
     
-    --primary-color: #60a5fa;
-    --primary-hover: #3b82f6;
-    --logo-warning: #fbbf24;
+    --primary-color: #3f51b5;
+    --primary-hover: #303f9f;
+    --logo-warning: #3f51b5;
     
     --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5);
     --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.6);
     --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.7);
     
-    --info-bg: rgba(59, 130, 246, 0.15);
-    --error-color: #f87171;
-    --error-bg: rgba(239, 68, 68, 0.15);
-    --success-color: #4ade80;
-    --success-bg: rgba(34, 197, 94, 0.15);
-    --warning-color: #fbbf24;
-    --warning-bg: rgba(245, 158, 11, 0.15);
+    --info-bg: rgba(63, 81, 181, 0.12);
+    --error-color: #ff5252;
+    --error-bg: rgba(255, 82, 82, 0.15);
+    --success-color: #4caf50;
+    --success-bg: rgba(76, 175, 80, 0.15);
+    --warning-color: #ffc107;
+    --warning-bg: rgba(255, 193, 7, 0.15);
     
-    --input-background: #1e293b;
-    --input-border: #334155;
-    --input-focus-ring: rgba(99, 102, 241, 0.2);
-    --input-text: #e2e8f0;
-    --input-placeholder: #94a3b8;
-    --button-text: #e2e8f0;
-    --button-bg: #1e293b;
-    --button-border: #334155;
-    --button-hover-border: #4f46e5;
-    --button-hover-bg: rgba(79, 70, 229, 0.1);
+    --input-background: #252525;
+    --input-border: #2c2c2c;
+    --input-focus-ring: rgba(63, 81, 181, 0.15);
+    --input-text: #f0f0f0;
+    --input-placeholder: #a0a0a0;
+    --button-text: #f0f0f0;
+    --button-bg: #252525;
+    --button-border: #2c2c2c;
+    --button-hover-border: #3f51b5;
+    --button-hover-bg: rgba(63, 81, 181, 0.08);
     
-    --table-header-bg: #1e293b;
-    --table-row-hover: #334155;
-    --table-border: #334155;
-    --table-text: #e2e8f0;
-    --table-header-text: #94a3b8;
+    --table-header-bg: #181818;
+    --table-row-hover: #252525;
+    --table-border: #2c2c2c;
+    --table-text: #f0f0f0;
+    --table-header-text: #a0a0a0;
     
-    --editor-background: #1e293b;
-    --editor-foreground: #e2e8f0;
-    --editor-line-number: #64748b;
-    --editor-cursor: #60a5fa;
-    --editor-selection: rgba(79, 70, 229, 0.2);
+    --editor-background: #1e1e1e;
+    --editor-foreground: #f0f0f0;
+    --editor-line-number: #707070;
+    --editor-cursor: #3f51b5;
+    --editor-selection: rgba(63, 81, 181, 0.15);
     
-    --dt-background: #1e293b;
-    --dt-text: #e2e8f0;
-    --dt-border: #334155;
-    --dt-header-bg: #0f172a;
-    --dt-row-hover: #334155;
-    --dt-pagination-bg: #1e293b;
-    --dt-pagination-text: #94a3b8;
+    --dt-background: #1e1e1e;
+    --dt-text: #f0f0f0;
+    --dt-border: #2c2c2c;
+    --dt-header-bg: #181818;
+    --dt-row-hover: #252525;
+    --dt-pagination-bg: #1e1e1e;
+    --dt-pagination-text: #a0a0a0;
     
-    --dropdown-bg: #1e293b;
-    --dropdown-border: #334155;
+    --dropdown-bg: #1e1e1e;
+    --dropdown-border: #2c2c2c;
     --dropdown-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-    --dropdown-item-hover: #334155;
-    --dropdown-text: #e2e8f0;
-    --dropdown-hover-text: #60a5fa;
+    --dropdown-item-hover: #252525;
+    --dropdown-text: #f0f0f0;
+    --dropdown-hover-text: #3f51b5;
     
-    --gradient-primary: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-    --gradient-overlay: linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(15, 23, 42, 0.95) 100%);
-    --gradient-spot-1: rgba(99, 102, 241, 0.15);
-    --gradient-spot-2: rgba(0, 191, 165, 0.1);
-    --gradient-spot-3: rgba(255, 152, 0, 0.1);
-    --gradient-spot-4: rgba(0, 107, 180, 0.15);
+    --gradient-primary: linear-gradient(135deg, #121212 0%, #1e1e1e 100%);
+    --gradient-overlay: linear-gradient(135deg, rgba(18, 18, 18, 0.8) 0%, rgba(18, 18, 18, 0.95) 100%);
+    --gradient-spot-1: rgba(63, 81, 181, 0.12);
+    --gradient-spot-2: rgba(33, 150, 243, 0.1);
+    --gradient-spot-3: rgba(0, 188, 212, 0.1);
+    --gradient-spot-4: rgba(3, 169, 244, 0.15);
     --grid-line-color: rgba(255, 255, 255, 0.025);
 } 
