@@ -162,4 +162,121 @@
 
 .modal label {
     color: var(--text-primary);
+}
+
+#addAliasBtn {
+    background-color: var(--primary-color);
+    color: white !important;
+    border: none;
+    border-radius: 8px;
+    padding: var(--space-sm) var(--space-lg);
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+#addAliasBtn:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
+
+#aliasModal .modal-body input {
+    background-color: var(--input-background);
+    color: var(--input-text);
+    border: 1px solid var(--input-border);
+}
+
+#aliasModal .modal-header h3 {
+    color: var(--text-primary);
+}
+
+#aliasModal .modal-body label {
+    color: var(--text-primary);
+}
+
+#addDocumentModal .document-field {
+    background-color: var(--modal-background);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+#addDocumentModal .document-field input {
+    background-color: var(--input-background);
+    color: var(--input-text);
+    border: 1px solid var(--input-border);
+    border-radius: 6px;
+    padding: 0.75rem;
+    width: 100%;
+}
+
+#addDocumentModal .document-field input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px var(--input-focus-ring);
+    outline: none;
+}
+
+#addDocumentModal .document-field label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+    font-weight: 500;
+    font-size: 0.875rem;
+}
+
+#documentJson {
+    background-color: var(--input-background);
+    color: var(--input-text);
+    border: 1px solid var(--input-border);
+    border-radius: 8px;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
+    padding: 1rem;
+    min-height: 200px;
+    width: 100%;
+}
+
+.field-type {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    margin-left: 0.5rem;
+    background-color: var(--badge-bg);
+    color: var(--badge-text);
+}
+
+.field-type.short {
+    background-color: var(--info-bg);
+    color: var(--info-color);
+}
+
+.field-type.text {
+    background-color: var(--success-bg);
+    color: var(--success-color);
+}
+
+.field-type.date {
+    background-color: var(--primary-bg);
+    color: var(--primary-color);
+}
+
+[data-theme="dark"] #addDocumentModal .modal-content {
+    background-color: var(--modal-background);
+}
+
+[data-theme="dark"] #addDocumentModal .modal-header {
+    background-color: var(--panel-header-background);
+    border-bottom: 1px solid var(--border-color);
+}
+
+[data-theme="dark"] #addDocumentModal .modal-body {
+    background-color: var(--modal-background);
+}
+
+[data-theme="dark"] #addDocumentModal .modal-footer {
+    background-color: var(--modal-background);
+    border-top: 1px solid var(--border-color);
 } 

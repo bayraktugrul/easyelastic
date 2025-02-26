@@ -77,21 +77,49 @@
 .alias-badge {
     display: inline-flex;
     align-items: center;
-    background: var(--info-bg);
-    color: var(--primary-color);
-    padding: 4px 12px;
+    background-color: #4b5563; 
+    color: #f3f4f6; 
+    padding: 0.4rem 0.75rem;
     border-radius: 6px;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
     font-size: 0.875rem;
-    margin: 2px;
+    font-weight: 500;
+    transition: all 0.2s ease;
 }
 
-.alias-badge .remove-alias {
-    margin-left: 4px;
+[data-theme="light"] .alias-badge {
+    background-color: #6b7280; 
+    color: white;
+}
+
+[data-theme="dark"] .alias-badge {
+    background-color: #4b5563;
+    color: #e5e7eb;
+}
+
+.alias-badge:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.remove-alias {
+    background: none;
+    border: none;
+    color: inherit;
+    margin-left: 0.5rem;
+    padding: 0.1rem 0.3rem;
+    border-radius: 4px;
     cursor: pointer;
-    opacity: 0.7;
-    transition: opacity 0.2s ease;
+    opacity: 0.8;
+    transition: all 0.2s ease;
 }
 
-.alias-badge .remove-alias:hover {
+.remove-alias:hover {
     opacity: 1;
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="light"] .remove-alias:hover {
+    background-color: rgba(0, 0, 0, 0.1);
 } 

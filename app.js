@@ -649,11 +649,31 @@ class ESMonitor {
 
     async showAliasManager(indexName) {
         const modal = document.getElementById('aliasModal');
-        document.getElementById('aliasIndexName').textContent = indexName;
+        const closeBtn = document.getElementById('closeAliasModal');
+        const closeModalBtn = modal.querySelector('.close-modal');
+        const addAliasBtn = document.getElementById('addAliasBtn');
+        
+        const newCloseBtn = closeBtn.cloneNode(true);
+        closeBtn.parentNode.replaceChild(newCloseBtn, closeBtn);
+        
+        const newCloseModalBtn = closeModalBtn.cloneNode(true);
+        closeModalBtn.parentNode.replaceChild(newCloseModalBtn, closeModalBtn);
+        
+        const newAddAliasBtn = addAliasBtn.cloneNode(true);
+        addAliasBtn.parentNode.replaceChild(newAddAliasBtn, addAliasBtn);
+        
         modal.dataset.indexName = indexName;
         
         await this.refreshAliasesList(indexName);
         modal.classList.remove('hidden');
+        
+        [newCloseBtn, newCloseModalBtn].forEach(btn => {
+            btn.addEventListener('click', () => {
+                modal.classList.add('hidden');
+            });
+        });
+        
+        newAddAliasBtn.addEventListener('click', () => this.handleAddAlias());
     }
 
     async refreshAliasesList(indexName) {
@@ -891,13 +911,22 @@ class ESMonitor {
             
             document.getElementById('documentId').value = '';
             
-            [closeBtn, cancelBtn].forEach(btn => {
+            const newCloseBtn = closeBtn.cloneNode(true);
+            closeBtn.parentNode.replaceChild(newCloseBtn, closeBtn);
+            
+            const newCancelBtn = cancelBtn.cloneNode(true);
+            cancelBtn.parentNode.replaceChild(newCancelBtn, cancelBtn);
+            
+            const newConfirmBtn = confirmBtn.cloneNode(true);
+            confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+            
+            [newCloseBtn, newCancelBtn].forEach(btn => {
                 btn.addEventListener('click', () => {
                     modal.classList.add('hidden');
                 });
             });
             
-            confirmBtn.addEventListener('click', async () => {
+            newConfirmBtn.addEventListener('click', async () => {
                 try {
                     const documentId = document.getElementById('documentId').value.trim();
                     const docData = this.collectFormData(mapping.properties);

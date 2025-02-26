@@ -42,7 +42,7 @@ button.danger:hover {
 .action-button {
     padding: 0.5rem;
     border-radius: 10px;
-    cursor: default !important;
+    cursor: pointer !important;
     background: transparent;
     border: none;
     display: flex;
@@ -55,7 +55,7 @@ button.danger:hover {
 
 .action-button i {
     font-size: 1rem;
-    cursor: default !important;
+    cursor: pointer !important;
     color: var(--text-secondary);
 }
 
@@ -84,34 +84,28 @@ button.danger:hover {
     background: var(--error-bg);
 }
 
+.action-button[title] {
+    cursor: pointer !important;
+}
+
+.action-button[title]:hover::after {
+    display: none !important;
+}
+
 .action-button i[title] {
-    cursor: default;
-    position: relative;
+    cursor: pointer;
 }
 
 .action-button i[title]:hover::after {
-    content: attr(title);
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 4px 8px;
-    background: var(--text-primary);
-    color: white;
-    border-radius: 4px;
-    font-size: 0.75rem;
-    white-space: nowrap;
-    margin-bottom: 8px;
+    display: none !important;
 }
 
-.action-button i[title]:hover::before {
-    content: '';
-    position: absolute;
-    bottom: calc(100% + 4px);
-    left: 50%;
-    transform: translateX(-50%);
-    border: 6px solid transparent;
-    border-top-color: var(--text-primary);
+.dropdown-toggle {
+    cursor: pointer !important;
+}
+
+.dropdown-toggle i {
+    cursor: pointer !important;
 }
 
 .modal-header {
@@ -120,4 +114,9 @@ button.danger:hover {
 
 .panel-header {
     padding: var(--space-md);
+}
+
+.action-button[title]::before,
+.action-button i[title]::before {
+    display: none !important;
 } 
