@@ -201,6 +201,7 @@ body .search-panel .query-label {
     transition: all 0.2s ease;
     z-index: 2;
     pointer-events: none;
+    border: 1px solid var(--border-color);
 }
 
 .btn-icon[title]::before {
@@ -494,11 +495,66 @@ body .search-panel .query-label {
     background-color: #252525 !important;
 }
 
-[data-theme="dark"] .monaco-editor .mtk1 { color: #f0f0f0 !important; } /* Varsayılan metin */
-[data-theme="dark"] .monaco-editor .mtk2 { color: #569cd6 !important; } /* Anahtar kelimeler */
-[data-theme="dark"] .monaco-editor .mtk3 { color: #ce9178 !important; } /* Stringler */
-[data-theme="dark"] .monaco-editor .mtk4 { color: #b5cea8 !important; } /* Sayılar */
-[data-theme="dark"] .monaco-editor .mtk5 { color: #608b4e !important; } /* Yorumlar */
-[data-theme="dark"] .monaco-editor .mtk6 { color: #9cdcfe !important; } /* Özellikler */
-[data-theme="dark"] .monaco-editor .mtk7 { color: #d7ba7d !important; } /* Operatörler */
-[data-theme="dark"] .monaco-editor .mtk8 { color: #4ec9b0 !important; } /* Tipler */
+[data-theme="dark"] .monaco-editor .mtk1 { color: #f0f0f0 !important; } 
+[data-theme="dark"] .monaco-editor .mtk2 { color: #569cd6 !important; } 
+[data-theme="dark"] .monaco-editor .mtk3 { color: #ce9178 !important; } 
+[data-theme="dark"] .monaco-editor .mtk4 { color: #b5cea8 !important; } 
+[data-theme="dark"] .monaco-editor .mtk5 { color: #608b4e !important; } 
+[data-theme="dark"] .monaco-editor .mtk6 { color: #9cdcfe !important; } 
+[data-theme="dark"] .monaco-editor .mtk7 { color: #d7ba7d !important; } 
+[data-theme="dark"] .monaco-editor .mtk8 { color: #4ec9b0 !important; } 
+
+.btn-icon[title]::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-8px);
+    background: var(--dropdown-bg);
+    color: var(--text-primary);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+    z-index: 2;
+    pointer-events: none;
+    border: 1px solid var(--border-color);
+}
+
+[data-theme="dark"] .btn-icon[title]::after {
+    background: #2d3748;
+    color: #f7fafc;
+    border-color: #4a5568;
+}
+
+[data-theme="light"] .btn-icon[title]::after {
+    background: #f8fafc;
+    color: #1e293b;
+    border-color: #e2e8f0;
+}
+
+.btn-icon[title]::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: var(--dropdown-bg);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+    z-index: 2;
+    pointer-events: none;
+}
+
+[data-theme="dark"] .btn-icon[title]::before {
+    border-top-color: #2d3748;
+}
+
+[data-theme="light"] .btn-icon[title]::before {
+    border-top-color: #f8fafc;
+}
