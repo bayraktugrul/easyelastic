@@ -162,4 +162,35 @@
 
 .modal label {
     color: var(--text-primary);
+}
+
+#addAliasBtn {
+    background-color: var(--primary-color);
+    color: white !important;
+    border: none;
+    border-radius: 8px;
+    padding: var(--space-sm) var(--space-lg);
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+#addAliasBtn:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
+
+#aliasModal .modal-body input {
+    background-color: var(--input-background);
+    color: var(--input-text);
+    border: 1px solid var(--input-border);
+}
+
+#aliasModal .modal-header h3 {
+    color: var(--text-primary);
+}
+
+#aliasModal .modal-body label {
+    color: var(--text-primary);
 } 
