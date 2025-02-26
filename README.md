@@ -4,6 +4,8 @@
 </p>
 
 
+[![Release][release-badge]][release] [![][beta-badge]][beta] [![][license-badge]][license] 
+
 A modern, lightweight web interface for Elasticsearch cluster monitoring and management.
 
 ### 🚀 Features
@@ -53,3 +55,12 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 This project is licensed under the EasyElastic License - see the LICENSE file for details.
 
+
+[release]: https://github.com/bayraktugrul/easyelastic/releases
+[release-badge]: https://img.shields.io/github/v/release/bayraktugrul/easyelastic.svg
+
+[license]:https://github.com/bayraktugrul/easyelastic/blob/main/LICENSE
+[license-badge]:https://img.shields.io/badge/LICENSE-blue.svg
+
+[beta]:https://img.shields.io/badge/status-beta-orange.svg
+[beta-badge]:https://img.shields.io/badge/status-beta-orange.svg
