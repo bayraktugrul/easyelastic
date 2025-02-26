@@ -22,11 +22,12 @@ class MetricsService {
             activeShards: stats.shards.active,
             relocatingShards: stats.shards.relocating,
             cpuUsage: `${stats.nodes.cpu_percent}%`,
-            memoryUsage: formatBytes(stats.nodes.memory.used_bytes),
-            heapUsage: formatBytes(stats.nodes.memory.total_bytes),
-            systemMemoryUsed: formatBytes(stats.nodes.memory.system_used_bytes),
-            systemMemory: formatBytes(stats.nodes.memory.system_total_bytes),
-            systemMemoryPercent: `${stats.nodes.memory.system_percent}%`
+            memoryUsage: formatBytes(stats.nodes.memory.used_bytes || 0),
+            heapUsage: formatBytes(stats.nodes.memory.total_bytes || 0),
+            systemMemoryUsed: formatBytes(stats.nodes.memory.system_used_bytes || 0),
+            systemMemory: formatBytes(stats.nodes.memory.system_total_bytes || 0),
+            systemMemoryPercent: stats.nodes.memory.system_percent ? 
+                `${stats.nodes.memory.system_percent}%` : '0%'
         };
 
         Object.entries(updates).forEach(([id, value]) => {
