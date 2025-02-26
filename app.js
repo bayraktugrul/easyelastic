@@ -649,11 +649,31 @@ class ESMonitor {
 
     async showAliasManager(indexName) {
         const modal = document.getElementById('aliasModal');
-        document.getElementById('aliasIndexName').textContent = indexName;
+        const closeBtn = document.getElementById('closeAliasModal');
+        const closeModalBtn = modal.querySelector('.close-modal');
+        const addAliasBtn = document.getElementById('addAliasBtn');
+        
+        const newCloseBtn = closeBtn.cloneNode(true);
+        closeBtn.parentNode.replaceChild(newCloseBtn, closeBtn);
+        
+        const newCloseModalBtn = closeModalBtn.cloneNode(true);
+        closeModalBtn.parentNode.replaceChild(newCloseModalBtn, closeModalBtn);
+        
+        const newAddAliasBtn = addAliasBtn.cloneNode(true);
+        addAliasBtn.parentNode.replaceChild(newAddAliasBtn, addAliasBtn);
+        
         modal.dataset.indexName = indexName;
         
         await this.refreshAliasesList(indexName);
         modal.classList.remove('hidden');
+        
+        [newCloseBtn, newCloseModalBtn].forEach(btn => {
+            btn.addEventListener('click', () => {
+                modal.classList.add('hidden');
+            });
+        });
+        
+        newAddAliasBtn.addEventListener('click', () => this.handleAddAlias());
     }
 
     async refreshAliasesList(indexName) {
