@@ -1,6 +1,6 @@
 <p align="center">
-<img src="https://github.com/user-attachments/assets/eb8038fe-403c-4ee5-9811-b083d2d4591a#gh-light-mode-only">
-<img src="https://github.com/user-attachments/assets/ba483c4b-d3f5-45a8-8b78-87fdb48e76be#gh-dark-mode-only">
+<img src="https://github.com/user-attachments/assets/9e128cfd-b128-4774-8e3e-0970a652716e#gh-light-mode-only">
+<img src="https://github.com/user-attachments/assets/affe907f-1412-403b-9107-55e46ca06b57#gh-dark-mode-only">
 </p>
 
 
