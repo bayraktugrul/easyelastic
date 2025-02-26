@@ -891,13 +891,22 @@ class ESMonitor {
             
             document.getElementById('documentId').value = '';
             
-            [closeBtn, cancelBtn].forEach(btn => {
+            const newCloseBtn = closeBtn.cloneNode(true);
+            closeBtn.parentNode.replaceChild(newCloseBtn, closeBtn);
+            
+            const newCancelBtn = cancelBtn.cloneNode(true);
+            cancelBtn.parentNode.replaceChild(newCancelBtn, cancelBtn);
+            
+            const newConfirmBtn = confirmBtn.cloneNode(true);
+            confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+            
+            [newCloseBtn, newCancelBtn].forEach(btn => {
                 btn.addEventListener('click', () => {
                     modal.classList.add('hidden');
                 });
             });
             
-            confirmBtn.addEventListener('click', async () => {
+            newConfirmBtn.addEventListener('click', async () => {
                 try {
                     const documentId = document.getElementById('documentId').value.trim();
                     const docData = this.collectFormData(mapping.properties);

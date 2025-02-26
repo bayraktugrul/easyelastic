@@ -235,4 +235,16 @@
 .query-preview::-webkit-scrollbar-thumb:hover,
 .results-preview::-webkit-scrollbar-thumb:hover {
     background: var(--text-secondary);
+}
+
+.quick-filter-content button[title]::after,
+.quick-filter-content button[title]::before,
+.copy-query-btn[title]::after,
+.copy-query-btn[title]::before {
+    display: none !important;
+}
+
+.quick-filter-content button[title],
+.copy-query-btn[title] {
+    cursor: pointer !important;
 } 
