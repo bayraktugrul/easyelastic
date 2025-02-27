@@ -1152,9 +1152,16 @@ class ESMonitor {
         const connectionSelectBtn = document.getElementById('connectionSelectBtn');
         const connectionDropdownMenu = document.getElementById('connectionDropdownMenu');
         
-        connectionSelectBtn.addEventListener('click', () => {
+        if (!connectionSelectBtn || !connectionDropdownMenu) {
+            console.error('Connection dropdown elements not found');
+            return;
+        }
+        
+        connectionSelectBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
             connectionDropdownMenu.classList.toggle('show');
-        });
+             });
         
         document.addEventListener('click', (e) => {
             if (!e.target.closest('.saved-connections') && connectionDropdownMenu.classList.contains('show')) {
@@ -1162,8 +1169,13 @@ class ESMonitor {
             }
         });
         
-        // Save connection button
-        document.getElementById('saveConnectionBtn').addEventListener('click', () => this.saveConnection());
+        const saveBtn = document.getElementById('saveConnectionBtn');
+        if (saveBtn) {
+            saveBtn.addEventListener('click', () => {
+                console.log('Save button clicked');
+                this.saveConnection();
+            });
+        }
     }
 
     updateConnectionsList() {

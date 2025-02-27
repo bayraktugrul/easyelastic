@@ -5,8 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>easyelastic | Elasticsearch Cluster Monitoring</title>
     <link rel="stylesheet" href="styles/main.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="libs/fontawesome/css/fontawesome.min.css">
+    <link rel="stylesheet" href="libs/fontawesome/css/solid.min.css">
+    <link rel="stylesheet" href="libs/fontawesome/css/brands.min.css">
+    <link rel="stylesheet" href="libs/fontawesome/css/regular.min.css">
     <link rel="stylesheet" type="text/css" href="libs/toastify/toastify.min.css">
     <script type="text/javascript" src="libs/toastify/toastify.js"></script>
     <link rel="stylesheet" type="text/css" href="libs/datatables/dataTables.tailwind.min.css">
@@ -49,14 +51,14 @@
             </ul>
             <div class="nav-actions">
                 <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
-                    <i class="fas fa-sun light-icon"></i>
-                    <i class="fas fa-moon dark-icon"></i>
+                    <i class="fa-solid fa-sun light-icon"></i>
+                    <i class="fa-solid fa-moon dark-icon"></i>
                 </button>
                 <a href="https://github.com/bayraktugrul/easyelastic" 
                    target="_blank" 
                    rel="noopener noreferrer"
                    class="github-link">
-                    <i class="fab fa-github"></i>
+                    <i class="fa-brands fa-github"></i>
                     GitHub
                 </a>
             </div>
@@ -70,7 +72,7 @@
                     <div class="connection-dropdown">
                         <button class="connection-select-btn" id="refreshIntervalBtn">
                             <span id="selectedRefreshText">5s</span>
-                            <i class="fas fa-chevron-down"></i>
+                            <i class="fa-solid fa-chevron-down"></i>
                         </button>
                         <div class="connection-dropdown-menu" id="refreshDropdownMenu">
                             <div class="connection-list">
@@ -88,7 +90,7 @@
                     <div class="connection-dropdown">
                         <button class="connection-select-btn" id="connectionSelectBtn">
                             <span id="selectedConnectionText">Select a connection</span>
-                            <i class="fas fa-chevron-down"></i>
+                            <i class="fa-solid fa-chevron-down"></i>
                         </button>
                         <div class="connection-dropdown-menu" id="connectionDropdownMenu">
                             <div class="connection-list" id="connectionList">
@@ -102,7 +104,7 @@
                            id="connectionName" 
                            placeholder="Connection name (optional)"
                            spellcheck="false">
-                    <i class="fas fa-link"></i>
+                    <i class="fa-solid fa-link"></i>
                     <input type="text" 
                            id="esUrl" 
                            placeholder="Elasticsearch URL (e.g. http://localhost:9200)"
@@ -110,19 +112,19 @@
                 </div>
                 <div class="button-group">
                     <button id="saveConnectionBtn" class="secondary">
-                        <i class="fas fa-save"></i>
+                        <i class="fa-solid fa-save"></i>
                         Save
                     </button>
                     <button id="testBtn" class="secondary">
-                        <i class="fas fa-vial"></i>
+                        <i class="fa-solid fa-vial"></i>
                         Test
                     </button>
                     <button id="connectBtn">
-                        <i class="fas fa-plug"></i>
+                        <i class="fa-solid fa-plug"></i>
                         Connect
                     </button>
                     <button id="disconnectBtn" class="danger">
-                        <i class="fas fa-power-off"></i>
+                        <i class="fa-solid fa-power-off"></i>
                         Disconnect
                     </button>
                 </div>
@@ -141,7 +143,7 @@
                                    placeholder="Password"
                                    spellcheck="false">
                             <button type="button" class="password-toggle">
-                                <i class="fas fa-eye"></i>
+                                <i class="fa-solid fa-eye"></i>
                             </button>
                         </div>
                     </div>
@@ -152,7 +154,7 @@
         <div class="dashboard hidden" id="dashboard">
             <div id="cluster-health" class="cluster-health-panel">
                 <div class="panel-header">
-                    <h2><i class="fas fa-heartbeat"></i> Cluster</h2>
+                    <h2><i class="fa-solid fa-heartbeat"></i> Cluster</h2>
                 </div>
                 <div class="panel-content">
                     <div class="cluster-overview">
@@ -182,7 +184,7 @@
                         <div class="cluster-stats">
                             <div class="stat-card">
                                 <div class="stat-icon">
-                                    <i class="fas fa-database"></i>
+                                    <i class="fa-solid fa-database"></i>
                                 </div>
                                 <div class="stat-content">
                                     <div class="stat-label">Indices & Documents</div>
@@ -197,7 +199,7 @@
                             </div>
                             <div class="stat-card">
                                 <div class="stat-icon">
-                                    <i class="fas fa-server"></i>
+                                    <i class="fa-solid fa-server"></i>
                                 </div>
                                 <div class="stat-content">
                                     <div class="stat-label">Nodes</div>
@@ -210,7 +212,7 @@
                             </div>
                             <div class="stat-card">
                                 <div class="stat-icon">
-                                    <i class="fas fa-puzzle-piece"></i>
+                                    <i class="fa-solid fa-puzzle-piece"></i>
                                 </div>
                                 <div class="stat-content">
                                     <div class="stat-label">Shards</div>
@@ -223,7 +225,7 @@
                             </div>
                             <div class="stat-card">
                                 <div class="stat-icon">
-                                    <i class="fas fa-microchip"></i>
+                                    <i class="fa-solid fa-microchip"></i>
                                 </div>
                                 <div class="stat-content">
                                     <div class="stat-label">System</div>
@@ -243,9 +245,9 @@
 
             <div id="indices" class="indices-panel">
                 <div class="panel-header">
-                    <h2><i class="fas fa-table"></i> Indices</h2>
+                    <h2><i class="fa-solid fa-table"></i> Indices</h2>
                     <button id="createIndexBtn" class="secondary">
-                        <i class="fas fa-plus"></i> Create Index
+                        <i class="fa-solid fa-plus"></i> Create Index
                     </button>
                 </div>
                 <table id="indicesTable" class="indices-table">
@@ -268,7 +270,7 @@
             <div id="shards" class="shards-data-panel">
                 <div class="panel-header">
                     <h2>
-                        <i class="fas fa-puzzle-piece"></i>
+                        <i class="fa-solid fa-puzzle-piece"></i>
                         Shards Distribution
                     </h2>
                 </div>
@@ -288,21 +290,21 @@
             <div id="search" class="search-panel">
                 <div class="panel-header">
                     <h2>
-                        <i class="fas fa-search"></i>
+                        <i class="fa-solid fa-search"></i>
                         Search
                     </h2>
                     <div class="search-actions">
                         <div class="popular-queries">
                             <button class="popular-queries-btn">
-                                <i class="fas fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
                                 Popular Queries
-                                <i class="fas fa-chevron-down"></i>
+                                <i class="fa-solid fa-chevron-down"></i>
                             </button>
                             <div class="popular-queries-menu">
                                 <div class="query-category">
                                     <span class="category-title">Index Operations</span>
                                     <button class="query-item" data-query="GET _cat/indices?v">
-                                        <i class="fas fa-list"></i>
+                                        <i class="fa-solid fa-list"></i>
                                         List All Indices
                                     </button>
                                     <button class="query-item" data-query="PUT my-index
@@ -312,7 +314,7 @@
     &quot;number_of_replicas&quot;: 1
   }
 }">
-                                        <i class="fas fa-plus"></i>
+                                        <i class="fa-solid fa-plus"></i>
                                         Create Index
                                     </button>
                                 </div>
@@ -335,7 +337,7 @@
     }
   ]
 }">
-                                        <i class="fas fa-exchange-alt"></i>
+                                        <i class="fa-solid fa-exchange-alt"></i>
                                         Add/Remove Alias (Atomic)
                                     </button>
                                     <button class="query-item" data-query="POST _aliases
@@ -349,22 +351,22 @@
     }
   ]
 }">
-                                        <i class="fas fa-tag"></i>
+                                        <i class="fa-solid fa-tag"></i>
                                         Add Alias
                                     </button>
                                     <button class="query-item" data-query="GET _cat/aliases?v">
-                                        <i class="fas fa-tags"></i>
+                                        <i class="fa-solid fa-tags"></i>
                                         List All Aliases
                                     </button>
                                 </div>
                                 <div class="query-category">
                                     <span class="category-title">Settings & Mapping</span>
                                     <button class="query-item" data-query="GET my-index/_settings">
-                                        <i class="fas fa-cog"></i>
+                                        <i class="fa-solid fa-cog"></i>
                                         Get Settings
                                     </button>
                                     <button class="query-item" data-query="GET my-index/_mapping">
-                                        <i class="fas fa-project-diagram"></i>
+                                        <i class="fa-solid fa-project-diagram"></i>
                                         Get Mapping
                                     </button>
                                 </div>
@@ -372,9 +374,9 @@
                         </div>
                         <div class="saved-queries">
                             <button class="saved-queries-btn">
-                                <i class="fas fa-bookmark"></i>
+                                <i class="fa-solid fa-bookmark"></i>
                                 Saved Queries
-                                <i class="fas fa-chevron-down"></i>
+                                <i class="fa-solid fa-chevron-down"></i>
                             </button>
                             <div class="saved-queries-menu">
                                 <div class="saved-queries-list" id="savedQueriesList">
@@ -391,20 +393,20 @@
                                 <span>Elasticsearch Query</span>
                                 <div class="editor-actions">
                                     <button class="btn-icon" id="saveQueryIcon" title="Save Query">
-                                        <i class="fas fa-save"></i>
+                                        <i class="fa-solid fa-save"></i>
                                     </button>
                                     <button class="btn-icon" id="formatQuery" title="Format Query">
-                                        <i class="fas fa-code"></i>
+                                        <i class="fa-solid fa-code"></i>
                                     </button>
                                     <button class="btn-icon" id="copyQuery" title="Copy Query">
-                                        <i class="fas fa-copy"></i>
+                                        <i class="fa-solid fa-copy"></i>
                                     </button>
                                 </div>
                             </div>
                             <div id="queryInput" class="query-editor"></div>
                             <div class="query-actions">
                                 <button id="executeQuery">
-                                    <i class="fas fa-play"></i>
+                                    <i class="fa-solid fa-play"></i>
                                     Execute
                                 </button>
                             </div>
@@ -426,7 +428,7 @@
             <div id="sample-data" class="sample-data-panel">
                 <div class="panel-header">
                     <h2>
-                        <i class="fas fa-database"></i>
+                        <i class="fa-solid fa-database"></i>
                         Sample Data
                     </h2>
                     <div class="sample-actions">
@@ -448,13 +450,13 @@
             <div id="quick-filter" class="quick-filter-panel">
                 <div class="panel-header" style="background: #f8fafc; padding: 1.25rem; border-bottom: 1px solid #e5e7eb; border-radius: 12px 12px 0 0;">
                     <h2>
-                        <i class="fas fa-filter"></i>
+                        <i class="fa-solid fa-filter"></i>
                         Quick Filter
                     </h2>
                     <div class="quick-filter-actions">
                         <select id="quickFilterIndexSelector" class="secondary"></select>
                         <button id="addQuickFilterBtn" class="secondary" disabled>
-                            <i class="fas fa-plus"></i> Add Filter
+                            <i class="fa-solid fa-plus"></i> Add Filter
                         </button>
                     </div>
                 </div>
@@ -469,7 +471,7 @@
                             <div class="query-header">
                                 <span>Elasticsearch Query</span>
                                 <button class="btn-icon" id="copyQuickFilterQuery" title="Copy Query">
-                                    <i class="fas fa-copy"></i>
+                                    <i class="fa-solid fa-copy"></i>
                                 </button>
                             </div>
                             <pre id="quickFilterQueryPreview" class="query-preview"></pre>
@@ -492,7 +494,7 @@
         <div id="createIndexModal" class="modal hidden">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3><i class="fas fa-plus"></i> Create New Index</h3>
+                    <h3><i class="fa-solid fa-plus"></i> Create New Index</h3>
                     <button class="close-modal">×</button>
                 </div>
                 <div class="modal-body">
@@ -519,7 +521,7 @@
         <div id="deleteConfirmationModal" class="modal hidden">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3><i class="fas fa-trash-alt"></i> <span id="deleteConfirmationModalTitle">Delete</span></h3>
+                    <h3><i class="fa-solid fa-trash-alt"></i> <span id="deleteConfirmationModalTitle">Delete</span></h3>
                     <button class="close-modal">×</button>
                 </div>
                 <div class="modal-body">
@@ -536,7 +538,7 @@
         <div id="aliasModal" class="modal hidden">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3><i class="fas fa-tag"></i> Manage Aliases</h3>
+                    <h3><i class="fa-solid fa-tag"></i> Manage Aliases</h3>
                     <button class="close-modal">×</button>
                 </div>
                 <div class="modal-body">
@@ -550,7 +552,7 @@
                         <div class="alias-input-group">
                             <input type="text" id="newAlias" placeholder="Enter alias name">
                             <button id="addAliasBtn" class="secondary">
-                                <i class="fas fa-plus"></i> Add
+                                <i class="fa-solid fa-plus"></i> Add
                             </button>
                         </div>
                     </div>
@@ -564,7 +566,7 @@
         <div id="indexDetailsModal" class="modal hidden">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3><i class="fas fa-info-circle"></i> Index Details</h3>
+                    <h3><i class="fa-solid fa-info-circle"></i> Index Details</h3>
                     <button class="close-modal">×</button>
                 </div>
                 <div class="modal-body">
@@ -590,7 +592,7 @@
         <div id="deleteAliasModal" class="modal hidden">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3><i class="fas fa-trash-alt"></i> Delete Alias</h3>
+                    <h3><i class="fa-solid fa-trash-alt"></i> Delete Alias</h3>
                     <button class="close-modal">×</button>
                 </div>
                 <div class="modal-body">
@@ -607,7 +609,7 @@
         <div id="updateMappingModal" class="modal hidden">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3><i class="fas fa-code"></i> Update Mapping</h3>
+                    <h3><i class="fa-solid fa-code"></i> Update Mapping</h3>
                     <button class="close-modal">×</button>
                 </div>
                 <div class="modal-body">
@@ -656,7 +658,7 @@
                                     </div>
                                 </div>
                                 <button id="addFieldBtn" class="secondary">
-                                    <i class="fas fa-plus"></i> Add Field
+                                    <i class="fa-solid fa-plus"></i> Add Field
                                 </button>
                             </div>
                         </div>
@@ -672,7 +674,7 @@
         <div id="deleteFieldModal" class="modal hidden">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3><i class="fas fa-trash-alt"></i> Delete Field</h3>
+                    <h3><i class="fa-solid fa-trash-alt"></i> Delete Field</h3>
                     <button class="close-modal">×</button>
                 </div>
                 <div class="modal-body">
@@ -689,7 +691,7 @@
         <div id="addDocumentModal" class="modal hidden">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3><i class="fas fa-file-plus"></i> Add Document</h3>
+                    <h3><i class="fa-solid fa-file-plus"></i> Add Document</h3>
                     <button class="close-modal">×</button>
                 </div>
                 <div class="modal-body">

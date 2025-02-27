@@ -20,10 +20,10 @@ export default class ThemeManager {
             const result = await new Promise(resolve => {
                 chrome.storage.local.get(['theme'], resolve);
             });
-            this.theme = result.theme || 'light';
+            this.theme = result.theme || 'dark';
             this.applyTheme();
         } catch (error) {
-            this.theme = 'light';
+            this.theme = 'dark';
             this.applyTheme();
         }
     }
