@@ -337,7 +337,9 @@ class ESMonitor {
             const isConnected = await service.checkConnection();
             
             if (isConnected) {
-                localStorage.setItem('esUrl', url);
+                await new Promise(resolve => {
+                    chrome.storage.local.set({ esUrl: url }, resolve);
+                });
                 Toast.show('Successfully connected to Elasticsearch', 'success');
             } else {
                 Toast.show('Failed to connect to Elasticsearch', 'error');
@@ -371,11 +373,17 @@ class ESMonitor {
 
             const isConnected = await this.esService.checkConnection();
             if (isConnected) {
-                localStorage.setItem('esUrl', url);
+                await new Promise(resolve => {
+                    chrome.storage.local.set({ esUrl: url }, resolve);
+                });
+                
                 const name = document.getElementById('connectionName').value.trim();
                 if (name) {
-                    localStorage.setItem('lastConnection', name);
+                    await new Promise(resolve => {
+                        chrome.storage.local.set({ lastConnection: name }, resolve);
+                    });
                 }
+                
                 document.getElementById('dashboard').classList.remove('hidden');
 
                 this.quickFilter = new QuickFilter(this.esService);
@@ -574,50 +582,71 @@ class ESMonitor {
     }
 
     async loadSavedConnection() {
-        const lastConnectionName = localStorage.getItem('lastConnection');
-        if (lastConnectionName) {
-            const connections = this.getSavedConnections();
-            const lastConnection = connections.find(c => c.name === lastConnectionName);
-            if (lastConnection) {
-                document.getElementById('connectionName').value = lastConnection.name;
-                document.getElementById('esUrl').value = lastConnection.url;
-                document.getElementById('esUsername').value = lastConnection.auth?.username || '';
-                document.getElementById('esPassword').value = lastConnection.auth?.password || '';
-                document.getElementById('selectedConnectionText').textContent = lastConnection.name;
+        try {
+            const result = await new Promise(resolve => {
+                chrome.storage.local.get(['lastConnection'], resolve);
+            });
+            
+            const lastConnectionName = result.lastConnection;
+            
+            if (lastConnectionName) {
+                const connections = await this.getSavedConnections();
+                const lastConnection = connections.find(c => c.name === lastConnectionName);
                 
-                this.esService = new ElasticsearchService(lastConnection.url, lastConnection.auth);
-                this.indicesRepository = new IndicesRepository(this.esService);
-                
-                const isConnected = await this.esService.checkConnection();
-                if (isConnected) {
-                    document.getElementById('dashboard').classList.remove('hidden');
-                    this.quickFilter = new QuickFilter(this.esService);
-                    this.search = new Search(this.esService);
-                    await this.updateDashboard();
-                } else {
-                    localStorage.removeItem('lastConnection');
-                    Toast.show('Saved connection is no longer valid', 'error');
+                if (lastConnection) {
+                    document.getElementById('connectionName').value = lastConnection.name;
+                    document.getElementById('esUrl').value = lastConnection.url;
+                    document.getElementById('esUsername').value = lastConnection.auth?.username || '';
+                    document.getElementById('esPassword').value = lastConnection.auth?.password || '';
+                    document.getElementById('selectedConnectionText').textContent = lastConnection.name;
+                    
+                    this.esService = new ElasticsearchService(lastConnection.url, lastConnection.auth);
+                    this.indicesRepository = new IndicesRepository(this.esService);
+                    
+                    const isConnected = await this.esService.checkConnection();
+                    if (isConnected) {
+                        document.getElementById('dashboard').classList.remove('hidden');
+                        this.quickFilter = new QuickFilter(this.esService);
+                        this.search = new Search(this.esService);
+                        
+                        await this.updateDashboard();
+                        
+                        if (this.autoRefresh) {
+                            this.autoRefresh.destroy();
+                        }
+                        this.autoRefresh = new AutoRefresh(this);
+                    }
                 }
             }
+        } catch (error) {
+            console.error('Failed to load saved connection:', error);
         }
     }
 
-    clearConnection() {
-        localStorage.removeItem('lastConnection');
-        document.getElementById('esUrl').value = '';
-        document.getElementById('connectionName').value = '';
-        document.getElementById('esUsername').value = '';
-        document.getElementById('esPassword').value = '';
-        document.getElementById('selectedConnectionText').textContent = 'Select a connection';
-        document.getElementById('dashboard').classList.add('hidden');
-        this.esService = null;
-        this.quickFilter = null;
-        this.search = null;
-        if (this.autoRefresh) {
-            this.autoRefresh.destroy();
-            this.autoRefresh = null;
+    async clearConnection() {
+        try {
+            await new Promise(resolve => {
+                chrome.storage.local.remove(['lastConnection'], resolve);
+            });
+            
+            document.getElementById('esUrl').value = '';
+            document.getElementById('connectionName').value = '';
+            document.getElementById('esUsername').value = '';
+            document.getElementById('esPassword').value = '';
+            document.getElementById('selectedConnectionText').textContent = 'Select a connection';
+            document.getElementById('dashboard').classList.add('hidden');
+            this.esService = null;
+            this.quickFilter = null;
+            this.search = null;
+            if (this.autoRefresh) {
+                this.autoRefresh.destroy();
+                this.autoRefresh = null;
+            }
+            Toast.show('Connection cleared', 'info');
+        } catch (error) {
+            console.error('Failed to clear connection:', error);
+            Toast.show('Failed to clear connection', 'error');
         }
-        Toast.show('Connection cleared', 'info');
     }
 
     showDeleteConfirmation(itemName) {
@@ -1207,12 +1236,19 @@ class ESMonitor {
         });
     }
 
-    getSavedConnections() {
-        const connections = localStorage.getItem('esConnections');
-        return connections ? JSON.parse(connections) : [];
+    async getSavedConnections() {
+        try {
+            const result = await new Promise(resolve => {
+                chrome.storage.local.get(['esConnections'], resolve);
+            });
+            return result.esConnections || [];
+        } catch (error) {
+            console.error('Failed to get saved connections:', error);
+            return [];
+        }
     }
 
-    saveConnection() {
+    async saveConnection() {
         const name = document.getElementById('connectionName').value.trim();
         const url = document.getElementById('esUrl').value.trim();
         const username = document.getElementById('esUsername').value.trim();
@@ -1228,7 +1264,7 @@ class ESMonitor {
             return;
         }
 
-        const connections = this.getSavedConnections();
+        const connections = await this.getSavedConnections();
         const connectionData = {
             name,
             url,
@@ -1244,28 +1280,42 @@ class ESMonitor {
             Toast.show('Connection saved successfully', 'success');
         }
 
-        localStorage.setItem('esConnections', JSON.stringify(connections));
+        await new Promise(resolve => {
+            chrome.storage.local.set({ esConnections: connections }, resolve);
+        });
+        
+        await new Promise(resolve => {
+            chrome.storage.local.set({ lastConnection: name }, resolve);
+        });
+        
         this.updateConnectionsList();
     }
 
-    deleteConnection() {
+    async deleteConnection() {
         const name = document.getElementById('connectionName').value.trim();
         if (!name) {
             Toast.show('Please select a connection to delete', 'error');
             return;
         }
 
-        const connections = this.getSavedConnections();
-        const newConnections = connections.filter(c => c.name !== name);
-        localStorage.setItem('esConnections', JSON.stringify(newConnections));
-        
-        this.updateConnectionsList();
-        document.getElementById('connectionName').value = '';
-        document.getElementById('esUrl').value = '';
-        document.getElementById('esUsername').value = '';
-        document.getElementById('esPassword').value = '';
-        document.getElementById('selectedConnectionText').textContent = 'Select a connection';
-        Toast.show('Connection deleted successfully', 'success');
+        try {
+            const connections = await this.getSavedConnections();
+            const newConnections = connections.filter(c => c.name !== name);
+            
+            await new Promise(resolve => {
+                chrome.storage.local.set({ esConnections: newConnections }, resolve);
+            });
+            
+            this.updateConnectionsList();
+            document.getElementById('connectionName').value = '';
+            document.getElementById('esUrl').value = '';
+            document.getElementById('esUsername').value = '';
+            document.getElementById('esPassword').value = '';
+            document.getElementById('selectedConnectionText').textContent = 'Select a connection';
+            Toast.show('Connection deleted successfully', 'success');
+        } catch (error) {
+            Toast.show('Failed to delete connection', 'error');
+        }
     }
 
     loadSavedConnections() {
@@ -1280,10 +1330,10 @@ class ESMonitor {
         }
     }
 
-    initializePanelToggles() {
+    async initializePanelToggles() {
         const panels = document.querySelectorAll('.status-panel, .metrics-panel, .indices-panel, .sample-data-panel, .quick-filter-panel, .search-panel, .shards-data-panel, .connection-panel, .cluster-health-panel');
         
-        panels.forEach(panel => {
+        panels.forEach(async panel => {
             const header = panel.querySelector('.panel-header');
             if (!header) return;
             
@@ -1323,31 +1373,42 @@ class ESMonitor {
             
             if (content) {
                 const panelId = panel.id || panel.className.split(' ')[0];
-                const isCollapsed = localStorage.getItem(`panel_${panelId}_collapsed`) === 'true';
                 
-                if (isCollapsed) {
-                    content.classList.add('collapsed');
-                    toggleBtn.classList.add('collapsed');
-                    if (panel.classList.contains('search-panel')) {
-                        panel.classList.add('collapsed');
+                try {
+                    const result = await new Promise(resolve => {
+                        chrome.storage.local.get([`panel_${panelId}_collapsed`], resolve);
+                    });
+                    
+                    const isCollapsed = result[`panel_${panelId}_collapsed`] === true;
+                    
+                    if (isCollapsed) {
+                        content.classList.add('collapsed');
+                        toggleBtn.classList.add('collapsed');
+                        if (panel.classList.contains('search-panel')) {
+                            panel.classList.add('collapsed');
+                        }
                     }
+                    
+                    toggleBtn.addEventListener('click', async (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        content.classList.toggle('collapsed');
+                        toggleBtn.classList.toggle('collapsed');
+                        
+                        if (panel.classList.contains('search-panel')) {
+                            panel.classList.toggle('collapsed');
+                        }
+                        
+                        const isNowCollapsed = content.classList.contains('collapsed');
+                        await new Promise(resolve => {
+                            chrome.storage.local.set({
+                                [`panel_${panelId}_collapsed`]: isNowCollapsed
+                            }, resolve);
+                        });
+                    });
+                } catch (error) {
+                    console.error('Failed to load panel state:', error);
                 }
-                
-                toggleBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    content.classList.toggle('collapsed');
-                    toggleBtn.classList.toggle('collapsed');
-                    
-                    if (panel.classList.contains('search-panel')) {
-                        panel.classList.toggle('collapsed');
-                    }
-                    
-                    localStorage.setItem(
-                        `panel_${panelId}_collapsed`,
-                        content.classList.contains('collapsed')
-                    );
-                });
             }
         });
     }

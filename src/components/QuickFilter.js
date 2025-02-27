@@ -5,10 +5,12 @@ export default class QuickFilter {
         this.esService = esService;
         this.selectedIndex = null;
         this.fields = [];
+        this.savedFilters = [];
         this.init();
     }
 
     async init() {
+        this.savedFilters = await this.loadFilters();
         await this.loadIndices();
         this.initializeEventListeners();
     }
@@ -131,7 +133,7 @@ export default class QuickFilter {
         });
     }
 
-    buildQuery() {
+    async buildQuery() {
         const filters = Array.from(document.querySelectorAll('.filter-item'))
             .map(filter => {
                 const field = filter.querySelector('.field-select').value;
@@ -140,17 +142,21 @@ export default class QuickFilter {
             })
             .filter(Boolean);
 
-        return {
+        const query = {
             query: {
                 bool: {
                     must: filters.length ? filters : [{ match_all: {} }]
                 }
             }
         };
+        
+        await this.saveFilters(filters);
+        
+        return query;
     }
 
     async updateQuery() {
-        const query = this.buildQuery();
+        const query = await this.buildQuery();
         const queryPreview = document.getElementById('quickFilterQueryPreview');
         queryPreview.textContent = JSON.stringify(query, null, 2);
 
@@ -177,5 +183,28 @@ export default class QuickFilter {
         navigator.clipboard.writeText(query)
             .then(() => Toast.show('Query copied to clipboard', 'success'))
             .catch(() => Toast.show('Failed to copy query', 'error'));
+    }
+
+    async saveFilters(filters) {
+        try {
+            await new Promise(resolve => {
+                chrome.storage.local.set({ savedFilters: filters }, resolve);
+            });
+        } catch (error) {
+            console.error('Failed to save filters:', error);
+        }
+    }
+
+    async loadFilters() {
+        try {
+            const result = await new Promise(resolve => {
+                chrome.storage.local.get(['savedFilters'], resolve);
+            });
+            
+            return result.savedFilters || [];
+        } catch (error) {
+            console.error('Failed to load filters:', error);
+            return [];
+        }
     }
 } 

@@ -5,23 +5,34 @@ export default class Search {
     constructor(esService) {
         this.esService = esService;
         this.editor = null;
-        this.savedQueries = this.loadSavedQueries();
+        this.savedQueries = [];
         this.init();
     }
 
     async init() {
+        this.savedQueries = await this.loadSavedQueries();
         await this.initializeMonacoEditor();
         this.initializeEventListeners();
         this.initializeSavedQueries();
     }
 
-    loadSavedQueries() {
-        return JSON.parse(localStorage.getItem('savedQueries') || '[]');
+    async loadSavedQueries() {
+        try {
+            const result = await new Promise(resolve => {
+                chrome.storage.local.get(['savedQueries'], resolve);
+            });
+            return result.savedQueries || [];
+        } catch (error) {
+            console.error('Failed to load saved queries:', error);
+            return [];
+        }
     }
 
-    saveQuery() {
+    async saveQuery() {
         try {
-            localStorage.setItem('savedQueries', JSON.stringify(this.savedQueries));
+            await new Promise(resolve => {
+                chrome.storage.local.set({ savedQueries: this.savedQueries }, resolve);
+            });
         } catch (error) {
             Toast.show('Error saving query', 'error');
         }
@@ -128,14 +139,14 @@ export default class Search {
         });
     }
 
-    deleteSavedQuery(id) {
+    async deleteSavedQuery(id) {
         this.savedQueries = this.savedQueries.filter(q => q.id !== id);
-        this.saveQuery();
+        await this.saveQuery();
         this.renderSavedQueries();
         Toast.show('Query deleted successfully', 'success');
     }
 
-    quickSave(name, query) {
+    async quickSave(name, query) {
         if (!query) {
             Toast.show('Query is empty', 'error');
             return;
@@ -148,7 +159,7 @@ export default class Search {
         };
 
         this.savedQueries.push(newQuery);
-        this.saveQuery();
+        await this.saveQuery();
         this.renderSavedQueries();
         Toast.show('Query saved successfully', 'success');
     }
@@ -163,102 +174,106 @@ export default class Search {
     }
 
     async initializeMonacoEditor() {
-        require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs' }});
-        require(['vs/editor/editor.main'], () => {
-            monaco.editor.defineTheme('es-dark', {
-                base: 'vs-dark',
-                inherit: true,
-                rules: [],
-                colors: {
-                    'editor.background': '#1e293b',
-                    'editor.foreground': '#e2e8f0',
-                    'editor.lineHighlightBackground': '#334155',
-                    'editorLineNumber.foreground': '#64748b',
-                    'editorIndentGuide.background': '#334155'
-                }
-            });
+        try {
+            require.config({ paths: { 'vs': 'libs/monaco-editor/min/vs' }});
+            require(['vs/editor/editor.main'], () => {
+                monaco.editor.defineTheme('es-dark', {
+                    base: 'vs-dark',
+                    inherit: true,
+                    rules: [],
+                    colors: {
+                        'editor.background': '#1e293b',
+                        'editor.foreground': '#e2e8f0',
+                        'editor.lineHighlightBackground': '#334155',
+                        'editorLineNumber.foreground': '#64748b',
+                        'editorIndentGuide.background': '#334155'
+                    }
+                });
 
-            monaco.languages.register({ id: 'elasticsearch' });
-            monaco.languages.setMonarchTokensProvider('elasticsearch', {
-                tokenizer: {
-                    root: [
-                        [/(GET|POST|PUT|DELETE)/, "keyword"],
-                        [/[a-zA-Z0-9_*-]+\//, "string"],
-                        [/{/, { token: "delimiter.curly", next: "@json" }],
-                    ],
-                    json: [
-                        [/[{}]/, "delimiter.curly"],
-                        [/".*?"/, "string"],
-                        [/[0-9]+/, "number"],
-                        [/[a-zA-Z_]\w*/, "identifier"],
-                        [/[,:]/, "delimiter"],
-                        [/\s+/, "white"],
-                        [/}/, { token: "delimiter.curly", next: "@pop" }]
-                    ]
-                }
-            });
+                monaco.languages.register({ id: 'elasticsearch' });
+                monaco.languages.setMonarchTokensProvider('elasticsearch', {
+                    tokenizer: {
+                        root: [
+                            [/(GET|POST|PUT|DELETE)/, "keyword"],
+                            [/[a-zA-Z0-9_*-]+\//, "string"],
+                            [/{/, { token: "delimiter.curly", next: "@json" }],
+                        ],
+                        json: [
+                            [/[{}]/, "delimiter.curly"],
+                            [/".*?"/, "string"],
+                            [/[0-9]+/, "number"],
+                            [/[a-zA-Z_]\w*/, "identifier"],
+                            [/[,:]/, "delimiter"],
+                            [/\s+/, "white"],
+                            [/}/, { token: "delimiter.curly", next: "@pop" }]
+                        ]
+                    }
+                });
 
-            const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'es-dark' : 'vs-light';
-            
-            this.editor = monaco.editor.create(document.getElementById('queryInput'), {
-                value: 'GET my-index/_search\n{\n  "query": {\n    "match_all": {}\n  }\n}',
-                language: 'elasticsearch',
-                theme: theme,
-                minimap: { enabled: false },
-                automaticLayout: true,
-                fontSize: 14,
-                lineNumbers: 'on',
-                scrollBeyondLastLine: false,
-                roundedSelection: false,
-                renderIndentGuides: true,
-                contextmenu: true,
-                lineHeight: 21,
-                padding: { top: 8, bottom: 8 },
-                suggest: {
-                    snippets: 'inline'
-                },
-                suggestOnTriggerCharacters: true,
-                quickSuggestions: {
-                    other: true,
-                    comments: true,
-                    strings: true
-                }
-            });
+                const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'es-dark' : 'vs-light';
+                
+                this.editor = monaco.editor.create(document.getElementById('queryInput'), {
+                    value: 'GET my-index/_search\n{\n  "query": {\n    "match_all": {}\n  }\n}',
+                    language: 'elasticsearch',
+                    theme: theme,
+                    minimap: { enabled: false },
+                    automaticLayout: true,
+                    fontSize: 14,
+                    lineNumbers: 'on',
+                    scrollBeyondLastLine: false,
+                    roundedSelection: false,
+                    renderIndentGuides: true,
+                    contextmenu: true,
+                    lineHeight: 21,
+                    padding: { top: 8, bottom: 8 },
+                    suggest: {
+                        snippets: 'inline'
+                    },
+                    suggestOnTriggerCharacters: true,
+                    quickSuggestions: {
+                        other: true,
+                        comments: true,
+                        strings: true
+                    }
+                });
 
-            document.addEventListener('themeChanged', (e) => {
-                const newTheme = e.detail.theme === 'dark' ? 'es-dark' : 'vs-light';
-                monaco.editor.setTheme(newTheme);
-            });
+                document.addEventListener('themeChanged', (e) => {
+                    const newTheme = e.detail.theme === 'dark' ? 'es-dark' : 'vs-light';
+                    monaco.editor.setTheme(newTheme);
+                });
 
-            monaco.languages.registerCompletionItemProvider('elasticsearch', {
-                provideCompletionItems: (model, position) => {
-                    const textUntilPosition = model.getValueInRange({
-                        startLineNumber: position.lineNumber,
-                        startColumn: 1,
-                        endLineNumber: position.lineNumber,
-                        endColumn: position.column
-                    });
+                monaco.languages.registerCompletionItemProvider('elasticsearch', {
+                    provideCompletionItems: (model, position) => {
+                        const textUntilPosition = model.getValueInRange({
+                            startLineNumber: position.lineNumber,
+                            startColumn: 1,
+                            endLineNumber: position.lineNumber,
+                            endColumn: position.column
+                        });
 
-                    if (position.lineNumber === 1) {
+                        if (position.lineNumber === 1) {
+                            return {
+                                suggestions: httpMethods.map(method => ({
+                                    ...method,
+                                    kind: monaco.languages.CompletionItemKind[method.kind]
+                                }))
+                            };
+                        }
+
                         return {
-                            suggestions: httpMethods.map(method => ({
-                                ...method,
-                                kind: monaco.languages.CompletionItemKind[method.kind]
+                            suggestions: queryDSL.map(suggestion => ({
+                                ...suggestion,
+                                kind: monaco.languages.CompletionItemKind[suggestion.kind],
+                                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
                             }))
                         };
-                    }
-
-                    return {
-                        suggestions: queryDSL.map(suggestion => ({
-                            ...suggestion,
-                            kind: monaco.languages.CompletionItemKind[suggestion.kind],
-                            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
-                        }))
-                    };
-                },
-                triggerCharacters: ['"', '{', '[', '.', ' ']
+                    },
+                    triggerCharacters: ['"', '{', '[', '.', ' ']
+                });
             });
-        });
+        } catch (error) {
+            console.error('Failed to initialize Monaco editor:', error);
+        }
     }
 
     initializeEventListeners() {
@@ -341,6 +356,7 @@ export default class Search {
     async executeSearch() {
         try {
             const query = this.editor.getValue().trim();
+            
             const firstLine = query.split('\n')[0];
             const [httpMethod, endpoint] = firstLine.trim().split(' ');
             

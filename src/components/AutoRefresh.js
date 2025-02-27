@@ -17,7 +17,7 @@ class AutoRefresh {
         }
     }
 
-    handleIntervalChange(event) {
+    async handleIntervalChange(event) {
         const value = event.target.value;
         
         this.destroy();
@@ -59,6 +59,29 @@ class AutoRefresh {
         if (this.refreshInterval) {
             clearInterval(this.refreshInterval);
             this.refreshInterval = null;
+        }
+    }
+
+    async saveRefreshInterval(interval) {
+        try {
+            await new Promise(resolve => {
+                chrome.storage.local.set({ refreshInterval: interval }, resolve);
+            });
+        } catch (error) {
+            console.error('Failed to save refresh interval:', error);
+        }
+    }
+
+    async loadRefreshInterval() {
+        try {
+            const result = await new Promise(resolve => {
+                chrome.storage.local.get(['refreshInterval'], resolve);
+            });
+            
+            return result.refreshInterval || 0; 
+        } catch (error) {
+            console.error('Failed to load refresh interval:', error);
+            return 0;
         }
     }
 }
