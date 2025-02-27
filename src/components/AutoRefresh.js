@@ -6,7 +6,12 @@ class AutoRefresh {
         this.init();
     }
 
-    init() {
+    async init() {
+        const savedInterval = await this.loadRefreshInterval();
+        if (savedInterval > 0) {
+            this.intervalTime = savedInterval;
+        }
+        
         const refreshSelect = document.getElementById('refreshInterval');
         if (!refreshSelect) return;
         
@@ -23,7 +28,12 @@ class AutoRefresh {
         this.destroy();
         
         if (value !== 'off' && this.esMonitor.esService) {
-            this.startRefresh(this.getIntervalTime(value));
+            const interval = this.getIntervalTime(value);
+            this.startRefresh(interval);
+            
+            await this.saveRefreshInterval(interval);
+        } else {
+            await this.saveRefreshInterval(0);
         }
     }
 
