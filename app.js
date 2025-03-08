@@ -337,7 +337,9 @@ class ESMonitor {
             const isConnected = await service.checkConnection();
             
             if (isConnected) {
-                localStorage.setItem('esUrl', url);
+                await new Promise(resolve => {
+                    chrome.storage.local.set({ esUrl: url }, resolve);
+                });
                 Toast.show('Successfully connected to Elasticsearch', 'success');
             } else {
                 Toast.show('Failed to connect to Elasticsearch', 'error');
@@ -371,11 +373,17 @@ class ESMonitor {
 
             const isConnected = await this.esService.checkConnection();
             if (isConnected) {
-                localStorage.setItem('esUrl', url);
+                await new Promise(resolve => {
+                    chrome.storage.local.set({ esUrl: url }, resolve);
+                });
+                
                 const name = document.getElementById('connectionName').value.trim();
                 if (name) {
-                    localStorage.setItem('lastConnection', name);
+                    await new Promise(resolve => {
+                        chrome.storage.local.set({ lastConnection: name }, resolve);
+                    });
                 }
+                
                 document.getElementById('dashboard').classList.remove('hidden');
 
                 this.quickFilter = new QuickFilter(this.esService);
@@ -574,50 +582,71 @@ class ESMonitor {
     }
 
     async loadSavedConnection() {
-        const lastConnectionName = localStorage.getItem('lastConnection');
-        if (lastConnectionName) {
-            const connections = this.getSavedConnections();
-            const lastConnection = connections.find(c => c.name === lastConnectionName);
-            if (lastConnection) {
-                document.getElementById('connectionName').value = lastConnection.name;
-                document.getElementById('esUrl').value = lastConnection.url;
-                document.getElementById('esUsername').value = lastConnection.auth?.username || '';
-                document.getElementById('esPassword').value = lastConnection.auth?.password || '';
-                document.getElementById('selectedConnectionText').textContent = lastConnection.name;
+        try {
+            const result = await new Promise(resolve => {
+                chrome.storage.local.get(['lastConnection'], resolve);
+            });
+            
+            const lastConnectionName = result.lastConnection;
+            
+            if (lastConnectionName) {
+                const connections = await this.getSavedConnections();
+                const lastConnection = connections.find(c => c.name === lastConnectionName);
                 
-                this.esService = new ElasticsearchService(lastConnection.url, lastConnection.auth);
-                this.indicesRepository = new IndicesRepository(this.esService);
-                
-                const isConnected = await this.esService.checkConnection();
-                if (isConnected) {
-                    document.getElementById('dashboard').classList.remove('hidden');
-                    this.quickFilter = new QuickFilter(this.esService);
-                    this.search = new Search(this.esService);
-                    await this.updateDashboard();
-                } else {
-                    localStorage.removeItem('lastConnection');
-                    Toast.show('Saved connection is no longer valid', 'error');
+                if (lastConnection) {
+                    document.getElementById('connectionName').value = lastConnection.name;
+                    document.getElementById('esUrl').value = lastConnection.url;
+                    document.getElementById('esUsername').value = lastConnection.auth?.username || '';
+                    document.getElementById('esPassword').value = lastConnection.auth?.password || '';
+                    document.getElementById('selectedConnectionText').textContent = lastConnection.name;
+                    
+                    this.esService = new ElasticsearchService(lastConnection.url, lastConnection.auth);
+                    this.indicesRepository = new IndicesRepository(this.esService);
+                    
+                    const isConnected = await this.esService.checkConnection();
+                    if (isConnected) {
+                        document.getElementById('dashboard').classList.remove('hidden');
+                        this.quickFilter = new QuickFilter(this.esService);
+                        this.search = new Search(this.esService);
+                        
+                        await this.updateDashboard();
+                        
+                        if (this.autoRefresh) {
+                            this.autoRefresh.destroy();
+                        }
+                        this.autoRefresh = new AutoRefresh(this);
+                    }
                 }
             }
+        } catch (error) {
+            console.error('Failed to load saved connection:', error);
         }
     }
 
-    clearConnection() {
-        localStorage.removeItem('lastConnection');
-        document.getElementById('esUrl').value = '';
-        document.getElementById('connectionName').value = '';
-        document.getElementById('esUsername').value = '';
-        document.getElementById('esPassword').value = '';
-        document.getElementById('selectedConnectionText').textContent = 'Select a connection';
-        document.getElementById('dashboard').classList.add('hidden');
-        this.esService = null;
-        this.quickFilter = null;
-        this.search = null;
-        if (this.autoRefresh) {
-            this.autoRefresh.destroy();
-            this.autoRefresh = null;
+    async clearConnection() {
+        try {
+            await new Promise(resolve => {
+                chrome.storage.local.remove(['lastConnection'], resolve);
+            });
+            
+            document.getElementById('esUrl').value = '';
+            document.getElementById('connectionName').value = '';
+            document.getElementById('esUsername').value = '';
+            document.getElementById('esPassword').value = '';
+            document.getElementById('selectedConnectionText').textContent = 'Select a connection';
+            document.getElementById('dashboard').classList.add('hidden');
+            this.esService = null;
+            this.quickFilter = null;
+            this.search = null;
+            if (this.autoRefresh) {
+                this.autoRefresh.destroy();
+                this.autoRefresh = null;
+            }
+            Toast.show('Connection cleared', 'info');
+        } catch (error) {
+            console.error('Failed to clear connection:', error);
+            Toast.show('Failed to clear connection', 'error');
         }
-        Toast.show('Connection cleared', 'info');
     }
 
     showDeleteConfirmation(itemName) {
@@ -1120,54 +1149,108 @@ class ESMonitor {
     }
 
     initializeConnectionHandlers() {
-        const dropdownBtn = document.getElementById('connectionSelectBtn');
-        const dropdownMenu = document.getElementById('connectionDropdownMenu');
+        const connectionSelectBtn = document.getElementById('connectionSelectBtn');
+        const connectionDropdownMenu = document.getElementById('connectionDropdownMenu');
         
-        if (dropdownBtn && dropdownMenu) {
-            dropdownBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                dropdownMenu.classList.toggle('show');
-            });
-            
-            document.addEventListener('click', (e) => {
-                if (!e.target.closest('.connection-dropdown') && dropdownMenu.classList.contains('show')) {
-                    dropdownMenu.classList.remove('show');
-                }
-            });
+        if (!connectionSelectBtn || !connectionDropdownMenu) {
+            console.error('Connection dropdown elements not found');
+            return;
         }
         
-        document.getElementById('saveConnectionBtn')?.addEventListener('click', () => {
-            this.saveConnection();
+        connectionSelectBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            connectionDropdownMenu.classList.toggle('show');
+             });
+        
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.saved-connections') && connectionDropdownMenu.classList.contains('show')) {
+                connectionDropdownMenu.classList.remove('show');
+            }
         });
+        
+        const saveBtn = document.getElementById('saveConnectionBtn');
+        if (saveBtn) {
+            saveBtn.addEventListener('click', () => {
+                console.log('Save button clicked');
+                this.saveConnection();
+            });
+        }
     }
 
     updateConnectionsList() {
         const connectionList = document.getElementById('connectionList');
-        const connections = this.getSavedConnections();
-        const dropdownMenu = document.getElementById('connectionDropdownMenu');
+        connectionList.innerHTML = '';
         
-        connectionList.innerHTML = connections.length === 0 ? 
-            '<div class="connection-item">No saved connections</div>' :
-            connections.map(conn => `
-                <div class="connection-item" data-name="${conn.name}">
-                    <span class="connection-name">${conn.name}</span>
-                    <div class="connection-item-actions">
-                        <button class="connection-action-btn edit" data-name="${conn.name}">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="connection-action-btn delete" data-name="${conn.name}">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                </div>
-            `).join('');
-
-        connectionList.querySelectorAll('.connection-item').forEach(item => {
-            item.addEventListener('click', async (e) => {
-                if (!e.target.closest('.connection-action-btn')) {
-                    const name = item.dataset.name;
-                    const connection = connections.find(c => c.name === name);
+        this.getSavedConnections().then(connections => {
+           const connectionArray = Array.isArray(connections) ? connections : [];
+            
+            if (connectionArray.length === 0) {
+                const emptyItem = document.createElement('div');
+                emptyItem.className = 'connection-item empty';
+                emptyItem.textContent = 'No saved connections';
+                connectionList.appendChild(emptyItem);
+                return;
+            }
+            
+            connectionArray.forEach(connection => {
+                const item = document.createElement('div');
+                item.className = 'connection-item';
+                item.dataset.name = connection.name;
+                
+                const nameSpan = document.createElement('span');
+                nameSpan.className = 'connection-name';
+                nameSpan.textContent = connection.name;
+                
+                const actions = document.createElement('div');
+                actions.className = 'connection-item-actions';
+                
+                const editBtn = document.createElement('button');
+                editBtn.className = 'connection-action-btn edit';
+                editBtn.dataset.name = connection.name;
+                editBtn.innerHTML = '<i class="fas fa-edit"></i>';
+                
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'connection-action-btn delete';
+                deleteBtn.dataset.name = connection.name;
+                deleteBtn.innerHTML = '<i class="fas fa-trash-alt"></i>';
+                
+                actions.appendChild(editBtn);
+                actions.appendChild(deleteBtn);
+                
+                item.appendChild(nameSpan);
+                item.appendChild(actions);
+                
+                connectionList.appendChild(item);
+            });
+            
+            const dropdownMenu = document.getElementById('connectionDropdownMenu');
+            
+            connectionList.querySelectorAll('.connection-item').forEach(item => {
+                if (item.classList.contains('empty')) return;
+                
+                item.addEventListener('click', async (e) => {
+                    if (!e.target.closest('.connection-action-btn')) {
+                        const name = item.dataset.name;
+                        const connection = connectionArray.find(c => c.name === name);
+                        if (connection) {
+                            document.getElementById('connectionName').value = connection.name;
+                            document.getElementById('esUrl').value = connection.url;
+                            document.getElementById('esUsername').value = connection.auth?.username || '';
+                            document.getElementById('esPassword').value = connection.auth?.password || '';
+                            document.getElementById('selectedConnectionText').textContent = connection.name;
+                            dropdownMenu.classList.remove('show');
+                            await this.connect();
+                        }
+                    }
+                });
+            });
+            
+            connectionList.querySelectorAll('.connection-action-btn.edit').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const name = btn.dataset.name;
+                    const connection = connectionArray.find(c => c.name === name);
                     if (connection) {
                         document.getElementById('connectionName').value = connection.name;
                         document.getElementById('esUrl').value = connection.url;
@@ -1175,44 +1258,34 @@ class ESMonitor {
                         document.getElementById('esPassword').value = connection.auth?.password || '';
                         document.getElementById('selectedConnectionText').textContent = connection.name;
                         dropdownMenu.classList.remove('show');
-                        await this.connect();
                     }
-                }
+                });
             });
-        });
-
-        connectionList.querySelectorAll('.connection-action-btn.edit').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const name = btn.dataset.name;
-                const connection = connections.find(c => c.name === name);
-                if (connection) {
-                    document.getElementById('connectionName').value = connection.name;
-                    document.getElementById('esUrl').value = connection.url;
-                    document.getElementById('esUsername').value = connection.auth?.username || '';
-                    document.getElementById('esPassword').value = connection.auth?.password || '';
-                    document.getElementById('selectedConnectionText').textContent = connection.name;
-                    dropdownMenu.classList.remove('show');
-                }
-            });
-        });
-
-        connectionList.querySelectorAll('.connection-action-btn.delete').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const name = btn.dataset.name;
-                this.deleteConnection();
-                dropdownMenu.classList.remove('show');
+            
+            connectionList.querySelectorAll('.connection-action-btn.delete').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const name = btn.dataset.name;
+                    document.getElementById('connectionName').value = name;
+                    this.deleteConnection();
+                });
             });
         });
     }
 
-    getSavedConnections() {
-        const connections = localStorage.getItem('esConnections');
-        return connections ? JSON.parse(connections) : [];
+    async getSavedConnections() {
+        try {
+            const result = await new Promise(resolve => {
+                chrome.storage.local.get(['esConnections'], resolve);
+            });
+            return result.esConnections || [];
+        } catch (error) {
+            console.error('Failed to get saved connections:', error);
+            return [];
+        }
     }
 
-    saveConnection() {
+    async saveConnection() {
         const name = document.getElementById('connectionName').value.trim();
         const url = document.getElementById('esUrl').value.trim();
         const username = document.getElementById('esUsername').value.trim();
@@ -1228,7 +1301,7 @@ class ESMonitor {
             return;
         }
 
-        const connections = this.getSavedConnections();
+        const connections = await this.getSavedConnections();
         const connectionData = {
             name,
             url,
@@ -1244,28 +1317,42 @@ class ESMonitor {
             Toast.show('Connection saved successfully', 'success');
         }
 
-        localStorage.setItem('esConnections', JSON.stringify(connections));
+        await new Promise(resolve => {
+            chrome.storage.local.set({ esConnections: connections }, resolve);
+        });
+        
+        await new Promise(resolve => {
+            chrome.storage.local.set({ lastConnection: name }, resolve);
+        });
+        
         this.updateConnectionsList();
     }
 
-    deleteConnection() {
+    async deleteConnection() {
         const name = document.getElementById('connectionName').value.trim();
         if (!name) {
             Toast.show('Please select a connection to delete', 'error');
             return;
         }
 
-        const connections = this.getSavedConnections();
-        const newConnections = connections.filter(c => c.name !== name);
-        localStorage.setItem('esConnections', JSON.stringify(newConnections));
-        
-        this.updateConnectionsList();
-        document.getElementById('connectionName').value = '';
-        document.getElementById('esUrl').value = '';
-        document.getElementById('esUsername').value = '';
-        document.getElementById('esPassword').value = '';
-        document.getElementById('selectedConnectionText').textContent = 'Select a connection';
-        Toast.show('Connection deleted successfully', 'success');
+        try {
+            const connections = await this.getSavedConnections();
+            const newConnections = connections.filter(c => c.name !== name);
+            
+            await new Promise(resolve => {
+                chrome.storage.local.set({ esConnections: newConnections }, resolve);
+            });
+            
+            this.updateConnectionsList();
+            document.getElementById('connectionName').value = '';
+            document.getElementById('esUrl').value = '';
+            document.getElementById('esUsername').value = '';
+            document.getElementById('esPassword').value = '';
+            document.getElementById('selectedConnectionText').textContent = 'Select a connection';
+            Toast.show('Connection deleted successfully', 'success');
+        } catch (error) {
+            Toast.show('Failed to delete connection', 'error');
+        }
     }
 
     loadSavedConnections() {
@@ -1280,10 +1367,10 @@ class ESMonitor {
         }
     }
 
-    initializePanelToggles() {
+    async initializePanelToggles() {
         const panels = document.querySelectorAll('.status-panel, .metrics-panel, .indices-panel, .sample-data-panel, .quick-filter-panel, .search-panel, .shards-data-panel, .connection-panel, .cluster-health-panel');
         
-        panels.forEach(panel => {
+        panels.forEach(async panel => {
             const header = panel.querySelector('.panel-header');
             if (!header) return;
             
@@ -1323,31 +1410,42 @@ class ESMonitor {
             
             if (content) {
                 const panelId = panel.id || panel.className.split(' ')[0];
-                const isCollapsed = localStorage.getItem(`panel_${panelId}_collapsed`) === 'true';
                 
-                if (isCollapsed) {
-                    content.classList.add('collapsed');
-                    toggleBtn.classList.add('collapsed');
-                    if (panel.classList.contains('search-panel')) {
-                        panel.classList.add('collapsed');
+                try {
+                    const result = await new Promise(resolve => {
+                        chrome.storage.local.get([`panel_${panelId}_collapsed`], resolve);
+                    });
+                    
+                    const isCollapsed = result[`panel_${panelId}_collapsed`] === true;
+                    
+                    if (isCollapsed) {
+                        content.classList.add('collapsed');
+                        toggleBtn.classList.add('collapsed');
+                        if (panel.classList.contains('search-panel')) {
+                            panel.classList.add('collapsed');
+                        }
                     }
+                    
+                    toggleBtn.addEventListener('click', async (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        content.classList.toggle('collapsed');
+                        toggleBtn.classList.toggle('collapsed');
+                        
+                        if (panel.classList.contains('search-panel')) {
+                            panel.classList.toggle('collapsed');
+                        }
+                        
+                        const isNowCollapsed = content.classList.contains('collapsed');
+                        await new Promise(resolve => {
+                            chrome.storage.local.set({
+                                [`panel_${panelId}_collapsed`]: isNowCollapsed
+                            }, resolve);
+                        });
+                    });
+                } catch (error) {
+                    console.error('Failed to load panel state:', error);
                 }
-                
-                toggleBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    content.classList.toggle('collapsed');
-                    toggleBtn.classList.toggle('collapsed');
-                    
-                    if (panel.classList.contains('search-panel')) {
-                        panel.classList.toggle('collapsed');
-                    }
-                    
-                    localStorage.setItem(
-                        `panel_${panelId}_collapsed`,
-                        content.classList.contains('collapsed')
-                    );
-                });
             }
         });
     }

@@ -6,7 +6,12 @@ class AutoRefresh {
         this.init();
     }
 
-    init() {
+    async init() {
+        const savedInterval = await this.loadRefreshInterval();
+        if (savedInterval > 0) {
+            this.intervalTime = savedInterval;
+        }
+        
         const refreshSelect = document.getElementById('refreshInterval');
         if (!refreshSelect) return;
         
@@ -17,13 +22,18 @@ class AutoRefresh {
         }
     }
 
-    handleIntervalChange(event) {
+    async handleIntervalChange(event) {
         const value = event.target.value;
         
         this.destroy();
         
         if (value !== 'off' && this.esMonitor.esService) {
-            this.startRefresh(this.getIntervalTime(value));
+            const interval = this.getIntervalTime(value);
+            this.startRefresh(interval);
+            
+            await this.saveRefreshInterval(interval);
+        } else {
+            await this.saveRefreshInterval(0);
         }
     }
 
@@ -59,6 +69,29 @@ class AutoRefresh {
         if (this.refreshInterval) {
             clearInterval(this.refreshInterval);
             this.refreshInterval = null;
+        }
+    }
+
+    async saveRefreshInterval(interval) {
+        try {
+            await new Promise(resolve => {
+                chrome.storage.local.set({ refreshInterval: interval }, resolve);
+            });
+        } catch (error) {
+            console.error('Failed to save refresh interval:', error);
+        }
+    }
+
+    async loadRefreshInterval() {
+        try {
+            const result = await new Promise(resolve => {
+                chrome.storage.local.get(['refreshInterval'], resolve);
+            });
+            
+            return result.refreshInterval || 0; 
+        } catch (error) {
+            console.error('Failed to load refresh interval:', error);
+            return 0;
         }
     }
 }

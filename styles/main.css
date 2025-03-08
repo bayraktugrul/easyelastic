@@ -64,4 +64,8 @@ button:active {
 .sample-data-panel,
 .quick-filter-panel {
     margin-bottom: 1.5rem;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 } 

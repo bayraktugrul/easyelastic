@@ -1,6 +1,6 @@
 class ElasticsearchService {
     constructor(baseUrl, auth = null) {
-        this.baseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
+        this.baseUrl = baseUrl;
         this.auth = auth;
     }
 
@@ -21,14 +21,31 @@ class ElasticsearchService {
             headers: { ...defaultOptions.headers, ...options.headers }
         };
 
-        const response = await fetch(url, requestOptions);
-        
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.error?.reason || `Request failed with status ${response.status}`);
+        try {
+            return new Promise((resolve, reject) => {
+                chrome.runtime.sendMessage(
+                    {
+                        action: 'fetchElasticsearch',
+                        url: url,
+                        options: requestOptions
+                    },
+                    response => {
+                        if (response.success) {
+                            const mockResponse = {
+                                ok: true,
+                                json: () => Promise.resolve(response.data)
+                            };
+                            resolve(mockResponse);
+                        } else {
+                            reject(new Error(response.error || 'Request failed'));
+                        }
+                    }
+                );
+            });
+        } catch (error) {
+            console.error('Fetch error:', error);
+            throw error;
         }
-
-        return response;
     }
 
     async checkConnection() {

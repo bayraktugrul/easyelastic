@@ -1,11 +1,10 @@
 export default class ThemeManager {
     constructor() {
-        this.theme = localStorage.getItem('theme') || 'light';
         this.init();
     }
 
-    init() {
-        this.applyTheme();
+    async init() {
+        await this.loadTheme();
         this.initializeEventListeners();
     }
 
@@ -16,12 +15,25 @@ export default class ThemeManager {
         }
     }
 
-    applyTheme() {
-        document.documentElement.setAttribute('data-theme', this.theme);
-        localStorage.setItem('theme', this.theme);
+    async loadTheme() {
+        try {
+            const result = await new Promise(resolve => {
+                chrome.storage.local.get(['theme'], resolve);
+            });
+            this.theme = result.theme || 'dark';
+            this.applyTheme();
+        } catch (error) {
+            this.theme = 'dark';
+            this.applyTheme();
+        }
     }
 
-    toggleTheme() {
+    applyTheme() {
+        document.documentElement.setAttribute('data-theme', this.theme);
+        chrome.storage.local.set({ theme: this.theme });
+    }
+
+    async toggleTheme() {
         this.theme = this.theme === 'dark' ? 'light' : 'dark';
         this.applyTheme();
         
