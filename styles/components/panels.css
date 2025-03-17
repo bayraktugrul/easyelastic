@@ -190,17 +190,18 @@ h2 i {
 
 .dataTables_scroll {
     width: 100%;
-    margin-bottom: 0;
+    margin-bottom: 1rem;
     border: 1px solid rgba(229, 231, 235, 0.8);
     border-radius: 8px;
-    overflow: hidden;
+    overflow-x: auto;
 }
 
 .dataTables_scrollBody {
-    width: 100% !important;
-    overflow-x: scroll !important;
     overflow-y: auto !important;
-    border-bottom: none !important;
+    overflow-x: auto !important;
+    width: 100% !important;
+    max-height: 400px;
+    border-top: none;
 }
 
 .dataTables_scroll::-webkit-scrollbar {
@@ -386,14 +387,15 @@ h2 i {
     margin-bottom: 1rem;
     border: 1px solid rgba(229, 231, 235, 0.8);
     border-radius: 8px;
-    overflow: hidden;
+    overflow-x: auto;
 }
 
 .dataTables_scrollBody {
-    width: 100% !important;
-    overflow-x: scroll !important;
     overflow-y: auto !important;
-    border-bottom: none !important;
+    overflow-x: auto !important;
+    width: 100% !important;
+    max-height: 400px;
+    border-top: none;
 }
 
 #sampleDataTable {
@@ -456,7 +458,7 @@ h2 i {
     margin-bottom: 1rem;
     border: 1px solid rgba(229, 231, 235, 0.8);
     border-radius: 8px;
-    overflow: hidden;
+    overflow-x: auto;
 }
 
 .dataTables_scrollHead {
@@ -468,7 +470,7 @@ h2 i {
 
 .dataTables_scrollBody {
     overflow-y: auto !important;
-    overflow-x: scroll !important;
+    overflow-x: auto !important;
     width: 100% !important;
     max-height: 400px;
     border-top: none;

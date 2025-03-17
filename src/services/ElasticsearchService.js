@@ -410,16 +410,15 @@ class ElasticsearchService {
                 options.body = JSON.stringify(body);
             }
 
-            const response = await this.fetchWithOptions(`${this.baseUrl}/${endpoint}`, options);
-            
-            if (endpoint.startsWith('_cat')) {
-                const text = await response.text();
-                if (!response.ok) {
-                    throw new Error(text || 'Query execution failed');
-                }
-                return { result: text };
+            let modifiedEndpoint = endpoint;
+            if (modifiedEndpoint.startsWith('_cat') && !modifiedEndpoint.includes('format=')) {
+                modifiedEndpoint = modifiedEndpoint.includes('?') 
+                    ? `${modifiedEndpoint}&format=json` 
+                    : `${modifiedEndpoint}?format=json`;
+                console.log('Modified _cat endpoint:', modifiedEndpoint);
             }
 
+            const response = await this.fetchWithOptions(`${this.baseUrl}/${modifiedEndpoint}`, options);            
             const data = await response.json();
             if (!response.ok) {
                 throw new Error(data.error?.reason || 'Query execution failed');

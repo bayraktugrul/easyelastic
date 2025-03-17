@@ -357,8 +357,29 @@ export default class Search {
         try {
             const query = this.editor.getValue().trim();
             
+            if (!query) {
+                Toast.show('Please enter a valid Elasticsearch query', 'warning');
+                return;
+            }
+            
             const firstLine = query.split('\n')[0];
             const [httpMethod, endpoint] = firstLine.trim().split(' ');
+            
+            if (!httpMethod) {
+                Toast.show('Missing HTTP method (GET, POST, PUT, DELETE)', 'warning');
+                return;
+            }
+            
+            const validMethods = ['GET', 'POST', 'PUT', 'DELETE'];
+            if (!validMethods.includes(httpMethod.toUpperCase())) {
+                Toast.show(`Invalid HTTP method: ${httpMethod}. Use GET, POST, PUT or DELETE.`, 'warning');
+                return;
+            }
+            
+            if (!endpoint) {
+                Toast.show('Missing endpoint (e.g. my-index/_search)', 'warning');
+                return;
+            }
             
             if (httpMethod === 'GET') {
                 const results = await this.esService.executeQuery(httpMethod, endpoint, null);
@@ -426,6 +447,9 @@ export default class Search {
         if (results.result) {
             countElement.textContent = 'Query executed';
             resultsElement.textContent = results.result;
+        } else if (Array.isArray(results)) {
+            countElement.textContent = `${results.length} results found`;
+            resultsElement.textContent = JSON.stringify(results, null, 2);
         } else if (results.hits?.total?.value !== undefined) {
             countElement.textContent = `${results.hits.total.value} results found`;
             resultsElement.textContent = JSON.stringify(results, null, 2);
