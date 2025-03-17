@@ -26,6 +26,12 @@
     font-weight: 600;
 }
 
+.indices-table thead th:first-child,
+.indices-table tbody td:first-child {
+    min-width: 240px;
+    max-width: 360px;
+}
+
 .indices-table tbody tr {
     background: var(--card-background);
     border-bottom: 1px solid var(--border-color);
@@ -42,6 +48,9 @@
     border: none !important;
     vertical-align: middle;
     color: var(--text-primary);
+    word-wrap: break-word;
+    word-break: break-word;
+    white-space: normal;
 }
 
 .dataTables_filter {
@@ -147,36 +156,6 @@
     color: var(--text-secondary) !important;
     opacity: 0.5;
     cursor: not-allowed;
-}
-
-.indices-table [title] {
-    cursor: help;
-    position: relative;
-}
-
-.indices-table [title]:hover::after {
-    content: attr(title);
-    position: absolute;
-    bottom: calc(100% + 10px);
-    left: 0;
-    transform: translateX(0);
-    padding: 8px 12px;
-    background: var(--text-primary);
-    color: white;
-    border-radius: 6px;
-    font-size: 0.875rem;
-    white-space: nowrap;
-    z-index: 10;
-    box-shadow: var(--shadow-md);
-}
-
-.indices-table [title]:hover::before {
-    content: '';
-    position: absolute;
-    bottom: calc(100% + 4px);
-    left: 15px;
-    border: 6px solid transparent;
-    border-top-color: var(--text-primary);
 }
 
 .dataTables_length select:focus {

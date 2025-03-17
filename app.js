@@ -471,11 +471,6 @@ class ESMonitor {
                     { 
                         data: 'index',
                         render: function(data) {
-                            if (data.length > 30) {
-                                return `<span class="font-medium" title="${data}">
-                                    ${data.substring(0, 30)}...
-                                </span>`;
-                            }
                             return `<span class="font-medium">${data}</span>`;
                         }
                     },

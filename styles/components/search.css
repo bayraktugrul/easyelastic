@@ -41,6 +41,7 @@ body .search-panel .results-container {
     flex-direction: column;
     height: 100%;
     min-height: 0;
+    overflow: hidden;
 }
 
 body .search-panel .query-label {
@@ -144,27 +145,36 @@ body .search-panel .query-label {
 #executeQuery {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1rem;
-    font-size: 0.875rem;
-    font-weight: 500;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 0.85rem 1.25rem;
+    font-size: 1rem;
+    font-weight: 600;
     color: white;
     background: var(--primary-color);
     border: none;
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.2s;
+    min-width: 140px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
 }
 
 #executeQuery:hover {
     background: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+#executeQuery i {
+    font-size: 1.1rem;
 }
 
 .query-actions {
     padding: 1rem;
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: flex-start;
     gap: 0.5rem;
     border-top: 1px solid var(--border-panel);
     background: var(--panel-header-background);
@@ -557,4 +567,59 @@ body .search-panel .query-label {
 
 [data-theme="light"] .btn-icon[title]::before {
     border-top-color: #f8fafc;
+}
+
+@media (max-width: 768px) {
+    body .search-panel {
+        height: auto;
+        min-height: auto;
+        max-height: none;
+    }
+    
+    body .search-panel .search-content {
+        height: auto;
+    }
+    
+    .query-editor, .results-preview {
+        height: 350px !important;
+    }
+    
+    .query-actions {
+        position: sticky;
+        bottom: 0;
+        z-index: 10;
+        padding: 0.75rem;
+        width: 100%;
+        left: 0;
+        box-sizing: border-box;
+        box-shadow: 0 -2px 5px rgba(0,0,0,0.05);
+    }
+    
+    #executeQuery {
+        width: 100%;
+        justify-content: center;
+        padding: 0.9rem 1.25rem;
+        font-size: 1rem;
+    }
+    
+    body .search-panel .query-box,
+    body .search-panel .results-container {
+        position: relative;
+        margin-bottom: 1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .query-editor, .results-preview {
+        height: 250px !important;
+    }
+    
+    .query-actions {
+        padding: 0.5rem;
+    }
+    
+    #executeQuery {
+        padding: 0.8rem 1rem;
+        font-size: 0.9rem;
+    }
 }
