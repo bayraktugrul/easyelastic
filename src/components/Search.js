@@ -357,8 +357,29 @@ export default class Search {
         try {
             const query = this.editor.getValue().trim();
             
+            if (!query) {
+                Toast.show('Please enter a valid Elasticsearch query', 'warning');
+                return;
+            }
+            
             const firstLine = query.split('\n')[0];
             const [httpMethod, endpoint] = firstLine.trim().split(' ');
+            
+            if (!httpMethod) {
+                Toast.show('Missing HTTP method (GET, POST, PUT, DELETE)', 'warning');
+                return;
+            }
+            
+            const validMethods = ['GET', 'POST', 'PUT', 'DELETE'];
+            if (!validMethods.includes(httpMethod.toUpperCase())) {
+                Toast.show(`Invalid HTTP method: ${httpMethod}. Use GET, POST, PUT or DELETE.`, 'warning');
+                return;
+            }
+            
+            if (!endpoint) {
+                Toast.show('Missing endpoint (e.g. my-index/_search)', 'warning');
+                return;
+            }
             
             if (httpMethod === 'GET') {
                 const results = await this.esService.executeQuery(httpMethod, endpoint, null);
