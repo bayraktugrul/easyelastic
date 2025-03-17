@@ -447,6 +447,9 @@ export default class Search {
         if (results.result) {
             countElement.textContent = 'Query executed';
             resultsElement.textContent = results.result;
+        } else if (Array.isArray(results)) {
+            countElement.textContent = `${results.length} results found`;
+            resultsElement.textContent = JSON.stringify(results, null, 2);
         } else if (results.hits?.total?.value !== undefined) {
             countElement.textContent = `${results.hits.total.value} results found`;
             resultsElement.textContent = JSON.stringify(results, null, 2);
