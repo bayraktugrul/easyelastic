@@ -2,6 +2,7 @@ export default class ShardDistribution {
     constructor(containerId) {
         this.container = document.getElementById(containerId);
         this.table = this.container.querySelector('.shards-table');
+        this.hideSystemIndices = true;
         if (!this.table) {
             console.error('Shards table not found in container:', containerId);
         }
@@ -17,7 +18,10 @@ export default class ShardDistribution {
         }
         tbody.innerHTML = '';
         
-        const sortedIndices = [...data.indices].sort();
+        let sortedIndices = [...data.indices].sort();
+        if (this.hideSystemIndices) {
+            sortedIndices = sortedIndices.filter(indexName => !this.isSystemIndex(indexName));
+        }
         
         sortedIndices.forEach(indexName => {
             const th = document.createElement('th');
@@ -105,5 +109,15 @@ export default class ShardDistribution {
             }
         });
         return count;
+    }
+    
+    isSystemIndex(indexName) {
+        return indexName.startsWith('.') ||  
+               indexName.startsWith('_');
+    }
+    
+    toggleSystemIndices() {
+        this.hideSystemIndices = !this.hideSystemIndices;
+        return this.hideSystemIndices;
     }
 } 
