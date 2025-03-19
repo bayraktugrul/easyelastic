@@ -1382,7 +1382,7 @@ class ESMonitor {
             if (!content) {
                 const contentElement = 
                     panel.querySelector('.cluster-overview') ||
-                    panel.querySelector('.indices-table') ||
+                    panel.querySelector('.indices-table-container') ||
                     panel.querySelector('.shards-table-container') ||
                     panel.querySelector('.search-content') ||
                     panel.querySelector('.sample-table-container') ||
