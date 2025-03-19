@@ -22,6 +22,25 @@
 @import 'responsive.css';
 @import 'components/background.css'; 
 
+body, html {
+    max-width: 100vw;
+    overflow-x: hidden;
+}
+
+.container, main, .wrapper, .dashboard, .content-wrapper {
+    max-width: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+.indices-table-container,
+.shards-table-container,
+.sample-table-container,
+.dataTables_wrapper,
+.table-responsive {
+    overflow-x: auto;
+}
+
 button {
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }

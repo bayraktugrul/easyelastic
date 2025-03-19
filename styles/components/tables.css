@@ -1,3 +1,21 @@
+.indices-table-container,
+.shards-table-container,
+.sample-table-container,
+.dataTables_wrapper,
+.table-responsive {
+    background: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    overflow-x: auto;
+    width: 100%;
+    max-width: 100%;
+    display: block;
+}
+
+table {
+    max-width: 100%;
+}
+
 .dataTables_wrapper {
     background: var(--card-background);
     border: 1px solid var(--border-color);

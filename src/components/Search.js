@@ -175,6 +175,24 @@ export default class Search {
 
     async initializeMonacoEditor() {
         try {
+            const originalConsoleWarn = console.warn;
+            console.warn = function(message) {
+                if (message && message.toString().includes('Could not create web worker(s)')) {
+                    return;
+                }
+                originalConsoleWarn.apply(console, arguments);
+            };
+            window.MonacoEnvironment = {
+                getWorker: function() {
+                    return {
+                        addEventListener: function() {},
+                        removeEventListener: function() {},
+                        postMessage: function() {},
+                        terminate: function() {}
+                    };
+                }
+            };
+            
             require.config({ paths: { 'vs': 'libs/monaco-editor/min/vs' }});
             require(['vs/editor/editor.main'], () => {
                 monaco.editor.defineTheme('es-dark', {
@@ -234,6 +252,11 @@ export default class Search {
                         other: true,
                         comments: true,
                         strings: true
+                    },
+                    formatOnType: false,
+                    formatOnPaste: false,
+                    semanticHighlighting: {
+                        enabled: false
                     }
                 });
 

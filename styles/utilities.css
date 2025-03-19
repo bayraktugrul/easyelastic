@@ -1,3 +1,49 @@
+.overflow-hidden {
+    overflow: hidden !important;
+}
+
+.overflow-x-auto {
+    overflow-x: auto !important;
+}
+
+.w-100 {
+    width: 100% !important;
+}
+
+.max-w-100 {
+    max-width: 100% !important;
+}
+
+body * {
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+body > div,
+.panel,
+.container,
+.wrapper,
+section,
+main,
+aside,
+header,
+footer,
+nav {
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.table-container,
+.table-responsive,
+.data-container,
+.indices-table-container,
+.shards-table-container,
+.sample-table-container {
+    overflow-x: auto !important;
+    max-width: 100%;
+    width: 100%;
+}
+
 .text-danger {
     color: var(--error-color);
 }

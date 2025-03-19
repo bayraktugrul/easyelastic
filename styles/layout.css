@@ -5,6 +5,8 @@
     padding-top: calc(60px + 1rem);
     padding-bottom: 1rem;
     overflow-x: hidden;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .header {
@@ -61,6 +63,9 @@
     box-shadow: var(--shadow-sm);
     transition: box-shadow 0.3s ease;
     margin-bottom: 0;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
 }
 
 .panel-header {

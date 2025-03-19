@@ -24,16 +24,19 @@
 }
 
 .shards-table-container {
-    overflow-x: auto;
     background: var(--card-background);
-    border-radius: 8px;
     border: 1px solid var(--border-color);
+    border-radius: 8px;
+    overflow-x: auto;
+    width: 100%;
+    max-width: 100%;
+    display: block;
 }
 
 .shards-table {
     width: 100%;
     border-collapse: collapse;
-    min-width: 800px;
+    table-layout: fixed;
     font-size: 14px;
 }
 
@@ -200,6 +203,9 @@
     padding: 1.25rem;
     box-shadow: var(--shadow-sm);
     margin-bottom: 2rem;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
 }
 
 .panel-header {
@@ -226,16 +232,29 @@
     font-size: 1.1rem;
 }
 
-.shards-table-container {
-    background: var(--card-background);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    overflow-x: auto;
-}
-
 @media (max-width: 768px) {
     .shards-table {
-        min-width: 600px;
+        min-width: auto;
+        width: 100%;
+    }
+    
+    .shard-cell {
+        min-width: 80px;
+    }
+}
+
+@media (max-width: 576px) {
+    .shards-table-container {
+        max-width: 100%;
+    }
+    
+    .shard-cell {
+        min-width: 60px;
+        padding: 8px;
+    }
+    
+    .node-column {
+        width: 120px;
     }
 }
 

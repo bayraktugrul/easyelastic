@@ -375,11 +375,6 @@ class ElasticsearchService {
                 track_total_hits: true
             };
 
-            console.log('Search request:', {
-                url: `${this.baseUrl}/${indexName}/_search`,
-                params: searchParams
-            });
-
             const response = await this.fetchWithOptions(`${this.baseUrl}/${indexName}/_search`, {
                 method: 'POST',
                 body: JSON.stringify(searchParams)
@@ -415,7 +410,6 @@ class ElasticsearchService {
                 modifiedEndpoint = modifiedEndpoint.includes('?') 
                     ? `${modifiedEndpoint}&format=json` 
                     : `${modifiedEndpoint}?format=json`;
-                console.log('Modified _cat endpoint:', modifiedEndpoint);
             }
 
             const response = await this.fetchWithOptions(`${this.baseUrl}/${modifiedEndpoint}`, options);            

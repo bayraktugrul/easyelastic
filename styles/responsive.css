@@ -103,6 +103,46 @@
         flex-direction: column;
         gap: 0.5rem;
     }
+    
+    .indices-panel,
+    .shards-data-panel,
+    .sample-data-panel,
+    .status-panel,
+    .metrics-panel,
+    .quick-filter-panel,
+    .search-panel,
+    .connection-panel {
+        max-width: 100%;
+        width: 100%;
+        overflow: hidden;
+        box-sizing: border-box;
+    }
+    
+    .indices-table-container,
+    .shards-table-container,
+    .sample-table-container,
+    .dataTables_wrapper {
+        overflow-x: auto;
+        width: 100%;
+        max-width: 100%;
+    }
+    
+    .indices-table,
+    .shards-table {
+        width: 100%;
+        min-width: auto;
+        table-layout: auto;
+    }
+    
+    .shard-cell {
+        min-width: 60px;
+        padding: 8px;
+    }
+    
+    th, td {
+        max-width: 100%;
+        white-space: nowrap;
+    }
 }
 
 @media (max-width: 576px) {
@@ -160,6 +200,42 @@
     
     .panel-header button {
         width: 100%;
+    }
+
+    .indices-table-container,
+    .shards-table-container,
+    .sample-table-container,
+    .dataTables_wrapper {
+        padding: 0;
+        border-radius: 8px;
+    }
+    
+    .shard-cell {
+        min-width: 50px;
+        padding: 6px;
+        font-size: 12px;
+    }
+    
+    .node-column {
+        width: 100px;
+    }
+    
+    .indices-table thead th,
+    .shards-table thead th {
+        padding: 8px;
+        font-size: 12px;
+    }
+    
+    .indices-table tbody td,
+    .shards-table tbody td {
+        padding: 8px;
+        font-size: 12px;
+    }
+    
+    .shard-badge {
+        padding: 2px 4px;
+        font-size: 10px;
+        margin: 1px;
     }
 }
 

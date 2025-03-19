@@ -1167,7 +1167,6 @@ class ESMonitor {
         const saveBtn = document.getElementById('saveConnectionBtn');
         if (saveBtn) {
             saveBtn.addEventListener('click', () => {
-                console.log('Save button clicked');
                 this.saveConnection();
             });
         }
