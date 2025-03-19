@@ -165,9 +165,9 @@
 .shard-badge::after {
     content: attr(title);
     position: absolute;
-    bottom: 100%;
+    top: 100%;
     left: 50%;
-    transform: translateX(-50%) translateY(-4px);
+    transform: translateX(-50%) translateY(4px);
     padding: 6px 12px;
     border-radius: 4px;
     font-size: 12px;
@@ -186,7 +186,7 @@
 .shard-badge:hover::after {
     opacity: 1;
     visibility: visible;
-    transform: translateX(-50%) translateY(-8px);
+    transform: translateX(-50%) translateY(8px);
 }
 
 [data-theme="dark"] .shard-badge::after {

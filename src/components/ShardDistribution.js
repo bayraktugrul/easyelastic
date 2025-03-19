@@ -22,9 +22,15 @@ export default class ShardDistribution {
         sortedIndices.forEach(indexName => {
             const th = document.createElement('th');
             const count = this.getShardCount(data.distribution, indexName);
+            
+            let displayName = indexName;
+            if (indexName.length > 10) {
+                displayName = indexName.substring(0, 10) + '...';
+            }
+            
             th.innerHTML = `
                 <div class="index-header">
-                    <div class="index-name">${indexName}</div>
+                    <div class="index-name ${indexName.length > 10 ? 'has-tooltip' : ''}" data-tooltip="${indexName}">${displayName}</div>
                     <div class="shard-count">${count} shards</div>
                 </div>
             `;

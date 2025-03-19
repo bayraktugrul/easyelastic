@@ -73,7 +73,7 @@ nav {
 [title]:hover::after {
     content: attr(title);
     position: absolute;
-    bottom: calc(100% + 10px);
+    top: calc(100% + 10px);
     left: 0;
     transform: translateX(0);
     padding: 8px 12px;
@@ -89,10 +89,10 @@ nav {
 [title]:hover::before {
     content: '';
     position: absolute;
-    bottom: calc(100% + 4px);
+    top: calc(100% + 4px);
     left: 15px;
     border: 6px solid transparent;
-    border-top-color: var(--text-primary);
+    border-bottom-color: var(--text-primary);
 }
 
 .health-green {
