@@ -250,21 +250,23 @@
                         <i class="fa-solid fa-plus"></i> Create Index
                     </button>
                 </div>
-                <table id="indicesTable" class="indices-table">
-                    <thead>
-                        <tr>
-                            <th>Index Name</th>
-                            <th>Docs Count</th>
-                            <th>Size</th>
-                            <th>Created Date</th>
-                            <th>Health</th>
-                            <th>Aliases</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
+                <div class="indices-table-container">
+                    <table id="indicesTable" class="indices-table">
+                        <thead>
+                            <tr>
+                                <th>Index Name</th>
+                                <th>Docs Count</th>
+                                <th>Size</th>
+                                <th>Created Date</th>
+                                <th>Health</th>
+                                <th>Aliases</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <div id="shards" class="shards-data-panel">
@@ -273,6 +275,15 @@
                         <i class="fa-solid fa-puzzle-piece"></i>
                         Shards Distribution
                     </h2>
+                    <div class="shards-actions">
+                        <div class="toggle-container">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="toggleSystemIndices" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <span class="toggle-label">Hide system indices</span>
+                        </div>
+                    </div>
                 </div>
                 <div class="shards-table-container">
                     <table class="shards-table">
@@ -391,6 +402,13 @@
                         <div class="query-box">
                             <div class="query-label">
                                 <span>Elasticsearch Query</span>
+                            </div>
+                            <div id="queryInput" class="query-editor"></div>
+                            <div class="query-actions">
+                                <button id="executeQuery">
+                                    <i class="fa-solid fa-play"></i>
+                                    Execute
+                                </button>
                                 <div class="editor-actions">
                                     <button class="btn-icon" id="saveQueryIcon" title="Save Query">
                                         <i class="fa-solid fa-save"></i>
@@ -402,13 +420,6 @@
                                         <i class="fa-solid fa-copy"></i>
                                     </button>
                                 </div>
-                            </div>
-                            <div id="queryInput" class="query-editor"></div>
-                            <div class="query-actions">
-                                <button id="executeQuery">
-                                    <i class="fa-solid fa-play"></i>
-                                    Execute
-                                </button>
                             </div>
                         </div>
                     </div>

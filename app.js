@@ -50,6 +50,15 @@ class ESMonitor {
         document.getElementById('testBtn').addEventListener('click', () => this.testConnection());
         document.getElementById('disconnectBtn').addEventListener('click', () => this.clearConnection());
 
+        const toggleSystemIndices = document.getElementById('toggleSystemIndices');
+        if (toggleSystemIndices) {
+            toggleSystemIndices.addEventListener('change', async () => {
+                const isHidden = this.components.shardDistribution.toggleSystemIndices();
+                toggleSystemIndices.checked = isHidden;
+                await this.updateShardDistribution();
+            });
+        }
+
         const refreshBtn = document.getElementById('refreshIntervalBtn');
         const refreshMenu = document.getElementById('refreshDropdownMenu');
         
@@ -1167,7 +1176,6 @@ class ESMonitor {
         const saveBtn = document.getElementById('saveConnectionBtn');
         if (saveBtn) {
             saveBtn.addEventListener('click', () => {
-                console.log('Save button clicked');
                 this.saveConnection();
             });
         }
@@ -1383,7 +1391,7 @@ class ESMonitor {
             if (!content) {
                 const contentElement = 
                     panel.querySelector('.cluster-overview') ||
-                    panel.querySelector('.indices-table') ||
+                    panel.querySelector('.indices-table-container') ||
                     panel.querySelector('.shards-table-container') ||
                     panel.querySelector('.search-content') ||
                     panel.querySelector('.sample-table-container') ||
@@ -1443,6 +1451,15 @@ class ESMonitor {
                 }
             }
         });
+    }
+
+    async updateShardDistribution() {
+        try {
+            const shardDistribution = await this.esService.getShardDistribution();
+            this.components.shardDistribution.render(shardDistribution);
+        } catch (error) {
+            Toast.show(`Failed to update shard distribution: ${error.message}`, 'error');
+        }
     }
 }
 

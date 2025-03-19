@@ -2,6 +2,7 @@ export default class ShardDistribution {
     constructor(containerId) {
         this.container = document.getElementById(containerId);
         this.table = this.container.querySelector('.shards-table');
+        this.hideSystemIndices = true;
         if (!this.table) {
             console.error('Shards table not found in container:', containerId);
         }
@@ -17,14 +18,23 @@ export default class ShardDistribution {
         }
         tbody.innerHTML = '';
         
-        const sortedIndices = [...data.indices].sort();
+        let sortedIndices = [...data.indices].sort();
+        if (this.hideSystemIndices) {
+            sortedIndices = sortedIndices.filter(indexName => !this.isSystemIndex(indexName));
+        }
         
         sortedIndices.forEach(indexName => {
             const th = document.createElement('th');
             const count = this.getShardCount(data.distribution, indexName);
+            
+            let displayName = indexName;
+            if (indexName.length > 10) {
+                displayName = indexName.substring(0, 10) + '...';
+            }
+            
             th.innerHTML = `
                 <div class="index-header">
-                    <div class="index-name">${indexName}</div>
+                    <div class="index-name ${indexName.length > 10 ? 'has-tooltip' : ''}" data-tooltip="${indexName}">${displayName}</div>
                     <div class="shard-count">${count} shards</div>
                 </div>
             `;
@@ -99,5 +109,15 @@ export default class ShardDistribution {
             }
         });
         return count;
+    }
+    
+    isSystemIndex(indexName) {
+        return indexName.startsWith('.') ||  
+               indexName.startsWith('_');
+    }
+    
+    toggleSystemIndices() {
+        this.hideSystemIndices = !this.hideSystemIndices;
+        return this.hideSystemIndices;
     }
 } 
