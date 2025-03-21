@@ -156,25 +156,20 @@ class ElasticsearchService {
 
     async getIndicesInfo() {
         try {
-            const response = await this.fetchWithOptions(`${this.baseUrl}/_stats`);
-            if (!response.ok) throw new Error('Failed to fetch indices info');
-            const stats = await response.json();
-            
-            const catResponse = await this.fetchWithOptions(`${this.baseUrl}/_cat/indices?format=json&bytes=b`);
+            const catResponse = await this.fetchWithOptions(`${this.baseUrl}/_cat/indices?format=json&bytes=b&h=index,health,status,pri,rep,docs.count,docs.deleted,store.size,pri.store.size`);
             if (!catResponse.ok) throw new Error('Failed to fetch cat indices info');
             const catIndices = await catResponse.json();
             
             return catIndices.map(index => {
-                const indexStats = stats.indices[index.index];
                 return {
                     ...index,
                     docs: {
-                        count: indexStats?.total?.docs?.count || 0,
-                        deleted: indexStats?.total?.docs?.deleted || 0
+                        count: parseInt(index["docs.count"] || 0),
+                        deleted: parseInt(index["docs.deleted"] || 0)
                     },
                     store: {
-                        size: indexStats?.total?.store?.size_in_bytes || 0,
-                        size_string: this.formatBytes(indexStats?.total?.store?.size_in_bytes || 0)
+                        size: parseInt(index["store.size"] || 0),
+                        size_string: this.formatBytes(parseInt(index["store.size"] || 0))
                     }
                 };
             });
