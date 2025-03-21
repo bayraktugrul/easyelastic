@@ -15,8 +15,8 @@ class IndicesRepository {
 
                     formattedIndices.push({
                         index: index.index,
-                        docs_count: index.docs.count || 0,
-                        store_size: index.store.size_string || '0b',
+                        docs_count: index.docs?.count || index["docs.count"] || 0,
+                        store_size: index.store?.size_string || index["store.size"] || '0b',
                         health: index.health,
                         creation_date: settings[index.index]?.settings?.index?.creation_date || '',
                         aliases: aliases
@@ -24,8 +24,8 @@ class IndicesRepository {
                 } catch (error) {
                     formattedIndices.push({
                         index: index.index,
-                        docs_count: index.docs.count || 0,
-                        store_size: index.store.size_string || '0b',
+                        docs_count: index.docs?.count || index["docs.count"] || 0,
+                        store_size: index.store?.size_string || index["store.size"] || '0b',
                         health: index.health,
                         creation_date: '',
                         aliases: []

@@ -440,6 +440,11 @@ class ESMonitor {
             document.getElementById('luceneVersion').textContent = clusterInfo.version?.lucene_version || '-';
 
             this.components.clusterHealth.render(health);
+            
+            const totalDocCount = indices.reduce((sum, index) => sum + (parseInt(index.docs?.count || index["docs.count"] || 0)), 0);
+            stats.indices.docs.count = totalDocCount;
+            stats.indices.count = indices.length;
+            
             this.metricsService.updateClusterMetrics(stats);
             await this.updateIndicesTable(indices);
             
