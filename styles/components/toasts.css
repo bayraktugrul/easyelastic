@@ -15,9 +15,38 @@
     font-size: 14px;
     font-weight: 500;
     line-height: 1.5;
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .toastify-custom:hover {
     transform: translateY(-2px);
     transition: transform 0.2s ease;
+}
+
+.toast-close {
+    background: none;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    font-size: 18px;
+    height: 24px;
+    width: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin-left: 12px;
+    opacity: 0.7;
+    transition: all 0.2s;
+    border-radius: 50%;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.toast-close:hover {
+    opacity: 1;
+    color: #64748b;
+    background: rgba(0, 0, 0, 0.05);
 } 

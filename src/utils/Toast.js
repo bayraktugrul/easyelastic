@@ -26,7 +26,7 @@ class Toast {
         const style = config[type] || config.info;
 
         Toastify({
-            text: `<div style="display: flex; align-items: center; gap: 12px;">
+            text: `<div style="display: flex; align-items: center; gap: 12px; flex: 1;">
                     <span style="font-size: 20px; color: ${style.color}">
                         ${style.icon}
                     </span>
@@ -38,6 +38,7 @@ class Toast {
             stopOnFocus: true,
             escapeMarkup: false,
             className: "toastify-custom",
+            close: true,
             style: {
                 background: style.background,
                 color: '#2d3436',
@@ -45,7 +46,9 @@ class Toast {
                 padding: '12px 24px',
                 borderRadius: '8px',
                 border: `1px solid ${style.color}20`,
-                minWidth: '300px'
+                minWidth: '300px',
+                display: 'flex',
+                alignItems: 'center'
             }
         }).showToast();
     }
