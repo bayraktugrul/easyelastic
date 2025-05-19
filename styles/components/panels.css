@@ -6,18 +6,12 @@
     box-shadow: var(--shadow-sm);
     backdrop-filter: blur(6px);
     margin-bottom: 1.5rem;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .status-panel,
 .indices-panel,
 .sample-data-panel {
     margin-top: 0.5rem;
-}
-
-.status-panel:hover, .metrics-panel:hover, .indices-panel:hover, .sample-data-panel:hover {
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-md);
 }
 
 h2 {
@@ -549,10 +543,6 @@ h2 i {
     transition: all 0.2s ease;
 }
 
-#indexSelector:hover {
-    border-color: var(--button-hover-border);
-}
-
 #indexSelector:focus {
     outline: none;
     border-color: var(--primary-color);
@@ -708,23 +698,13 @@ h2 i {
 }
 
 .stat-card {
-    background: rgba(255, 255, 255, 0.98);
-    border: 1px solid rgba(255, 255, 255, 0.6);
-    border-radius: 12px;
+    background-color: var(--card-background);
     padding: 1.25rem;
-    box-shadow: 
-        0 4px 6px -1px rgba(0, 0, 0, 0.05),
-        0 2px 4px -2px rgba(0, 0, 0, 0.025);
-    position: relative;
-    overflow: hidden;
-}
-
-.stat-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 
-        0 12px 20px -3px rgba(0, 0, 0, 0.1),
-        0 4px 6px -4px rgba(0, 0, 0, 0.05);
-    border-color: rgba(99, 102, 241, 0.2);
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 }
 
 .stat-icon {
@@ -814,7 +794,6 @@ h2 i {
     display: inline-flex !important; 
     align-items: center;
     justify-content: center;
-    transition: all 0.2s ease;
     margin-right: 0.5rem;
     padding: 0;
     outline: none !important;
@@ -910,11 +889,11 @@ h2 i {
 }
 
 .cluster-health-panel {
-    background: var(--card-background);
+    background-color: var(--card-background);
+    border-radius: 12px;
     border: 1px solid var(--border-color);
-    border-radius: 8px;
     margin-bottom: 1.5rem;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--shadow-sm);
 }
 
 .cluster-health-panel .panel-header {
@@ -952,11 +931,6 @@ h2 i {
     padding: 0;
     margin: 0;
     pointer-events: none;
-}
-
-.cluster-health-panel:hover {
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-md);
 }
 
 .cluster-overview {
@@ -1000,7 +974,5 @@ h2 i {
 
 .panel-toggle:hover {
     background: rgba(var(--primary-rgb), 0.05);
-    transform: translateY(-1px);
-    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
     border-color: var(--primary-color);
 } 

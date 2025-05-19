@@ -6,10 +6,6 @@
     font-weight: 500;
 }
 
-.toastify:hover {
-    transform: translateY(-2px);
-}
-
 .toastify-custom {
     font-family: 'Inter', sans-serif;
     font-size: 14px;
@@ -20,10 +16,6 @@
     justify-content: space-between;
 }
 
-.toastify-custom:hover {
-    transform: translateY(-2px);
-    transition: transform 0.2s ease;
-}
 
 .toast-close {
     background: none;

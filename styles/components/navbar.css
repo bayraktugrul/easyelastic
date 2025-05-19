@@ -54,10 +54,6 @@
     color: var(--primary-color);
 }
 
-.nav-logo:hover {
-    transform: translateY(-1px);
-    background: var(--info-bg);
-}
 
 .nav-links {
     display: flex;
@@ -129,12 +125,6 @@
     gap: 0.5rem;
     text-decoration: none;
     border: 1px solid var(--border-light);
-}
-
-.github-link:hover {
-    transform: translateY(-1px);
-    background: var(--info-bg);
-    color: var(--primary-color);
 }
 
 .github-link i {

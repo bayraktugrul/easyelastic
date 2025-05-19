@@ -69,7 +69,6 @@
 
 .filter-item:hover {
     border-color: var(--primary-color);
-    box-shadow: 0 2px 4px var(--input-focus-ring);
 }
 
 .filter-item select,

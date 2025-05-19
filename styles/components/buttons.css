@@ -14,8 +14,6 @@ button {
 
 button:hover {
     background-color: var(--primary-hover);
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-sm);
 }
 
 button.secondary {
