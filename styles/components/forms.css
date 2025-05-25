@@ -16,9 +16,6 @@
     z-index: 1;
 }
 
-.connection-panel:hover {
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
-}
 
 .input-group {
     display: flex;
@@ -117,7 +114,6 @@
 }
 
 .button-group button:hover {
-    transform: translateY(-1px);
 }
 
 .button-group button:active {
@@ -228,9 +224,6 @@
     transition: all 0.2s ease;
 }
 
-#createIndexModal .modal-footer button:hover {
-    transform: translateY(-1px);
-}
 
 #createIndexModal .modal-footer button:active {
     transform: translateY(0);
@@ -442,7 +435,6 @@
 .document-field:hover {
     background: white;
     border-color: #e2e8f0;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .document-field label {
@@ -994,8 +986,6 @@
 
 #saveConnectionBtn:hover {
     background-color: #4338ca; 
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-sm);
 }
 
 [data-theme="light"] #saveConnectionBtn {

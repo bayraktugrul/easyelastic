@@ -177,8 +177,6 @@
 
 #addAliasBtn:hover {
     background-color: var(--primary-hover);
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-sm);
 }
 
 #aliasModal .modal-body input {

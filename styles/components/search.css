@@ -171,8 +171,6 @@ body .search-panel .query-label {
 
 #executeQuery:hover {
     background: var(--primary-hover);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 #executeQuery i {
