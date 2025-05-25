@@ -481,6 +481,16 @@ class ESMonitor {
             $('#indicesTable').DataTable({
                 data: formattedIndices,
                 responsive: true,
+                autoWidth: false,
+                columnDefs: [
+                    { width: "25%", targets: 0 },
+                    { width: "12%", targets: 1 },
+                    { width: "12%", targets: 2 },
+                    { width: "18%", targets: 3 },
+                    { width: "10%", targets: 4 },
+                    { width: "15%", targets: 5 },
+                    { width: "8%", targets: 6 }
+                ],
                 columns: [
                     { 
                         data: 'index',
@@ -501,10 +511,16 @@ class ESMonitor {
                         }
                     },
                     { 
-                        data: 'creation_date',
+                        data: 'aliases',
                         render: function(data) {
-                            const date = new Date(parseInt(data));
-                            return date.toLocaleString();
+                            if (!data || data.length === 0) {
+                                return '<span class="no-aliases">No aliases</span>';
+                            }
+                            return data.map(alias => `
+                                <span class="alias-badge">
+                                    ${alias}
+                                </span>
+                            `).join('');
                         }
                     },
                     { 
@@ -521,16 +537,10 @@ class ESMonitor {
                         }
                     },
                     { 
-                        data: 'aliases',
+                        data: 'creation_date',
                         render: function(data) {
-                            if (!data || data.length === 0) {
-                                return '<span class="no-aliases">No aliases</span>';
-                            }
-                            return data.map(alias => `
-                                <span class="alias-badge">
-                                    ${alias}
-                                </span>
-                            `).join('');
+                            const date = new Date(parseInt(data));
+                            return date.toLocaleString();
                         }
                     },
                     {
