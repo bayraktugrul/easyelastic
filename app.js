@@ -11,6 +11,7 @@ import { formatNumber } from './src/utils/formatters.js';
 import initParticles from './src/utils/background.js';
 import QuickFilter from './src/components/QuickFilter.js';
 import ThemeManager from './src/utils/ThemeManager.js';
+import LanguageManager from './src/utils/translations.js';
 import Search from './src/components/Search.js';
 import AutoRefresh from './src/components/AutoRefresh.js';
 import ShardDistribution from './src/components/ShardDistribution.js';
@@ -21,6 +22,7 @@ class ESMonitor {
         this.metricsService = new MetricsService();
         this.indicesRepository = null;
         this.eventBus = EventBus;
+        this.languageManager = new LanguageManager();
         this.components = {
             clusterHealth: new ClusterHealth('clusterHealth'),
             shardDistribution: new ShardDistribution('shards')
@@ -34,6 +36,7 @@ class ESMonitor {
         this.loadSavedConnection();
         this.loadSavedConnections();
         this.initializeConnectionHandlers();
+        this.initializeLanguageToggle();
         this.search = null;
         this.autoRefresh = null;
     }
@@ -456,7 +459,7 @@ class ESMonitor {
             const currentValue = indexSelector.value;
             
             indexSelector.innerHTML = `
-                <option value="">Select an index</option>
+                <option value="">${this.languageManager.translate('common.selectIndex')}</option>
                 ${indices.map(index => `
                     <option value="${index.index}" ${currentValue === index.index ? 'selected' : ''}>
                         ${index.index}
@@ -518,7 +521,7 @@ class ESMonitor {
                         data: 'aliases',
                         render: function(data) {
                             if (!data || data.length === 0) {
-                                return '<span class="no-aliases">No aliases</span>';
+                                return `<span class="no-aliases" data-translate="common.noAliases">No aliases</span>`;
                             }
                             return data.map(alias => `
                                 <span class="alias-badge">
@@ -557,19 +560,19 @@ class ESMonitor {
                                     </button>
                                     <div class="dropdown-menu">
                                         <button class="dropdown-item show-details" data-index="${data.index}">
-                                            <i class="fas fa-info-circle"></i> Details
+                                            <i class="fas fa-info-circle"></i> <span data-translate="modals.details">Details</span>
                                         </button>
                                         <button class="dropdown-item manage-aliases" data-index="${data.index}">
-                                            <i class="fas fa-tags"></i> Manage Aliases
+                                            <i class="fas fa-tags"></i> <span data-translate="modals.manageAliases">Manage Aliases</span>
                                         </button>
                                         <button class="dropdown-item update-mapping" data-index="${data.index}">
-                                            <i class="fas fa-code"></i> Update Mapping
+                                            <i class="fas fa-code"></i> <span data-translate="modals.updateMapping">Update Mapping</span>
                                         </button>
                                         <button class="dropdown-item add-document" data-index="${data.index}">
-                                            <i class="fas fa-file-circle-plus"></i> Add Document
+                                            <i class="fas fa-file-circle-plus"></i> <span data-translate="modals.addDocument">Add Document</span>
                                         </button>
                                         <button class="dropdown-item delete-index" data-index="${data.index}">
-                                            <i class="fas fa-trash-alt"></i> Delete
+                                            <i class="fas fa-trash-alt"></i> <span data-translate="modals.delete">Delete</span>
                                         </button>
                                     </div>
                                 </div>`;
@@ -577,16 +580,16 @@ class ESMonitor {
                     }
                 ],
                 language: {
-                    search: "Search:",
-                    lengthMenu: "Show _MENU_ entries",
-                    info: "Showing _START_ to _END_ of _TOTAL_ entries",
-                    infoEmpty: "No entries available",
-                    infoFiltered: "(filtered from _MAX_ total entries)",
+                    search: this.languageManager.translate('dataTables.search'),
+                    lengthMenu: this.languageManager.translate('dataTables.lengthMenu'),
+                    info: this.languageManager.translate('dataTables.info'),
+                    infoEmpty: this.languageManager.translate('dataTables.infoEmpty'),
+                    infoFiltered: this.languageManager.translate('dataTables.infoFiltered'),
                     paginate: {
-                        first: "First",
-                        last: "Last",
-                        next: "Next",
-                        previous: "Previous"
+                        first: this.languageManager.translate('dataTables.paginate.first'),
+                        last: this.languageManager.translate('dataTables.paginate.last'),
+                        next: this.languageManager.translate('dataTables.paginate.next'),
+                        previous: this.languageManager.translate('dataTables.paginate.previous')
                     }
                 },
                 order: [[1, 'desc']],
@@ -741,7 +744,7 @@ class ESMonitor {
             const aliasesList = document.getElementById('currentAliasesList');
             
             if (aliases.length === 0) {
-                aliasesList.innerHTML = '<span class="no-aliases">No aliases defined</span>';
+                aliasesList.innerHTML = `<span class="no-aliases" data-translate="common.noAliasesDefined">${this.languageManager.translate('common.noAliasesDefined')}</span>`;
                 return;
             }
 
@@ -1138,7 +1141,7 @@ class ESMonitor {
                     { 
                         data: 'id', 
                         title: `<div class="column-header">
-                                    <span>ID</span>
+                                    <span>${this.languageManager.translate('common.id')}</span>
                                     <span class="field-type" data-type="keyword">keyword</span>
                                 </div>`,
                         width: '280px'
@@ -1165,7 +1168,17 @@ class ESMonitor {
                 dom: "<'dt-controls'<'dataTables_filter'f>>" +
                      "<'dataTables_scroll't>",
                 language: {
-                    search: "Search:"
+                    search: this.languageManager.translate('dataTables.search'),
+                    lengthMenu: this.languageManager.translate('dataTables.lengthMenu'),
+                    info: this.languageManager.translate('dataTables.info'),
+                    infoEmpty: this.languageManager.translate('dataTables.infoEmpty'),
+                    infoFiltered: this.languageManager.translate('dataTables.infoFiltered'),
+                    paginate: {
+                        first: this.languageManager.translate('dataTables.paginate.first'),
+                        last: this.languageManager.translate('dataTables.paginate.last'),
+                        next: this.languageManager.translate('dataTables.paginate.next'),
+                        previous: this.languageManager.translate('dataTables.paginate.previous')
+                    }
                 }
             });
 
@@ -1488,6 +1501,229 @@ class ESMonitor {
             this.components.shardDistribution.render(shardDistribution);
         } catch (error) {
             Toast.show(`Failed to update shard distribution: ${error.message}`, 'error');
+        }
+    }
+
+    initializeLanguageToggle() {
+        const languageToggle = document.querySelector('.language-toggle');
+        const currentLangSpan = document.querySelector('.current-lang');
+  
+        if (!languageToggle || !currentLangSpan) {
+            console.error('❌ Language selector elements not found!');
+            return;
+        }
+        
+        const dropdownPortal = document.createElement('div');
+        dropdownPortal.className = 'language-dropdown-portal';
+        dropdownPortal.innerHTML = `
+            <div class="language-dropdown-content">
+                <button class="language-option active" data-lang="en">
+                    <span class="lang-name">English</span>
+                    <span class="lang-code">EN</span>
+                </button>
+                <button class="language-option" data-lang="zh">
+                    <span class="lang-name">中文</span>
+                    <span class="lang-code">ZH</span>
+                </button>
+            </div>
+        `;
+        
+        // Add styles for portal
+        dropdownPortal.style.cssText = `
+            position: fixed;
+            background: var(--card-background);
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(12px);
+            min-width: 120px;
+            z-index: 999999;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.2s ease;
+            padding: 4px 0;
+        `;
+        
+        // Add option styles
+        const style = document.createElement('style');
+        style.textContent = `
+            .language-dropdown-portal .language-option {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 10px 16px;
+                color: var(--text-secondary);
+                background: none;
+                border: none;
+                width: 100%;
+                text-align: left;
+                cursor: pointer;
+                font-size: 13px;
+                font-weight: 500;
+                transition: all 0.2s ease;
+            }
+            
+            .language-dropdown-portal .language-option:hover {
+                background: var(--info-bg);
+                color: var(--primary-color);
+            }
+            
+            .language-dropdown-portal .language-option.active {
+                background: var(--primary-color);
+                color: white;
+                font-weight: 600;
+            }
+            
+            .language-dropdown-portal .language-option.active:hover {
+                background: var(--primary-hover);
+            }
+            
+            .language-dropdown-portal .lang-name {
+                flex: 1;
+            }
+            
+            .language-dropdown-portal .lang-code {
+                font-size: 11px;
+                opacity: 0.7;
+                font-weight: 400;
+                text-transform: uppercase;
+            }
+            
+            .language-dropdown-portal .language-option.active .lang-code {
+                opacity: 0.9;
+            }
+        `;
+        document.head.appendChild(style);
+        document.body.appendChild(dropdownPortal);
+        
+        const languageNames = {
+            en: 'English',
+            zh: '中文'
+        };
+        
+        let isOpen = false;
+        
+        const updateCurrentLanguage = (langCode) => {
+            currentLangSpan.textContent = languageNames[langCode];
+            
+            dropdownPortal.querySelectorAll('.language-option').forEach(option => {
+                option.classList.toggle('active', option.dataset.lang === langCode);
+                
+                const optionLang = option.dataset.lang;
+                const langNameElement = option.querySelector('.lang-name');
+                langNameElement.textContent = languageNames[optionLang];
+            });
+        };
+        
+        const showDropdown = () => {
+            const rect = languageToggle.getBoundingClientRect();
+            
+            dropdownPortal.style.left = rect.left + 'px';
+            dropdownPortal.style.top = (rect.bottom + 4) + 'px';
+            dropdownPortal.style.opacity = '1';
+            dropdownPortal.style.visibility = 'visible';
+            dropdownPortal.style.transform = 'translateY(0)';
+            
+            isOpen = true;
+        };
+        
+        const hideDropdown = () => {
+            dropdownPortal.style.opacity = '0';
+            dropdownPortal.style.visibility = 'hidden';
+            dropdownPortal.style.transform = 'translateY(-10px)';
+            isOpen = false;
+        };
+        
+        const toggleDropdown = (e) => {
+            e.stopPropagation();
+            if (isOpen) {
+                hideDropdown();
+            } else {
+                showDropdown();
+            }
+        };
+        
+        languageToggle.addEventListener('click', toggleDropdown);
+        
+        dropdownPortal.querySelectorAll('.language-option').forEach((option, index) => {
+            option.addEventListener('click', (e) => {
+                e.stopPropagation();
+                
+                const newLang = option.dataset.lang;
+                const currentLang = this.languageManager.getCurrentLanguage();
+                
+                if (newLang === currentLang) {
+                    hideDropdown();
+                    return;
+                }
+                
+                setTimeout(() => {
+                    this.languageManager.setLanguage(newLang);
+                    updateCurrentLanguage(newLang);
+                    hideDropdown();
+                    
+                    const message = newLang === 'zh' 
+                        ? '语言已切换为中文 🇨🇳' 
+                        : 'Language switched to English 🇺🇸';
+                    Toast.show(message, 'success');
+                }, 100);
+            });
+        });
+        
+        document.addEventListener('click', (e) => {
+            if (!languageToggle.contains(e.target) && !dropdownPortal.contains(e.target)) {
+                hideDropdown();
+            }
+        });
+        
+        // Reposition on scroll/resize
+        window.addEventListener('scroll', () => {
+            if (isOpen) showDropdown();
+        });
+        
+        window.addEventListener('resize', () => {
+            if (isOpen) showDropdown();
+        });
+        
+        const currentLang = this.languageManager.getCurrentLanguage();
+        updateCurrentLanguage(currentLang);
+    }
+
+    refreshDataTablesLanguage() {
+        if ($.fn.DataTable.isDataTable('#indicesTable')) {
+            const table = $('#indicesTable').DataTable();
+            table.settings()[0].oLanguage = {
+                search: this.languageManager.translate('dataTables.search'),
+                lengthMenu: this.languageManager.translate('dataTables.lengthMenu'),
+                info: this.languageManager.translate('dataTables.info'),
+                infoEmpty: this.languageManager.translate('dataTables.infoEmpty'),
+                infoFiltered: this.languageManager.translate('dataTables.infoFiltered'),
+                paginate: {
+                    first: this.languageManager.translate('dataTables.paginate.first'),
+                    last: this.languageManager.translate('dataTables.paginate.last'),
+                    next: this.languageManager.translate('dataTables.paginate.next'),
+                    previous: this.languageManager.translate('dataTables.paginate.previous')
+                }
+            };
+            table.draw();
+        }
+
+        if (this.sampleDataTable) {
+            this.sampleDataTable.settings()[0].oLanguage = {
+                search: this.languageManager.translate('dataTables.search'),
+                lengthMenu: this.languageManager.translate('dataTables.lengthMenu'),
+                info: this.languageManager.translate('dataTables.info'),
+                infoEmpty: this.languageManager.translate('dataTables.infoEmpty'),
+                infoFiltered: this.languageManager.translate('dataTables.infoFiltered'),
+                paginate: {
+                    first: this.languageManager.translate('dataTables.paginate.first'),
+                    last: this.languageManager.translate('dataTables.paginate.last'),
+                    next: this.languageManager.translate('dataTables.paginate.next'),
+                    previous: this.languageManager.translate('dataTables.paginate.previous')
+                }
+            };
+            this.sampleDataTable.draw();
         }
     }
 }
