@@ -10,6 +10,7 @@ body .search-panel {
     height: calc(100vh - 120px);
     max-height: 800px;
     min-height: 600px;
+    position: relative;
 }
 
 body .search-panel .panel-header {
@@ -19,6 +20,7 @@ body .search-panel .panel-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-shrink: 0;
 }
 
 body .search-panel .search-content {
@@ -31,6 +33,7 @@ body .search-panel .search-content {
     min-height: 0;
     overflow: visible;
     position: relative;
+    flex: 1;
 }
 
 body .search-panel .query-box,
@@ -61,7 +64,7 @@ body .search-panel .query-label {
 .query-editor {
     flex: 1 1 auto;
     min-height: 350px;
-    max-height: 100%;
+    max-height: calc(100% - 80px);
     border: none;
     background-color: #1a1a1a !important;
     position: relative;
@@ -75,6 +78,7 @@ body .search-panel .query-label {
 .results-container {
     display: flex;
     flex-direction: column;
+    overflow: hidden;
 }
 
 .results-header {
@@ -87,6 +91,7 @@ body .search-panel .query-label {
     font-weight: 500;
     color: var(--text-primary);
     background: var(--panel-header-background);
+    flex-shrink: 0;
 }
 
 .results-preview {
@@ -149,7 +154,7 @@ body .search-panel .query-label {
 }
 
 #executeQuery {
-    display: flex;
+    display: flex !important;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
@@ -165,8 +170,10 @@ body .search-panel .query-label {
     min-width: 100px;
     height: 2.1rem;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-    position: relative;
-    z-index: 10;
+    position: relative !important;
+    z-index: 100 !important;
+    visibility: visible !important;
+    opacity: 1 !important;
 }
 
 #executeQuery:hover {
@@ -183,10 +190,13 @@ body .search-panel .query-label {
     left: 0;
     width: 100%;
     background: var(--panel-header-background);
-    border-top: none;
-    z-index: 5;
-    height: 35px;
-    overflow: visible;
+    border-top: 1px solid var(--border-panel);
+    z-index: 1000;
+    height: auto;
+    min-height: 60px;
+    overflow: visible !important;
+    flex-shrink: 0;
+    margin-top: auto;
 }
 
 .query-actions {
@@ -197,7 +207,9 @@ body .search-panel .query-label {
     gap: 0.5rem;
     background: var(--panel-header-background);
     position: relative;
-    z-index: 5;
+    z-index: 1000;
+    min-height: 60px;
+    overflow: visible !important;
 }
 
 .editor-actions {
@@ -206,6 +218,7 @@ body .search-panel .query-label {
     gap: 0.5rem;
     z-index: 1000;
     position: relative;
+    overflow: visible;
 }
 
 .btn-icon[title]::after,
@@ -512,33 +525,50 @@ body .search-panel .query-label {
         overflow: visible;
         padding-bottom: 0;
         grid-template-columns: 1fr;
+        min-height: 600px;
     }
     
     .query-editor, .results-preview {
         height: 350px !important;
+        max-height: 350px !important;
     }
     
     body .search-panel .query-box {
-        min-height: 395px;
+        min-height: 450px;
+        max-height: none;
         padding-bottom: 0;
         position: relative;
+        overflow: visible;
     }
     
     body .search-panel .results-container {
         margin-top: 1rem;
+        max-height: 400px;
+        overflow: hidden;
     }
     
     .query-actions {
-        padding: 0.25rem;
+        padding: 1rem;
         flex-wrap: wrap;
         justify-content: space-between;
-        z-index: 100;
+        z-index: 1000;
+        min-height: 70px;
+        overflow: visible !important;
+    }
+    
+    .query-actions-wrapper {
+        min-height: 70px;
+        height: auto;
+        overflow: visible !important;
+        flex-shrink: 0;
+        position: relative;
+        bottom: auto;
     }
     
     .editor-actions {
         justify-content: flex-end;
         flex-wrap: wrap;
-        z-index: 95;
+        z-index: 1000;
         overflow: visible !important;
     }
     
@@ -546,36 +576,60 @@ body .search-panel .query-label {
     .monaco-editor-background,
     .monaco-editor .overflow-guard {
         z-index: 1;
-        overflow: visible !important;
-    }
-    
-    .query-actions-wrapper {
-        min-height: 35px;
+        overflow: hidden !important;
     }
 }
 
 @media (max-width: 576px) {
     .query-editor, .results-preview {
         height: 250px !important;
+        max-height: 250px !important;
     }
     
     body .search-panel .query-box {
-        min-height: 295px;
+        min-height: 350px;
+        max-height: none;
+        overflow: visible;
+    }
+    
+    body .search-panel .results-container {
+        max-height: 300px;
+    }
+    
+    body .search-panel .search-content {
+        min-height: 500px;
+        overflow: visible;
     }
     
     .query-actions {
         flex-direction: column;
         align-items: stretch;
-        gap: 0.25rem;
+        gap: 0.75rem;
+        padding: 1.25rem;
+        min-height: 100px;
+        overflow: visible !important;
+    }
+    
+    .query-actions-wrapper {
+        min-height: 100px;
+        height: auto;
+        overflow: visible !important;
+        position: relative;
+        bottom: auto;
+        margin-top: auto;
     }
     
     .editor-actions {
         justify-content: center;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.75rem;
+        width: 100%;
+        overflow: visible !important;
     }
     
     #executeQuery {
         width: 100%;
+        margin-top: 0.75rem;
+        min-height: 44px;
     }
 }
 
@@ -603,14 +657,17 @@ body .search-panel .query-box {
     flex: 1;
     position: relative;
     min-height: 300px;
-    max-height: 100%;
+    max-height: calc(100% - 80px);
     z-index: 1;
     overflow: hidden !important;
+    display: flex;
+    flex-direction: column;
 }
 
 .query-editor .monaco-editor {
     height: 100% !important;
     max-height: 100% !important;
+    overflow: hidden !important;
 }
 
 .monaco-editor .context-view,
@@ -622,4 +679,29 @@ body .search-panel .query-box {
 .monaco-editor .editor-widget,
 .monaco-editor .overlayWidgets {
     z-index: 50 !important;
+}
+
+body .search-panel.collapsed {
+    height: auto;
+    min-height: auto;
+    max-height: none;
+    overflow: hidden;
+}
+
+body .search-panel.collapsed .search-content {
+    display: none;
+    height: 0;
+    overflow: hidden;
+}
+
+.monaco-editor .overflow-guard {
+    overflow: hidden !important;
+    max-height: 100% !important;
+    position: relative !important;
+}
+
+.monaco-editor .monaco-scrollable-element {
+    overflow: auto !important;
+    max-height: 100% !important;
+    position: relative !important;
 }
