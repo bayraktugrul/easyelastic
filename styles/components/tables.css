@@ -6,7 +6,7 @@
     background: var(--card-background);
     border: 1px solid var(--border-color);
     border-radius: 8px;
-    overflow-x: auto;
+    overflow: hidden;
     width: 100%;
     max-width: 100%;
     display: block;
@@ -31,6 +31,7 @@ table {
     border-collapse: separate !important;
     border-spacing: 0 8px !important;
     margin-top: 1rem !important;
+    table-layout: fixed !important;
 }
 
 .indices-table thead th {
@@ -39,9 +40,15 @@ table {
     font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    padding: 1rem;
+    padding: 1rem !important;
     border-bottom: 1px solid var(--border-color);
     font-weight: 600;
+    text-align: center !important;
+    vertical-align: middle !important;
+}
+
+.indices-table thead th:first-child {
+    text-align: left !important;
 }
 
 .indices-table thead th:first-child,
@@ -64,11 +71,16 @@ table {
 .indices-table tbody td {
     padding: 0.75rem 1rem !important;
     border: none !important;
-    vertical-align: middle;
+    vertical-align: middle !important;
     color: var(--text-primary);
     word-wrap: break-word;
     word-break: break-word;
     white-space: normal;
+    text-align: center !important;
+}
+
+.indices-table tbody td:first-child {
+    text-align: left !important;
 }
 
 .dataTables_filter {
