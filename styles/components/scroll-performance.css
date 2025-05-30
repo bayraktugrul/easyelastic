@@ -1,0 +1,64 @@
+.status-panel, 
+.metrics-panel, 
+.indices-panel, 
+.sample-data-panel, 
+.quick-filter-panel, 
+.connection-panel, 
+.cluster-health-panel {
+    backdrop-filter: none !important;
+    will-change: scroll-position;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    position: relative;
+    isolation: isolate;
+}
+
+.indices-panel {
+    contain: layout style paint;
+    transform: translate3d(0, 0, 0);
+    -webkit-transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+.indices-table-container {
+    contain: layout style;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+}
+
+.container {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+}
+
+body {
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+.indices-panel,
+.indices-panel * {
+    background-attachment: scroll !important;
+}
+
+.panel-header,
+.indices-table-container,
+.dataTables_wrapper {
+    transform: translate3d(0, 0, 0);
+    -webkit-transform: translate3d(0, 0, 0);
+    will-change: transform;
+}
+
+.indices-panel,
+.indices-table-container {
+    background-color: var(--card-background) !important;
+    background-clip: padding-box;
+}
+
+.indices-panel .panel-content {
+    contain: style layout paint;
+    isolation: isolate;
+} 

@@ -17,13 +17,38 @@ table {
 }
 
 .dataTables_wrapper {
-    background: var(--card-background);
+    background: var(--card-background) !important;
     border: 1px solid var(--border-color);
     border-radius: 16px;
     padding: 1rem;
     box-shadow: var(--shadow-sm);
     margin-top: 1rem;
-    overflow: visible !important;
+    overflow: hidden !important;
+    position: relative;
+}
+
+.dataTables_scrollBody {
+    background: var(--card-background) !important;
+    border: none !important;
+    overflow-x: auto !important;
+    overflow-y: auto !important;
+    position: relative;
+    z-index: 1;
+}
+
+.dataTables_scrollBody table {
+    background: var(--card-background) !important;
+    margin: 0 !important;
+}
+
+.dataTables_scrollHead,
+.dataTables_scrollFoot {
+    background: var(--card-background) !important;
+    border: none !important;
+}
+
+.dataTables_scroll {
+    background: var(--card-background) !important;
 }
 
 .indices-table {
@@ -32,6 +57,7 @@ table {
     border-spacing: 0 8px !important;
     margin-top: 1rem !important;
     table-layout: fixed !important;
+    background: var(--card-background) !important;
 }
 
 .indices-table thead th {
@@ -58,14 +84,14 @@ table {
 }
 
 .indices-table tbody tr {
-    background: var(--card-background);
+    background: var(--card-background) !important;
     border-bottom: 1px solid var(--border-color);
     margin-bottom: 4px;
     transition: all 0.3s ease;
 }
 
 .indices-table tbody tr:hover {
-    background: var(--table-row-hover);
+    background: var(--table-row-hover) !important;
 }
 
 .indices-table tbody td {
@@ -77,6 +103,7 @@ table {
     word-break: break-word;
     white-space: normal;
     text-align: center !important;
+    background: inherit !important;
 }
 
 .indices-table tbody td:first-child {
@@ -277,16 +304,28 @@ table {
     background: var(--card-background);
 }
 
+.dataTables_scrollBody::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
 .dataTables_scrollBody::-webkit-scrollbar-track {
-    background: var(--background-color);
+    background: var(--card-background);
+    border-radius: 4px;
 }
 
 .dataTables_scrollBody::-webkit-scrollbar-thumb {
     background: var(--border-color);
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
 }
 
 .dataTables_scrollBody::-webkit-scrollbar-thumb:hover {
     background: var(--text-secondary);
+}
+
+.dataTables_scrollBody::-webkit-scrollbar-corner {
+    background: var(--card-background);
 }
 
 .dataTables_filter input {

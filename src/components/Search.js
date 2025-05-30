@@ -175,6 +175,18 @@ export default class Search {
 
     async initializeMonacoEditor() {
         try {
+            const queryInputElement = document.getElementById('queryInput');
+            
+            if (this.editor) {
+                this.editor.dispose();
+                this.editor = null;
+            }
+            
+            if (queryInputElement && queryInputElement.dataset.monacoInitialized === 'true') {
+                queryInputElement.innerHTML = '';
+                queryInputElement.removeAttribute('data-monaco-initialized');
+            }
+
             const originalConsoleWarn = console.warn;
             console.warn = function(message) {
                 if (message && message.toString().includes('Could not create web worker(s)')) {
@@ -230,7 +242,7 @@ export default class Search {
 
                 const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'es-dark' : 'vs-light';
                 
-                this.editor = monaco.editor.create(document.getElementById('queryInput'), {
+                this.editor = monaco.editor.create(queryInputElement, {
                     value: 'GET my-index/_search\n{\n  "query": {\n    "match_all": {}\n  }\n}',
                     language: 'elasticsearch',
                     theme: theme,
@@ -259,6 +271,8 @@ export default class Search {
                         enabled: false
                     }
                 });
+
+                queryInputElement.dataset.monacoInitialized = 'true';
 
                 document.addEventListener('themeChanged', (e) => {
                     const newTheme = e.detail.theme === 'dark' ? 'es-dark' : 'vs-light';
@@ -296,6 +310,19 @@ export default class Search {
             });
         } catch (error) {
             console.error('Failed to initialize Monaco editor:', error);
+        }
+    }
+
+    destroy() {
+        if (this.editor) {
+            this.editor.dispose();
+            this.editor = null;
+        }
+        
+        const queryInputElement = document.getElementById('queryInput');
+        if (queryInputElement) {
+            queryInputElement.innerHTML = '';
+            queryInputElement.removeAttribute('data-monaco-initialized');
         }
     }
 
