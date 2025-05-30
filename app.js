@@ -396,6 +396,10 @@ class ESMonitor {
                 document.getElementById('dashboard').classList.remove('hidden');
 
                 this.quickFilter = new QuickFilter(this.esService);
+                
+                if (this.search) {
+                    this.search.destroy();
+                }
                 this.search = new Search(this.esService);
 
                 await this.updateDashboard();
@@ -626,6 +630,10 @@ class ESMonitor {
                     if (isConnected) {
                         document.getElementById('dashboard').classList.remove('hidden');
                         this.quickFilter = new QuickFilter(this.esService);
+                        
+                        if (this.search) {
+                            this.search.destroy();
+                        }
                         this.search = new Search(this.esService);
                         
                         await this.updateDashboard();
@@ -656,6 +664,9 @@ class ESMonitor {
             document.getElementById('dashboard').classList.add('hidden');
             this.esService = null;
             this.quickFilter = null;
+            if (this.search) {
+                this.search.destroy();
+            }
             this.search = null;
             if (this.autoRefresh) {
                 this.autoRefresh.destroy();
@@ -1379,6 +1390,9 @@ class ESMonitor {
 
     async initializeComponents() {
         try {
+            if (this.search) {
+                this.search.destroy();
+            }
             this.search = new Search(this.esService);
         } catch (error) {
             Toast.show('Failed to initialize components', 'error');
