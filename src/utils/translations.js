@@ -404,7 +404,9 @@ class LanguageManager {
         });
 
         if (window.esMonitor) {
-            window.esMonitor.refreshDataTablesLanguage();
+            setTimeout(() => {
+                window.esMonitor.refreshDataTablesLanguage();
+            }, 200);
         }
     }
 

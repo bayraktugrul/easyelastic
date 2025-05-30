@@ -32,7 +32,7 @@ class Toast {
                     </span>
                     <span>${message}</span>
                    </div>`,
-            duration: 3000,
+            duration: 900,
             gravity: "top",
             position: "right",
             stopOnFocus: true,

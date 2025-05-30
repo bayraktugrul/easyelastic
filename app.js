@@ -411,6 +411,7 @@ class ESMonitor {
                     this.autoRefresh.destroy();
                 }
                 this.autoRefresh = new AutoRefresh(this);
+                this.initializeLanguageToggle();
 
                 Toast.show('Connected and data loaded successfully', 'success');
             } else {
@@ -483,6 +484,14 @@ class ESMonitor {
 
     async updateIndicesTable(indices) {
         const formattedIndices = await this.indicesRepository.getAllIndices();
+
+        const getLanguageText = (key, fallback) => {
+            try {
+                return this.languageManager ? this.languageManager.translate(key) || fallback : fallback;
+            } catch (error) {
+                return fallback;
+            }
+        };
 
         if (!$.fn.DataTable.isDataTable('#indicesTable')) {
             $('#indicesTable').DataTable({
@@ -580,16 +589,16 @@ class ESMonitor {
                     }
                 ],
                 language: {
-                    search: this.languageManager.translate('dataTables.search'),
-                    lengthMenu: this.languageManager.translate('dataTables.lengthMenu'),
-                    info: this.languageManager.translate('dataTables.info'),
-                    infoEmpty: this.languageManager.translate('dataTables.infoEmpty'),
-                    infoFiltered: this.languageManager.translate('dataTables.infoFiltered'),
+                    search: getLanguageText('dataTables.search', 'Search:'),
+                    lengthMenu: getLanguageText('dataTables.lengthMenu', 'Show _MENU_ entries'),
+                    info: getLanguageText('dataTables.info', 'Showing _START_ to _END_ of _TOTAL_ entries'),
+                    infoEmpty: getLanguageText('dataTables.infoEmpty', 'No entries available'),
+                    infoFiltered: getLanguageText('dataTables.infoFiltered', '(filtered from _MAX_ total entries)'),
                     paginate: {
-                        first: this.languageManager.translate('dataTables.paginate.first'),
-                        last: this.languageManager.translate('dataTables.paginate.last'),
-                        next: this.languageManager.translate('dataTables.paginate.next'),
-                        previous: this.languageManager.translate('dataTables.paginate.previous')
+                        first: getLanguageText('dataTables.paginate.first', 'First'),
+                        last: getLanguageText('dataTables.paginate.last', 'Last'),
+                        next: getLanguageText('dataTables.paginate.next', 'Next'),
+                        previous: getLanguageText('dataTables.paginate.previous', 'Previous')
                     }
                 },
                 order: [[1, 'desc']],
@@ -645,6 +654,8 @@ class ESMonitor {
                             this.autoRefresh.destroy();
                         }
                         this.autoRefresh = new AutoRefresh(this);
+                        
+                        this.initializeLanguageToggle();
                     }
                 }
             }
@@ -1086,6 +1097,14 @@ class ESMonitor {
     }
 
     async showSampleDataPreview(indexName) {
+        const getLanguageText = (key, fallback) => {
+            try {
+                return this.languageManager ? this.languageManager.translate(key) || fallback : fallback;
+            } catch (error) {
+                return fallback;
+            }
+        };
+
         try {
             const indexDetails = await this.esService.getIndexMapping(indexName);
             const mapping = indexDetails[indexName].mappings.properties || {};
@@ -1141,7 +1160,7 @@ class ESMonitor {
                     { 
                         data: 'id', 
                         title: `<div class="column-header">
-                                    <span>${this.languageManager.translate('common.id')}</span>
+                                    <span>${getLanguageText('common.id', 'ID')}</span>
                                     <span class="field-type" data-type="keyword">keyword</span>
                                 </div>`,
                         width: '280px'
@@ -1168,16 +1187,16 @@ class ESMonitor {
                 dom: "<'dt-controls'<'dataTables_filter'f>>" +
                      "<'dataTables_scroll't>",
                 language: {
-                    search: this.languageManager.translate('dataTables.search'),
-                    lengthMenu: this.languageManager.translate('dataTables.lengthMenu'),
-                    info: this.languageManager.translate('dataTables.info'),
-                    infoEmpty: this.languageManager.translate('dataTables.infoEmpty'),
-                    infoFiltered: this.languageManager.translate('dataTables.infoFiltered'),
+                    search: getLanguageText('dataTables.search', 'Search:'),
+                    lengthMenu: getLanguageText('dataTables.lengthMenu', 'Show _MENU_ entries'),
+                    info: getLanguageText('dataTables.info', 'Showing _START_ to _END_ of _TOTAL_ entries'),
+                    infoEmpty: getLanguageText('dataTables.infoEmpty', 'No entries available'),
+                    infoFiltered: getLanguageText('dataTables.infoFiltered', '(filtered from _MAX_ total entries)'),
                     paginate: {
-                        first: this.languageManager.translate('dataTables.paginate.first'),
-                        last: this.languageManager.translate('dataTables.paginate.last'),
-                        next: this.languageManager.translate('dataTables.paginate.next'),
-                        previous: this.languageManager.translate('dataTables.paginate.previous')
+                        first: getLanguageText('dataTables.paginate.first', 'First'),
+                        last: getLanguageText('dataTables.paginate.last', 'Last'),
+                        next: getLanguageText('dataTables.paginate.next', 'Next'),
+                        previous: getLanguageText('dataTables.paginate.previous', 'Previous')
                     }
                 }
             });
@@ -1513,6 +1532,14 @@ class ESMonitor {
             return;
         }
         
+        const existingPortal = document.querySelector('.language-dropdown-portal');
+        if (existingPortal) {
+            existingPortal.remove();
+        }
+        
+        const newLanguageToggle = languageToggle.cloneNode(true);
+        languageToggle.parentNode.replaceChild(newLanguageToggle, languageToggle);
+        
         const dropdownPortal = document.createElement('div');
         dropdownPortal.className = 'language-dropdown-portal';
         dropdownPortal.innerHTML = `
@@ -1528,7 +1555,6 @@ class ESMonitor {
             </div>
         `;
         
-        // Add styles for portal
         dropdownPortal.style.cssText = `
             position: fixed;
             background: var(--card-background);
@@ -1545,56 +1571,61 @@ class ESMonitor {
             padding: 4px 0;
         `;
         
-        // Add option styles
-        const style = document.createElement('style');
-        style.textContent = `
-            .language-dropdown-portal .language-option {
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                padding: 10px 16px;
-                color: var(--text-secondary);
-                background: none;
-                border: none;
-                width: 100%;
-                text-align: left;
-                cursor: pointer;
-                font-size: 13px;
-                font-weight: 500;
-                transition: all 0.2s ease;
-            }
-            
-            .language-dropdown-portal .language-option:hover {
-                background: var(--info-bg);
-                color: var(--primary-color);
-            }
-            
-            .language-dropdown-portal .language-option.active {
-                background: var(--primary-color);
-                color: white;
-                font-weight: 600;
-            }
-            
-            .language-dropdown-portal .language-option.active:hover {
-                background: var(--primary-hover);
-            }
-            
-            .language-dropdown-portal .lang-name {
-                flex: 1;
-            }
-            
-            .language-dropdown-portal .lang-code {
-                font-size: 11px;
-                opacity: 0.7;
-                font-weight: 400;
-                text-transform: uppercase;
-            }
-            
-            .language-dropdown-portal .language-option.active .lang-code {
-                opacity: 0.9;
-            }
-        `;
-        document.head.appendChild(style);
+ 
+        let existingStyle = document.querySelector('#language-dropdown-styles');
+        if (!existingStyle) {
+            const style = document.createElement('style');
+            style.id = 'language-dropdown-styles';
+            style.textContent = `
+                .language-dropdown-portal .language-option {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    padding: 10px 16px;
+                    color: var(--text-secondary);
+                    background: none;
+                    border: none;
+                    width: 100%;
+                    text-align: left;
+                    cursor: pointer;
+                    font-size: 13px;
+                    font-weight: 500;
+                    transition: all 0.2s ease;
+                }
+                
+                .language-dropdown-portal .language-option:hover {
+                    background: var(--info-bg);
+                    color: var(--primary-color);
+                }
+                
+                .language-dropdown-portal .language-option.active {
+                    background: var(--primary-color);
+                    color: white;
+                    font-weight: 600;
+                }
+                
+                .language-dropdown-portal .language-option.active:hover {
+                    background: var(--primary-hover);
+                }
+                
+                .language-dropdown-portal .lang-name {
+                    flex: 1;
+                }
+                
+                .language-dropdown-portal .lang-code {
+                    font-size: 11px;
+                    opacity: 0.7;
+                    font-weight: 400;
+                    text-transform: uppercase;
+                }
+                
+                .language-dropdown-portal .language-option.active .lang-code {
+                    opacity: 0.9;
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
         document.body.appendChild(dropdownPortal);
         
         const languageNames = {
@@ -1605,7 +1636,10 @@ class ESMonitor {
         let isOpen = false;
         
         const updateCurrentLanguage = (langCode) => {
-            currentLangSpan.textContent = languageNames[langCode];
+            const currentLangSpan = document.querySelector('.current-lang');
+            if (currentLangSpan) {
+                currentLangSpan.textContent = languageNames[langCode];
+            }
             
             dropdownPortal.querySelectorAll('.language-option').forEach(option => {
                 option.classList.toggle('active', option.dataset.lang === langCode);
@@ -1617,6 +1651,9 @@ class ESMonitor {
         };
         
         const showDropdown = () => {
+            const languageToggle = document.querySelector('.language-toggle');
+            if (!languageToggle) return;
+            
             const rect = languageToggle.getBoundingClientRect();
             
             dropdownPortal.style.left = rect.left + 'px';
@@ -1644,7 +1681,8 @@ class ESMonitor {
             }
         };
         
-        languageToggle.addEventListener('click', toggleDropdown);
+        const updatedLanguageToggle = document.querySelector('.language-toggle');
+        updatedLanguageToggle.addEventListener('click', toggleDropdown);
         
         dropdownPortal.querySelectorAll('.language-option').forEach((option, index) => {
             option.addEventListener('click', (e) => {
@@ -1671,59 +1709,112 @@ class ESMonitor {
             });
         });
         
-        document.addEventListener('click', (e) => {
-            if (!languageToggle.contains(e.target) && !dropdownPortal.contains(e.target)) {
+
+        if (this.languageGlobalClickListener) {
+            document.removeEventListener('click', this.languageGlobalClickListener);
+        }
+        
+        this.languageGlobalClickListener = (e) => {
+            const languageToggle = document.querySelector('.language-toggle');
+            if (languageToggle && !languageToggle.contains(e.target) && !dropdownPortal.contains(e.target)) {
                 hideDropdown();
             }
-        });
+        };
         
-        // Reposition on scroll/resize
-        window.addEventListener('scroll', () => {
-            if (isOpen) showDropdown();
-        });
+        document.addEventListener('click', this.languageGlobalClickListener);
         
-        window.addEventListener('resize', () => {
+        const repositionHandler = () => {
             if (isOpen) showDropdown();
-        });
+        };
+        
+        if (this.languageRepositionHandler) {
+            window.removeEventListener('scroll', this.languageRepositionHandler);
+            window.removeEventListener('resize', this.languageRepositionHandler);
+        }
+        
+        this.languageRepositionHandler = repositionHandler;
+        window.addEventListener('scroll', this.languageRepositionHandler);
+        window.addEventListener('resize', this.languageRepositionHandler);
         
         const currentLang = this.languageManager.getCurrentLanguage();
         updateCurrentLanguage(currentLang);
     }
 
     refreshDataTablesLanguage() {
-        if ($.fn.DataTable.isDataTable('#indicesTable')) {
-            const table = $('#indicesTable').DataTable();
-            table.settings()[0].oLanguage = {
-                search: this.languageManager.translate('dataTables.search'),
-                lengthMenu: this.languageManager.translate('dataTables.lengthMenu'),
-                info: this.languageManager.translate('dataTables.info'),
-                infoEmpty: this.languageManager.translate('dataTables.infoEmpty'),
-                infoFiltered: this.languageManager.translate('dataTables.infoFiltered'),
-                paginate: {
-                    first: this.languageManager.translate('dataTables.paginate.first'),
-                    last: this.languageManager.translate('dataTables.paginate.last'),
-                    next: this.languageManager.translate('dataTables.paginate.next'),
-                    previous: this.languageManager.translate('dataTables.paginate.previous')
-                }
-            };
-            table.draw();
-        }
+        const getLanguageText = (key, fallback) => {
+            try {
+                return this.languageManager ? this.languageManager.translate(key) || fallback : fallback;
+            } catch (error) {
+                return fallback;
+            }
+        };
 
-        if (this.sampleDataTable) {
-            this.sampleDataTable.settings()[0].oLanguage = {
-                search: this.languageManager.translate('dataTables.search'),
-                lengthMenu: this.languageManager.translate('dataTables.lengthMenu'),
-                info: this.languageManager.translate('dataTables.info'),
-                infoEmpty: this.languageManager.translate('dataTables.infoEmpty'),
-                infoFiltered: this.languageManager.translate('dataTables.infoFiltered'),
-                paginate: {
-                    first: this.languageManager.translate('dataTables.paginate.first'),
-                    last: this.languageManager.translate('dataTables.paginate.last'),
-                    next: this.languageManager.translate('dataTables.paginate.next'),
-                    previous: this.languageManager.translate('dataTables.paginate.previous')
+        try {
+        
+            if (!$ || !$.fn || !$.fn.DataTable) {
+                console.warn('DataTables library not loaded, skipping language refresh');
+                return;
+            }
+
+            if ($.fn.DataTable.isDataTable('#indicesTable')) {
+                try {
+                    const table = $('#indicesTable').DataTable();
+                    if (table && table.settings && table.settings().length > 0) {
+                        const settings = table.settings()[0];
+                        
+                        if (settings && settings.oLanguage && typeof settings.oLanguage === 'object') {
+                            settings.oLanguage.search = getLanguageText('dataTables.search', 'Search:');
+                            settings.oLanguage.lengthMenu = getLanguageText('dataTables.lengthMenu', 'Show _MENU_ entries');
+                            settings.oLanguage.info = getLanguageText('dataTables.info', 'Showing _START_ to _END_ of _TOTAL_ entries');
+                            settings.oLanguage.infoEmpty = getLanguageText('dataTables.infoEmpty', 'No entries available');
+                            settings.oLanguage.infoFiltered = getLanguageText('dataTables.infoFiltered', '(filtered from _MAX_ total entries)');
+                            
+                            if (!settings.oLanguage.paginate) {
+                                settings.oLanguage.paginate = {};
+                            }
+                            settings.oLanguage.paginate.first = getLanguageText('dataTables.paginate.first', 'First');
+                            settings.oLanguage.paginate.last = getLanguageText('dataTables.paginate.last', 'Last');
+                            settings.oLanguage.paginate.next = getLanguageText('dataTables.paginate.next', 'Next');
+                            settings.oLanguage.paginate.previous = getLanguageText('dataTables.paginate.previous', 'Previous');
+                            
+                            table.draw();
+                        }
+                    }
+                } catch (tableError) {
+                    console.warn('Failed to update indices table language:', tableError);
                 }
-            };
-            this.sampleDataTable.draw();
+            }
+
+            if (this.sampleDataTable) {
+                try {
+                    if (this.sampleDataTable.settings && typeof this.sampleDataTable.settings === 'function') {
+                        const settings = this.sampleDataTable.settings();
+                        
+                        if (settings && settings.length > 0 && settings[0] && settings[0].oLanguage && typeof settings[0].oLanguage === 'object') {
+                            const oLang = settings[0].oLanguage;
+                            oLang.search = getLanguageText('dataTables.search', 'Search:');
+                            oLang.lengthMenu = getLanguageText('dataTables.lengthMenu', 'Show _MENU_ entries');
+                            oLang.info = getLanguageText('dataTables.info', 'Showing _START_ to _END_ of _TOTAL_ entries');
+                            oLang.infoEmpty = getLanguageText('dataTables.infoEmpty', 'No entries available');
+                            oLang.infoFiltered = getLanguageText('dataTables.infoFiltered', '(filtered from _MAX_ total entries)');
+                            
+                            if (!oLang.paginate) {
+                                oLang.paginate = {};
+                            }
+                            oLang.paginate.first = getLanguageText('dataTables.paginate.first', 'First');
+                            oLang.paginate.last = getLanguageText('dataTables.paginate.last', 'Last');
+                            oLang.paginate.next = getLanguageText('dataTables.paginate.next', 'Next');
+                            oLang.paginate.previous = getLanguageText('dataTables.paginate.previous', 'Previous');
+                            
+                            this.sampleDataTable.draw();
+                        }
+                    }
+                } catch (sampleTableError) {
+                    console.warn('Failed to update sample data table language:', sampleTableError);
+                }
+            }
+        } catch (error) {
+            console.warn('Failed to refresh DataTables language:', error);
         }
     }
 }
