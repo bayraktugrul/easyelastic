@@ -301,6 +301,8 @@ const translations = {
     }
 };
 
+const DATATABLES_INITIALIZATION_TIMEOUT = 500;
+
 class LanguageManager {
     constructor() {
         this.currentLanguage = 'en';
@@ -379,6 +381,27 @@ class LanguageManager {
         return value || key;
     }
 
+    getSafeTranslation(key, fallback = null) {
+        try {
+            if (!this || typeof this.translate !== 'function') {
+                console.warn('LanguageManager not properly initialized, using fallback for:', key);
+                return fallback || key;
+            }
+            
+            const result = this.translate(key);
+            
+            if (result === undefined || result === null || result === '') {
+                console.warn('Empty translation for:', key, 'using fallback:', fallback || key);
+                return fallback || key;
+            }
+            
+            return result;
+        } catch (error) {
+            console.warn('Translation error for:', key, error, 'using fallback:', fallback || key);
+            return fallback || key;
+        }
+    }
+
     updateUI() {
         document.querySelectorAll('[data-translate]').forEach(element => {
             const key = element.getAttribute('data-translate');
@@ -406,7 +429,7 @@ class LanguageManager {
         if (window.esMonitor) {
             setTimeout(() => {
                 window.esMonitor.refreshDataTablesLanguage();
-            }, 200);
+            }, DATATABLES_INITIALIZATION_TIMEOUT);
         }
     }
 

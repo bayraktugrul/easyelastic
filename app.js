@@ -41,6 +41,28 @@ class ESMonitor {
         this.autoRefresh = null;
     }
 
+    getTranslationWithFallback(key, fallback) {
+        return this.languageManager ? 
+            this.languageManager.getSafeTranslation(key, fallback) : 
+            fallback;
+    }
+
+    createDataTablesLanguageConfig() {
+        return {
+            search: this.getTranslationWithFallback('dataTables.search', 'Search:'),
+            lengthMenu: this.getTranslationWithFallback('dataTables.lengthMenu', 'Show _MENU_ entries'),
+            info: this.getTranslationWithFallback('dataTables.info', 'Showing _START_ to _END_ of _TOTAL_ entries'),
+            infoEmpty: this.getTranslationWithFallback('dataTables.infoEmpty', 'No entries available'),
+            infoFiltered: this.getTranslationWithFallback('dataTables.infoFiltered', '(filtered from _MAX_ total entries)'),
+            paginate: {
+                first: this.getTranslationWithFallback('dataTables.paginate.first', 'First'),
+                last: this.getTranslationWithFallback('dataTables.paginate.last', 'Last'),
+                next: this.getTranslationWithFallback('dataTables.paginate.next', 'Next'),
+                previous: this.getTranslationWithFallback('dataTables.paginate.previous', 'Previous')
+            }
+        };
+    }
+
     subscribeToEvents() {
         this.eventBus.subscribe('index:created', () => this.updateDashboard());
         this.eventBus.subscribe('index:deleted', () => this.updateDashboard());
@@ -460,7 +482,7 @@ class ESMonitor {
             const currentValue = indexSelector.value;
             
             indexSelector.innerHTML = `
-                <option value="">${this.languageManager.translate('common.selectIndex')}</option>
+                <option value="">${this.getTranslationWithFallback('common.selectIndex', 'Select Index')}</option>
                 ${indices.map(index => `
                     <option value="${index.index}" ${currentValue === index.index ? 'selected' : ''}>
                         ${index.index}
@@ -484,14 +506,6 @@ class ESMonitor {
 
     async updateIndicesTable(indices) {
         const formattedIndices = await this.indicesRepository.getAllIndices();
-
-        const getLanguageText = (key, fallback) => {
-            try {
-                return this.languageManager ? this.languageManager.translate(key) || fallback : fallback;
-            } catch (error) {
-                return fallback;
-            }
-        };
 
         if (!$.fn.DataTable.isDataTable('#indicesTable')) {
             $('#indicesTable').DataTable({
@@ -588,19 +602,7 @@ class ESMonitor {
                         }
                     }
                 ],
-                language: {
-                    search: getLanguageText('dataTables.search', 'Search:'),
-                    lengthMenu: getLanguageText('dataTables.lengthMenu', 'Show _MENU_ entries'),
-                    info: getLanguageText('dataTables.info', 'Showing _START_ to _END_ of _TOTAL_ entries'),
-                    infoEmpty: getLanguageText('dataTables.infoEmpty', 'No entries available'),
-                    infoFiltered: getLanguageText('dataTables.infoFiltered', '(filtered from _MAX_ total entries)'),
-                    paginate: {
-                        first: getLanguageText('dataTables.paginate.first', 'First'),
-                        last: getLanguageText('dataTables.paginate.last', 'Last'),
-                        next: getLanguageText('dataTables.paginate.next', 'Next'),
-                        previous: getLanguageText('dataTables.paginate.previous', 'Previous')
-                    }
-                },
+                language: this.createDataTablesLanguageConfig(),
                 order: [[1, 'desc']],
                 dom: "<'dt-controls'<'dataTables_length'l><'dataTables_filter'f>>" +
                      "rt" +
@@ -755,7 +757,7 @@ class ESMonitor {
             const aliasesList = document.getElementById('currentAliasesList');
             
             if (aliases.length === 0) {
-                aliasesList.innerHTML = `<span class="no-aliases" data-translate="common.noAliasesDefined">${this.languageManager.translate('common.noAliasesDefined')}</span>`;
+                aliasesList.innerHTML = `<span class="no-aliases" data-translate="common.noAliasesDefined">${this.getTranslationWithFallback('common.noAliasesDefined', 'No aliases defined')}</span>`;
                 return;
             }
 
@@ -1097,14 +1099,6 @@ class ESMonitor {
     }
 
     async showSampleDataPreview(indexName) {
-        const getLanguageText = (key, fallback) => {
-            try {
-                return this.languageManager ? this.languageManager.translate(key) || fallback : fallback;
-            } catch (error) {
-                return fallback;
-            }
-        };
-
         try {
             const indexDetails = await this.esService.getIndexMapping(indexName);
             const mapping = indexDetails[indexName].mappings.properties || {};
@@ -1160,7 +1154,7 @@ class ESMonitor {
                     { 
                         data: 'id', 
                         title: `<div class="column-header">
-                                    <span>${getLanguageText('common.id', 'ID')}</span>
+                                    <span>${this.getTranslationWithFallback('common.id', 'ID')}</span>
                                     <span class="field-type" data-type="keyword">keyword</span>
                                 </div>`,
                         width: '280px'
@@ -1186,19 +1180,7 @@ class ESMonitor {
                 fixedHeader: false,
                 dom: "<'dt-controls'<'dataTables_filter'f>>" +
                      "<'dataTables_scroll't>",
-                language: {
-                    search: getLanguageText('dataTables.search', 'Search:'),
-                    lengthMenu: getLanguageText('dataTables.lengthMenu', 'Show _MENU_ entries'),
-                    info: getLanguageText('dataTables.info', 'Showing _START_ to _END_ of _TOTAL_ entries'),
-                    infoEmpty: getLanguageText('dataTables.infoEmpty', 'No entries available'),
-                    infoFiltered: getLanguageText('dataTables.infoFiltered', '(filtered from _MAX_ total entries)'),
-                    paginate: {
-                        first: getLanguageText('dataTables.paginate.first', 'First'),
-                        last: getLanguageText('dataTables.paginate.last', 'Last'),
-                        next: getLanguageText('dataTables.paginate.next', 'Next'),
-                        previous: getLanguageText('dataTables.paginate.previous', 'Previous')
-                    }
-                }
+                language: this.createDataTablesLanguageConfig()
             });
 
         } catch (error) {
@@ -1741,80 +1723,42 @@ class ESMonitor {
     }
 
     refreshDataTablesLanguage() {
-        const getLanguageText = (key, fallback) => {
-            try {
-                return this.languageManager ? this.languageManager.translate(key) || fallback : fallback;
-            } catch (error) {
-                return fallback;
-            }
-        };
-
         try {
-        
             if (!$ || !$.fn || !$.fn.DataTable) {
                 console.warn('DataTables library not loaded, skipping language refresh');
                 return;
             }
 
-            if ($.fn.DataTable.isDataTable('#indicesTable')) {
-                try {
-                    const table = $('#indicesTable').DataTable();
-                    if (table && table.settings && table.settings().length > 0) {
-                        const settings = table.settings()[0];
-                        
-                        if (settings && settings.oLanguage && typeof settings.oLanguage === 'object') {
-                            settings.oLanguage.search = getLanguageText('dataTables.search', 'Search:');
-                            settings.oLanguage.lengthMenu = getLanguageText('dataTables.lengthMenu', 'Show _MENU_ entries');
-                            settings.oLanguage.info = getLanguageText('dataTables.info', 'Showing _START_ to _END_ of _TOTAL_ entries');
-                            settings.oLanguage.infoEmpty = getLanguageText('dataTables.infoEmpty', 'No entries available');
-                            settings.oLanguage.infoFiltered = getLanguageText('dataTables.infoFiltered', '(filtered from _MAX_ total entries)');
-                            
-                            if (!settings.oLanguage.paginate) {
-                                settings.oLanguage.paginate = {};
-                            }
-                            settings.oLanguage.paginate.first = getLanguageText('dataTables.paginate.first', 'First');
-                            settings.oLanguage.paginate.last = getLanguageText('dataTables.paginate.last', 'Last');
-                            settings.oLanguage.paginate.next = getLanguageText('dataTables.paginate.next', 'Next');
-                            settings.oLanguage.paginate.previous = getLanguageText('dataTables.paginate.previous', 'Previous');
-                            
-                            table.draw();
-                        }
-                    }
-                } catch (tableError) {
-                    console.warn('Failed to update indices table language:', tableError);
-                }
-            }
+            const languageConfig = this.createDataTablesLanguageConfig();
 
+            this.updateDataTableLanguage('#indicesTable', languageConfig);
+            
             if (this.sampleDataTable) {
-                try {
-                    if (this.sampleDataTable.settings && typeof this.sampleDataTable.settings === 'function') {
-                        const settings = this.sampleDataTable.settings();
-                        
-                        if (settings && settings.length > 0 && settings[0] && settings[0].oLanguage && typeof settings[0].oLanguage === 'object') {
-                            const oLang = settings[0].oLanguage;
-                            oLang.search = getLanguageText('dataTables.search', 'Search:');
-                            oLang.lengthMenu = getLanguageText('dataTables.lengthMenu', 'Show _MENU_ entries');
-                            oLang.info = getLanguageText('dataTables.info', 'Showing _START_ to _END_ of _TOTAL_ entries');
-                            oLang.infoEmpty = getLanguageText('dataTables.infoEmpty', 'No entries available');
-                            oLang.infoFiltered = getLanguageText('dataTables.infoFiltered', '(filtered from _MAX_ total entries)');
-                            
-                            if (!oLang.paginate) {
-                                oLang.paginate = {};
-                            }
-                            oLang.paginate.first = getLanguageText('dataTables.paginate.first', 'First');
-                            oLang.paginate.last = getLanguageText('dataTables.paginate.last', 'Last');
-                            oLang.paginate.next = getLanguageText('dataTables.paginate.next', 'Next');
-                            oLang.paginate.previous = getLanguageText('dataTables.paginate.previous', 'Previous');
-                            
-                            this.sampleDataTable.draw();
-                        }
-                    }
-                } catch (sampleTableError) {
-                    console.warn('Failed to update sample data table language:', sampleTableError);
-                }
+                this.updateDataTableLanguage(this.sampleDataTable, languageConfig);
             }
         } catch (error) {
             console.warn('Failed to refresh DataTables language:', error);
+        }
+    }
+
+    updateDataTableLanguage(tableSelector, languageConfig) {
+        try {
+            const table = typeof tableSelector === 'string' ? 
+                ($.fn.DataTable.isDataTable(tableSelector) ? $(tableSelector).DataTable() : null) :
+                tableSelector;
+
+            if (!table || !table.settings || typeof table.settings !== 'function') {
+                return;
+            }
+
+            const settings = table.settings();
+            
+            if (settings && settings.length > 0 && settings[0] && settings[0].oLanguage) {
+                Object.assign(settings[0].oLanguage, languageConfig);
+                table.draw();
+            }
+        } catch (error) {
+            console.warn('Failed to update DataTable language:', error);
         }
     }
 }
