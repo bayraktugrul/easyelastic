@@ -20,7 +20,7 @@
 .toast-close {
     background: none;
     border: none;
-    color: #94a3b8;
+    color: var(--text-muted);
     cursor: pointer;
     font-size: 18px;
     height: 24px;
@@ -39,6 +39,6 @@
 
 .toast-close:hover {
     opacity: 1;
-    color: #64748b;
+    color: var(--text-secondary);
     background: rgba(0, 0, 0, 0.05);
 } 
