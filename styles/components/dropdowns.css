@@ -26,7 +26,7 @@
     border-radius: 8px;
     box-shadow: var(--shadow-md);
     min-width: 160px;
-    z-index: 1200;
+    z-index: 9999;
     opacity: 0;
     visibility: hidden;
     transform: translateY(10px);
@@ -36,6 +36,16 @@
 .dropdown-menu.show {
     opacity: 1;
     visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-menu.dropup {
+    top: auto;
+    bottom: 100%;
+    transform: translateY(-10px);
+}
+
+.dropdown-menu.dropup.show {
     transform: translateY(0);
 }
 
