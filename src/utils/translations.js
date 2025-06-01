@@ -38,7 +38,13 @@ const translations = {
             shards: "Shards",
             active: "active",
             relocating: "relocating",
-            system: "System"
+            system: "System",
+            clusterStatus: "Cluster Status",
+            healthGreen: "HEALTHY",
+            healthYellow: "WARNING",
+            healthRed: "CRITICAL",
+            jvm: "JVM",
+            systemMemory: "System"
         },
         indices: {
             title: "Indices",
@@ -54,7 +60,14 @@ const translations = {
         shards: {
             title: "Shards Distribution",
             hideSystemIndices: "Hide system indices",
-            node: "Node"
+            node: "Node",
+            primary: "Primary",
+            replica: "Replica",
+            shard: "Shard",
+            unassigned: "Unassigned",
+            started: "Started",
+            initializing: "Initializing",
+            relocating: "Relocating"
         },
         search: {
             title: "Search",
@@ -107,7 +120,35 @@ const translations = {
             mapping: "Mapping",
             details: "Details",
             updateMapping: "Update Mapping",
-            addDocument: "Add Document"
+            addDocument: "Add Document",
+            deleteAlias: "Delete Alias",
+            managingAliasesFor: "Managing aliases for index",
+            deleteFieldTitle: "Delete Field",
+            deleteFieldConfirmation: "Are you sure you want to delete field",
+            documentId: "Document ID (optional)",
+            documentIdPlaceholder: "Leave empty for auto-generated ID",
+            mappingJson: "Mapping JSON",
+            visualEditor: "Visual Editor",
+            fieldName: "Field Name",
+            fieldType: "Field Type",
+            enterFieldName: "Enter field name",
+            addField: "Add Field",
+            update: "Update"
+        },
+        fieldTypes: {
+            text: "Text",
+            keyword: "Keyword",
+            long: "Long",
+            integer: "Integer",
+            short: "Short",
+            byte: "Byte",
+            double: "Double",
+            float: "Float",
+            date: "Date",
+            boolean: "Boolean",
+            binary: "Binary",
+            object: "Object",
+            nested: "Nested"
         },
         messages: {
             connectionSaved: "Connection saved successfully",
@@ -133,7 +174,11 @@ const translations = {
             noRecords: "No records found",
             loading: "Loading...",
             refresh: "Refresh",
-            id: "ID"
+            id: "ID",
+            pleaseSelectIndex: "Please select an index to view documents.",
+            noDocumentsFound: "No documents found in this index.",
+            errorLoadingDocuments: "Error loading documents.",
+            error: "Error"
         },
         dataTables: {
             search: "Search:",
@@ -188,7 +233,13 @@ const translations = {
             shards: "分片",
             active: "活跃",
             relocating: "重新定位",
-            system: "系统"
+            system: "系统",
+            clusterStatus: "集群状态",
+            healthGreen: "健康",
+            healthYellow: "警告",
+            healthRed: "严重",
+            jvm: "JVM",
+            systemMemory: "系统"
         },
         indices: {
             title: "索引",
@@ -204,7 +255,14 @@ const translations = {
         shards: {
             title: "分片分布",
             hideSystemIndices: "隐藏系统索引",
-            node: "节点"
+            node: "节点",
+            primary: "主分片",
+            replica: "副本分片",
+            shard: "分片",
+            unassigned: "未分配",
+            started: "已启动",
+            initializing: "初始化中",
+            relocating: "重新定位中"
         },
         search: {
             title: "搜索",
@@ -257,7 +315,35 @@ const translations = {
             mapping: "映射",
             details: "详情",
             updateMapping: "更新映射",
-            addDocument: "添加文档"
+            addDocument: "添加文档",
+            deleteAlias: "删除别名",
+            managingAliasesFor: "管理索引的别名",
+            deleteFieldTitle: "删除字段",
+            deleteFieldConfirmation: "您确定要删除字段",
+            documentId: "文档ID（可选）",
+            documentIdPlaceholder: "留空以自动生成ID",
+            mappingJson: "映射JSON",
+            visualEditor: "可视化编辑器",
+            fieldName: "字段名称",
+            fieldType: "字段类型",
+            enterFieldName: "输入字段名称",
+            addField: "添加字段",
+            update: "更新"
+        },
+        fieldTypes: {
+            text: "文本",
+            keyword: "关键字",
+            long: "长整型",
+            integer: "整数",
+            short: "短整型",
+            byte: "字节",
+            double: "双精度",
+            float: "浮点数",
+            date: "日期",
+            boolean: "布尔值",
+            binary: "二进制",
+            object: "对象",
+            nested: "嵌套"
         },
         messages: {
             connectionSaved: "连接保存成功",
@@ -283,7 +369,11 @@ const translations = {
             noRecords: "没有找到记录",
             loading: "加载中...",
             refresh: "刷新",
-            id: "ID"
+            id: "ID",
+            pleaseSelectIndex: "请选择一个索引来查看文档。",
+            noDocumentsFound: "此索引中没有找到文档。",
+            errorLoadingDocuments: "加载文档时出错。",
+            error: "错误"
         },
         dataTables: {
             search: "搜索:",
@@ -424,6 +514,12 @@ class LanguageManager {
             const key = element.getAttribute('data-translate-title');
             const translation = this.translate(key);
             element.title = translation;
+        });
+
+        document.querySelectorAll('option[data-translate]').forEach(element => {
+            const key = element.getAttribute('data-translate');
+            const translation = this.translate(key);
+            element.textContent = translation;
         });
 
         if (window.esMonitor) {

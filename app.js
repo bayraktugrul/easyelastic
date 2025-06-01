@@ -28,6 +28,9 @@ class ESMonitor {
             shardDistribution: new ShardDistribution('shards')
         };
         
+        this.components.clusterHealth.setLanguageManager(this.languageManager);
+        this.components.shardDistribution.setLanguageManager(this.languageManager);
+        
         this.initializeEventListeners();
         this.initializeModalHandlers();
         this.initializePasswordToggle();
@@ -289,7 +292,7 @@ class ESMonitor {
             } else {
                 document.querySelector('.sample-records').innerHTML = `
                     <div class="no-records">
-                        <p>Please select an index to view documents.</p>
+                        <p>${this.getTranslationWithFallback('common.pleaseSelectIndex', 'Please select an index to view documents.')}</p>
                     </div>
                 `;
                 document.querySelector('.record-count').textContent = 'No index selected';
@@ -555,14 +558,20 @@ class ESMonitor {
                     },
                     { 
                         data: 'health',
-                        render: function(data) {
+                        render: (data) => {
                             const healthClass = `health-badge ${data.toLowerCase()}`;
                             const icon = data === 'green' ? 'check-circle' : 
                                        data === 'yellow' ? 'exclamation-circle' : 'times-circle';
+                            
+                            const statusKey = `cluster.health${data.charAt(0).toUpperCase() + data.slice(1).toLowerCase()}`;
+                            const translatedStatus = this.languageManager ? 
+                                this.languageManager.getSafeTranslation(statusKey, data.toUpperCase()) : 
+                                data.toUpperCase();
+                            
                             return `
                                 <span class="${healthClass}">
                                     <i class="fas fa-${icon}"></i>
-                                    ${data}
+                                    ${translatedStatus}
                                 </span>`;
                         }
                     },
@@ -612,6 +621,12 @@ class ESMonitor {
             const table = $('#indicesTable').DataTable();
             table.clear().rows.add(formattedIndices).draw();
         }
+        
+        setTimeout(() => {
+            if (this.languageManager) {
+                this.languageManager.updateUI();
+            }
+        }, 100);
     }
 
     showError(message) {
@@ -742,6 +757,12 @@ class ESMonitor {
         await this.refreshAliasesList(indexName);
         modal.classList.remove('hidden');
         
+        if (this.languageManager) {
+            setTimeout(() => {
+                this.languageManager.updateUI();
+            }, 50);
+        }
+        
         [newCloseBtn, newCloseModalBtn].forEach(btn => {
             btn.addEventListener('click', () => {
                 modal.classList.add('hidden');
@@ -758,6 +779,9 @@ class ESMonitor {
             
             if (aliases.length === 0) {
                 aliasesList.innerHTML = `<span class="no-aliases" data-translate="common.noAliasesDefined">${this.getTranslationWithFallback('common.noAliasesDefined', 'No aliases defined')}</span>`;
+                if (this.languageManager) {
+                    this.languageManager.updateUI();
+                }
                 return;
             }
 
@@ -1113,7 +1137,7 @@ class ESMonitor {
             if (!response.hits || !response.hits.hits || response.hits.total.value === 0) {
                 container.innerHTML = `
                     <div class="no-records">
-                        <p>${response.hits.total.value === 0 ? 'No documents found in this index.' : 'Error loading documents.'}</p>
+                        <p>${response.hits.total.value === 0 ? this.getTranslationWithFallback('common.noDocumentsFound', 'No documents found in this index.') : this.getTranslationWithFallback('common.errorLoadingDocuments', 'Error loading documents.')}</p>
                     </div>`;
                 return;
             }
@@ -1187,7 +1211,7 @@ class ESMonitor {
             const container = document.querySelector('.sample-table-container');
             container.innerHTML = `
                 <div class="no-records error">
-                    <p>Error: ${error.message}</p>
+                    <p>${this.getTranslationWithFallback('common.error', 'Error')}: ${error.message}</p>
                 </div>`;
         }
     }
@@ -1553,7 +1577,6 @@ class ESMonitor {
             padding: 4px 0;
         `;
         
- 
         let existingStyle = document.querySelector('#language-dropdown-styles');
         if (!existingStyle) {
             const style = document.createElement('style');
@@ -1691,7 +1714,6 @@ class ESMonitor {
             });
         });
         
-
         if (this.languageGlobalClickListener) {
             document.removeEventListener('click', this.languageGlobalClickListener);
         }

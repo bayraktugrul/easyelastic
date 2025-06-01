@@ -244,9 +244,9 @@
                                     <div class="stat-label" data-translate="cluster.system">System</div>
                                     <div class="stat-value" id="cpuUsage">-</div>
                                     <div class="stat-details">
-                                        JVM: <span id="memoryUsage">-</span> <span data-translate="cluster.of">of</span> <span id="heapUsage">-</span>
+                                        <span data-translate="cluster.jvm">JVM</span>: <span id="memoryUsage">-</span> <span data-translate="cluster.of">of</span> <span id="heapUsage">-</span>
                                         <br>
-                                        System: <span id="systemMemoryUsed">-</span> <span data-translate="cluster.of">of</span> <span id="systemMemory">-</span>
+                                        <span data-translate="cluster.systemMemory">System</span>: <span id="systemMemoryUsed">-</span> <span data-translate="cluster.of">of</span> <span id="systemMemory">-</span>
                                         (<span id="systemMemoryPercent">-</span>)
                                     </div>
                                 </div>
@@ -517,26 +517,26 @@
         <div id="createIndexModal" class="modal hidden">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3><i class="fa-solid fa-plus"></i> Create New Index</h3>
+                    <h3><i class="fa-solid fa-plus"></i> <span data-translate="modals.createNewIndex">Create New Index</span></h3>
                     <button class="close-modal">×</button>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="indexName">Index Name</label>
-                        <input type="text" id="indexName" placeholder="Enter index name">
+                        <label for="indexName" data-translate="modals.indexName">Index Name</label>
+                        <input type="text" id="indexName" data-translate-placeholder="modals.enterIndexName" placeholder="Enter index name">
                     </div>
                     <div class="form-group">
-                        <label for="shardCountInput">Number of Shards</label>
+                        <label for="shardCountInput" data-translate="modals.numberOfShards">Number of Shards</label>
                         <input type="number" id="shardCountInput" value="1" min="1">
                     </div>
                     <div class="form-group">
-                        <label for="replicaCountInput">Number of Replicas</label>
+                        <label for="replicaCountInput" data-translate="modals.numberOfReplicas">Number of Replicas</label>
                         <input type="number" id="replicaCountInput" value="1" min="0">
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button id="cancelCreateIndex" class="btn-secondary">Cancel</button>
-                    <button id="confirmCreateIndex" class="btn-primary">Create</button>
+                    <button id="cancelCreateIndex" class="btn-secondary" data-translate="modals.cancel">Cancel</button>
+                    <button id="confirmCreateIndex" class="btn-primary" data-translate="modals.create">Create</button>
                 </div>
             </div>
         </div>
@@ -544,16 +544,16 @@
         <div id="deleteConfirmationModal" class="modal hidden">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3><i class="fa-solid fa-trash-alt"></i> <span id="deleteConfirmationModalTitle">Delete</span></h3>
+                    <h3><i class="fa-solid fa-trash-alt"></i> <span id="deleteConfirmationModalTitle" data-translate="modals.delete">Delete</span></h3>
                     <button class="close-modal">×</button>
                 </div>
                 <div class="modal-body">
-                    <p>Are you sure you want to delete <span id="deleteConformationModalItemType"></span> "<span id="deleteConformationModalItemName"></span>"?</p>
-                    <p class="text-danger">This action cannot be undone!</p>
+                    <p><span data-translate="modals.deleteConfirmation">Are you sure you want to delete</span> <span id="deleteConformationModalItemType"></span> "<span id="deleteConformationModalItemName"></span>"?</p>
+                    <p class="text-danger" data-translate="modals.cannotBeUndone">This action cannot be undone!</p>
                 </div>
                 <div class="modal-footer">
-                    <button id="cancelDelete" class="btn-secondary">Cancel</button>
-                    <button id="confirmDelete" class="btn-danger">Delete</button>
+                    <button id="cancelDelete" class="btn-secondary" data-translate="modals.cancel">Cancel</button>
+                    <button id="confirmDelete" class="btn-danger" data-translate="modals.delete">Delete</button>
                 </div>
             </div>
         </div>
@@ -561,27 +561,27 @@
         <div id="aliasModal" class="modal hidden">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3><i class="fa-solid fa-tag"></i> Manage Aliases</h3>
+                    <h3><i class="fa-solid fa-tag"></i> <span data-translate="modals.manageAliases">Manage Aliases</span></h3>
                     <button class="close-modal">×</button>
                 </div>
                 <div class="modal-body">
-                    <p>Managing aliases for index "<span id="aliasIndexName"></span>"</p>
+                    <p><span data-translate="modals.managingAliasesFor">Managing aliases for index</span> "<span id="aliasIndexName"></span>"</p>
                     <div class="current-aliases">
-                        <label>Current Aliases</label>
+                        <label data-translate="modals.currentAliases">Current Aliases</label>
                         <div id="currentAliasesList" class="aliases-list"></div>
                     </div>
                     <div class="form-group">
-                        <label for="newAlias">Add New Alias</label>
+                        <label for="newAlias" data-translate="modals.addNewAlias">Add New Alias</label>
                         <div class="alias-input-group">
-                            <input type="text" id="newAlias" placeholder="Enter alias name">
+                            <input type="text" id="newAlias" data-translate-placeholder="modals.enterAliasName" placeholder="Enter alias name">
                             <button id="addAliasBtn" class="secondary">
-                                <i class="fa-solid fa-plus"></i> Add
+                                <i class="fa-solid fa-plus"></i> <span data-translate="modals.add">Add</span>
                             </button>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button id="closeAliasModal" class="secondary">Close</button>
+                    <button id="closeAliasModal" class="secondary" data-translate="modals.close">Close</button>
                 </div>
             </div>
         </div>
@@ -589,13 +589,13 @@
         <div id="indexDetailsModal" class="modal hidden">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3><i class="fa-solid fa-info-circle"></i> Index Details</h3>
+                    <h3><i class="fa-solid fa-info-circle"></i> <span data-translate="modals.indexDetails">Index Details</span></h3>
                     <button class="close-modal">×</button>
                 </div>
                 <div class="modal-body">
                     <div class="index-details-tabs">
-                        <button class="tab-button active" data-tab="settings">Settings</button>
-                        <button class="tab-button" data-tab="mapping">Mapping</button>
+                        <button class="tab-button active" data-tab="settings" data-translate="modals.settings">Settings</button>
+                        <button class="tab-button" data-tab="mapping" data-translate="modals.mapping">Mapping</button>
                     </div>
                     <div class="tab-content">
                         <div id="settingsTab" class="tab-pane active">
@@ -607,7 +607,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button id="closeIndexDetails" class="secondary">Close</button>
+                    <button id="closeIndexDetails" class="secondary" data-translate="modals.close">Close</button>
                 </div>
             </div>
         </div>
@@ -615,16 +615,16 @@
         <div id="deleteAliasModal" class="modal hidden">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3><i class="fa-solid fa-trash-alt"></i> Delete Alias</h3>
+                    <h3><i class="fa-solid fa-trash-alt"></i> <span data-translate="modals.deleteAlias">Delete Alias</span></h3>
                     <button class="close-modal">×</button>
                 </div>
                 <div class="modal-body">
-                    <p>Are you sure you want to delete alias "<span id="deleteAliasName"></span>" from index "<span id="deleteAliasIndexName"></span>"?</p>
-                    <p class="text-danger">This action cannot be undone!</p>
+                    <p><span data-translate="modals.deleteConfirmation">Are you sure you want to delete</span> alias "<span id="deleteAliasName"></span>" from index "<span id="deleteAliasIndexName"></span>"?</p>
+                    <p class="text-danger" data-translate="modals.cannotBeUndone">This action cannot be undone!</p>
                 </div>
                 <div class="modal-footer">
-                    <button id="cancelDeleteAlias" class="secondary">Cancel</button>
-                    <button id="confirmDeleteAlias" class="danger">Delete</button>
+                    <button id="cancelDeleteAlias" class="secondary" data-translate="modals.cancel">Cancel</button>
+                    <button id="confirmDeleteAlias" class="danger" data-translate="modals.delete">Delete</button>
                 </div>
             </div>
         </div>
@@ -632,19 +632,19 @@
         <div id="updateMappingModal" class="modal hidden">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3><i class="fa-solid fa-code"></i> Update Mapping</h3>
+                    <h3><i class="fa-solid fa-code"></i> <span data-translate="modals.updateMapping">Update Mapping</span></h3>
                     <button class="close-modal">×</button>
                 </div>
                 <div class="modal-body">
                     <div class="mapping-tabs">
                         <button class="tab-button active" data-tab="json">JSON</button>
-                        <button class="tab-button" data-tab="visual">Visual Editor</button>
+                        <button class="tab-button" data-tab="visual" data-translate="modals.visualEditor">Visual Editor</button>
                     </div>
                     
                     <!-- JSON Editor Tab -->
                     <div id="jsonMappingTab" class="tab-pane active">
                         <div class="form-group">
-                            <label for="mappingJson">Mapping JSON</label>
+                            <label for="mappingJson" data-translate="modals.mappingJson">Mapping JSON</label>
                             <textarea id="mappingJson" class="code-editor" placeholder="{&#10;  &quot;properties&quot;: {&#10;    &quot;field_name&quot;: {&#10;      &quot;type&quot;: &quot;text&quot;&#10;    }&#10;  }&#10;}"></textarea>
                         </div>
                     </div>
@@ -658,38 +658,38 @@
                             <div class="add-field-form">
                                 <div class="form-row">
                                     <div class="form-group">
-                                        <label for="fieldName">Field Name</label>
-                                        <input type="text" id="fieldName" placeholder="Enter field name">
+                                        <label for="fieldName" data-translate="modals.fieldName">Field Name</label>
+                                        <input type="text" id="fieldName" data-translate-placeholder="modals.enterFieldName" placeholder="Enter field name">
                                     </div>
                                     <div class="form-group">
-                                        <label for="fieldType">Field Type</label>
+                                        <label for="fieldType" data-translate="modals.fieldType">Field Type</label>
                                         <select id="fieldType">
-                                            <option value="text">Text</option>
-                                            <option value="keyword">Keyword</option>
-                                            <option value="long">Long</option>
-                                            <option value="integer">Integer</option>
-                                            <option value="short">Short</option>
-                                            <option value="byte">Byte</option>
-                                            <option value="double">Double</option>
-                                            <option value="float">Float</option>
-                                            <option value="date">Date</option>
-                                            <option value="boolean">Boolean</option>
-                                            <option value="binary">Binary</option>
-                                            <option value="object">Object</option>
-                                            <option value="nested">Nested</option>
+                                            <option value="text" data-translate="fieldTypes.text">Text</option>
+                                            <option value="keyword" data-translate="fieldTypes.keyword">Keyword</option>
+                                            <option value="long" data-translate="fieldTypes.long">Long</option>
+                                            <option value="integer" data-translate="fieldTypes.integer">Integer</option>
+                                            <option value="short" data-translate="fieldTypes.short">Short</option>
+                                            <option value="byte" data-translate="fieldTypes.byte">Byte</option>
+                                            <option value="double" data-translate="fieldTypes.double">Double</option>
+                                            <option value="float" data-translate="fieldTypes.float">Float</option>
+                                            <option value="date" data-translate="fieldTypes.date">Date</option>
+                                            <option value="boolean" data-translate="fieldTypes.boolean">Boolean</option>
+                                            <option value="binary" data-translate="fieldTypes.binary">Binary</option>
+                                            <option value="object" data-translate="fieldTypes.object">Object</option>
+                                            <option value="nested" data-translate="fieldTypes.nested">Nested</option>
                                         </select>
                                     </div>
                                 </div>
                                 <button id="addFieldBtn" class="secondary">
-                                    <i class="fa-solid fa-plus"></i> Add Field
+                                    <i class="fa-solid fa-plus"></i> <span data-translate="modals.addField">Add Field</span>
                                 </button>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button id="cancelUpdateMapping" class="secondary">Cancel</button>
-                    <button id="confirmUpdateMapping">Update</button>
+                    <button id="cancelUpdateMapping" class="secondary" data-translate="modals.cancel">Cancel</button>
+                    <button id="confirmUpdateMapping" data-translate="modals.update">Update</button>
                 </div>
             </div>
         </div>
@@ -697,16 +697,16 @@
         <div id="deleteFieldModal" class="modal hidden">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3><i class="fa-solid fa-trash-alt"></i> Delete Field</h3>
+                    <h3><i class="fa-solid fa-trash-alt"></i> <span data-translate="modals.deleteFieldTitle">Delete Field</span></h3>
                     <button class="close-modal">×</button>
                 </div>
                 <div class="modal-body">
-                    <p>Are you sure you want to delete field "<span id="deleteFieldName"></span>"?</p>
-                    <p class="text-danger">This action cannot be undone!</p>
+                    <p><span data-translate="modals.deleteFieldConfirmation">Are you sure you want to delete field</span> "<span id="deleteFieldName"></span>"?</p>
+                    <p class="text-danger" data-translate="modals.cannotBeUndone">This action cannot be undone!</p>
                 </div>
                 <div class="modal-footer">
-                    <button id="cancelDeleteField" class="secondary">Cancel</button>
-                    <button id="confirmDeleteField" class="danger">Delete</button>
+                    <button id="cancelDeleteField" class="secondary" data-translate="modals.cancel">Cancel</button>
+                    <button id="confirmDeleteField" class="danger" data-translate="modals.delete">Delete</button>
                 </div>
             </div>
         </div>
@@ -714,21 +714,21 @@
         <div id="addDocumentModal" class="modal hidden">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3><i class="fa-solid fa-file-plus"></i> Add Document</h3>
+                    <h3><i class="fa-solid fa-file-plus"></i> <span data-translate="modals.addDocument">Add Document</span></h3>
                     <button class="close-modal">×</button>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="documentId">Document ID (optional)</label>
-                        <input type="text" id="documentId" placeholder="Leave empty for auto-generated ID">
+                        <label for="documentId" data-translate="modals.documentId">Document ID (optional)</label>
+                        <input type="text" id="documentId" data-translate-placeholder="modals.documentIdPlaceholder" placeholder="Leave empty for auto-generated ID">
                     </div>
                     <div id="documentFields" class="document-fields">
                         <!-- Fields will be generated dynamically based on mapping -->
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button id="cancelAddDocument" class="secondary">Cancel</button>
-                    <button id="confirmAddDocument">Add</button>
+                    <button id="cancelAddDocument" class="secondary" data-translate="modals.cancel">Cancel</button>
+                    <button id="confirmAddDocument" data-translate="modals.add">Add</button>
                 </div>
             </div>
         </div>
