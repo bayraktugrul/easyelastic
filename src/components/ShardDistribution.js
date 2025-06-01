@@ -81,6 +81,8 @@ export default class ShardDistribution {
             
             tbody.appendChild(tr);
         });
+        
+        this.updateTranslations();
     }
     
     renderShards(shards) {
@@ -139,5 +141,13 @@ export default class ShardDistribution {
     toggleSystemIndices() {
         this.hideSystemIndices = !this.hideSystemIndices;
         return this.hideSystemIndices;
+    }
+
+    updateTranslations() {
+        if (this.languageManager) {
+            setTimeout(() => {
+                this.languageManager.updateUI();
+            }, 10);
+        }
     }
 } 

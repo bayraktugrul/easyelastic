@@ -31,6 +31,10 @@ class ESMonitor {
         this.components.clusterHealth.setLanguageManager(this.languageManager);
         this.components.shardDistribution.setLanguageManager(this.languageManager);
         
+        document.addEventListener('languageChanged', (e) => {
+            this.onLanguageChanged(e.detail.language);
+        });
+        
         this.initializeEventListeners();
         this.initializeModalHandlers();
         this.initializePasswordToggle();
@@ -1781,6 +1785,35 @@ class ESMonitor {
             }
         } catch (error) {
             console.warn('Failed to update DataTable language:', error);
+        }
+    }
+
+    async onLanguageChanged(language) {
+        if (this.esService) {
+            try {
+                if (this.components.shardDistribution) {
+                    const shardDistribution = await this.esService.getShardDistribution();
+                    this.components.shardDistribution.render(shardDistribution);
+                }
+                
+                if (this.components.clusterHealth) {
+                    const health = await this.esService.getClusterHealth();
+                    this.components.clusterHealth.render(health);
+                }
+            } catch (error) {
+                console.warn('Failed to update components on language change:', error);
+            }
+        }
+        
+        setTimeout(() => {
+            this.updateIndicesTableLanguage();
+        }, 100);
+    }
+
+    updateIndicesTableLanguage() {
+        if ($.fn.DataTable.isDataTable('#indicesTable')) {
+            const table = $('#indicesTable').DataTable();
+            table.draw();
         }
     }
 }

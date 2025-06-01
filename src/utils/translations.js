@@ -63,7 +63,7 @@ const translations = {
             node: "Node",
             primary: "Primary",
             replica: "Replica",
-            shard: "Shard",
+            shard: "shards",
             unassigned: "Unassigned",
             started: "Started",
             initializing: "Initializing",
