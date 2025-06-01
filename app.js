@@ -249,15 +249,12 @@ class ESMonitor {
                     }
                 });
                 
-                // Check if dropdown should open upward
                 const rect = toggleBtn.getBoundingClientRect();
-                const menuHeight = 200; // Approximate dropdown height
+                const menuHeight = 200;
                 
-                // Check viewport space
                 const spaceBelow = window.innerHeight - rect.bottom;
                 const spaceAbove = rect.top;
                 
-                // Check table container space
                 const tableContainer = toggleBtn.closest('.indices-table-container, .dataTables_wrapper');
                 let containerSpaceBelow = spaceBelow;
                 
@@ -266,10 +263,8 @@ class ESMonitor {
                     containerSpaceBelow = Math.min(spaceBelow, containerRect.bottom - rect.bottom);
                 }
                 
-                // Remove existing positioning classes
                 menu.classList.remove('dropup');
                 
-                // If not enough space below (considering both viewport and container) and more space above, open upward
                 if (containerSpaceBelow < menuHeight && spaceAbove > containerSpaceBelow) {
                     menu.classList.add('dropup');
                 }
