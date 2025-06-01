@@ -245,8 +245,29 @@ class ESMonitor {
                 document.querySelectorAll('.dropdown-menu.show').forEach(openMenu => {
                     if (openMenu !== menu) {
                         openMenu.classList.remove('show');
+                        openMenu.classList.remove('dropup');
                     }
                 });
+                
+                const rect = toggleBtn.getBoundingClientRect();
+                const menuHeight = 200;
+                
+                const spaceBelow = window.innerHeight - rect.bottom;
+                const spaceAbove = rect.top;
+                
+                const tableContainer = toggleBtn.closest('.indices-table-container, .dataTables_wrapper');
+                let containerSpaceBelow = spaceBelow;
+                
+                if (tableContainer) {
+                    const containerRect = tableContainer.getBoundingClientRect();
+                    containerSpaceBelow = Math.min(spaceBelow, containerRect.bottom - rect.bottom);
+                }
+                
+                menu.classList.remove('dropup');
+                
+                if (containerSpaceBelow < menuHeight && spaceAbove > containerSpaceBelow) {
+                    menu.classList.add('dropup');
+                }
                 
                 menu.classList.toggle('show');
             }
