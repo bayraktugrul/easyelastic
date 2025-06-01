@@ -4,7 +4,7 @@
     padding: 1rem;
     padding-top: calc(60px + 1rem);
     padding-bottom: 1rem;
-    overflow-x: auto;
+    overflow-x: hidden;
     overflow-y: visible;
     width: 100%;
     box-sizing: border-box;

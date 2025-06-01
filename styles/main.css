@@ -22,16 +22,10 @@
 @import 'responsive.css';
 @import 'components/background.css'; 
 
-body, html {
-    max-width: 100vw;
-    overflow-x: hidden;
-    overflow-y: auto;
-}
-
 .container, main, .wrapper, .dashboard, .content-wrapper {
     max-width: 100%;
     width: 100%;
-    overflow-x: auto;
+    overflow-x: hidden;
     overflow-y: visible;
 }
 

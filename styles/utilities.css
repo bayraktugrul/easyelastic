@@ -19,10 +19,9 @@ body * {
     box-sizing: border-box;
 }
 
-body > div,
+body > div:not(.container),
 .panel,
-.container,
-.wrapper,
+.wrapper:not(.container),
 section,
 main,
 aside,
