@@ -1685,7 +1685,7 @@ class ESMonitor {
                     
                     const message = newLang === 'zh' 
                         ? '语言已切换为中文 🇨🇳' 
-                        : 'Language switched to English 🇺🇸';
+                        : 'Language switched to English 🇬🇧';
                     Toast.show(message, 'success');
                 }, 100);
             });
