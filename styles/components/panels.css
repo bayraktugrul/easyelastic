@@ -133,11 +133,17 @@ h2 i {
 }
 
 #sampleDataTable thead th {
-    background: #f8fafc;
+    padding: 0.75rem 1rem;
+    font-weight: 600;
+    color: var(--table-header-text);
+    background: var(--table-header-bg);
     border-bottom: 2px solid rgba(229, 231, 235, 0.8);
     position: sticky;
     top: 0;
     z-index: 10;
+    vertical-align: middle;
+    height: 48px;
+    line-height: 1.5;
 }
 
 #sampleDataTable tbody td {
@@ -178,7 +184,7 @@ h2 i {
 
 .dataTables_info {
     font-size: 0.875rem;
-    color: #64748b;
+    color: var(--text-secondary);
     padding: 0.5rem 0;
 }
 
@@ -286,7 +292,7 @@ h2 i {
     border-radius: 6px;
     cursor: pointer;
     font-size: 0.875rem;
-    color: #475569;
+    color: var(--text-secondary);
 }
 
 .paginate_button.current {
@@ -306,7 +312,7 @@ h2 i {
 
 .dataTables_info {
     font-size: 0.875rem;
-    color: #64748b;
+    color: var(--text-secondary);
     margin-top: 1rem;
 }
 
@@ -552,7 +558,7 @@ h2 i {
 #indexSelector option {
     padding: 0.5rem;
     font-size: 0.875rem;
-    color: #475569;
+    color: var(--text-secondary);
 }
 
 .panel-header h2 {
@@ -562,7 +568,7 @@ h2 i {
     margin: 0;
     font-size: 1.125rem;
     font-weight: 600;
-    color: #1e293b;
+    color: var(--text-primary);
 }
 
 .panel-header h2 i {
@@ -577,7 +583,7 @@ h2 i {
     gap: 0.5rem;
     white-space: nowrap;
     font-weight: 600;
-    color: #1e293b;
+    color: var(--text-primary);
     min-height: 24px;
     padding: 2px 0;
 }
@@ -632,8 +638,8 @@ h2 i {
 #sampleDataTable thead th {
     padding: 0.75rem 1rem;
     font-weight: 600;
-    color: #475569;
-    background: #f8fafc;
+    color: var(--table-header-text);
+    background: var(--table-header-bg);
     border-bottom: 2px solid rgba(229, 231, 235, 0.8);
     position: sticky;
     top: 0;

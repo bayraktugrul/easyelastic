@@ -7,7 +7,7 @@
     left: 0;
     right: 0;
     box-shadow: var(--shadow-sm);
-    z-index: 1000;
+    z-index: 50000;
 }
 
 .nav-container {
@@ -183,4 +183,124 @@
 [data-theme="dark"] .theme-toggle .dark-icon {
     opacity: 0;
     transform: rotate(90deg);
+}
+
+.language-selector {
+    position: relative;
+    display: inline-block;
+}
+
+.language-toggle {
+    background: var(--card-background);
+    border: 1px solid var(--border-light);
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 8px;
+    position: relative;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(8px);
+    box-shadow: var(--shadow-sm);
+    gap: 8px;
+    min-width: 100px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.language-toggle:hover {
+    background: var(--info-bg);
+    border-color: var(--primary-color);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+    color: var(--primary-color);
+}
+
+.language-toggle .current-lang {
+    flex: 1;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.language-toggle .dropdown-arrow {
+    font-size: 10px;
+    transition: transform 0.3s ease;
+    color: var(--text-muted);
+}
+
+.language-toggle:hover .dropdown-arrow {
+    transform: rotate(180deg);
+    color: var(--primary-color);
+}
+
+.language-selector.show .language-dropdown {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateY(0) !important;
+}
+
+.language-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    color: var(--text-secondary);
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.language-option:hover {
+    background: var(--info-bg);
+    color: var(--primary-color);
+}
+
+.language-option.active {
+    background: var(--primary-color);
+    color: white;
+    font-weight: 600;
+}
+
+.language-option.active:hover {
+    background: var(--primary-hover);
+}
+
+.language-option .lang-name {
+    flex: 1;
+}
+
+.language-option .lang-code {
+    font-size: 11px;
+    opacity: 0.7;
+    font-weight: 400;
+    text-transform: uppercase;
+}
+
+.language-option.active .lang-code {
+    opacity: 0.9;
+}
+
+.language-selector .ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: var(--primary-color);
+    transform: scale(0);
+    animation: ripple-animation 0.4s ease-out;
+    pointer-events: none;
+    opacity: 0.3;
+}
+
+@keyframes ripple-animation {
+    to {
+        transform: scale(2.5);
+        opacity: 0;
+    }
 } 

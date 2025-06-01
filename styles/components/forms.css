@@ -442,7 +442,7 @@
     align-items: center;
     gap: 0.5rem;
     font-weight: 500;
-    color: #1e293b;
+    color: var(--text-primary);
     font-size: 0.875rem;
 }
 
@@ -462,8 +462,8 @@
     border: 1px solid rgba(229, 231, 235, 0.8);
     border-radius: 6px;
     font-size: 0.875rem;
-    color: #1e293b;
-    background: white;
+    color: var(--input-text);
+    background: var(--input-background);
     transition: all 0.2s ease;
 }
 
@@ -506,7 +506,7 @@
     display: block;
     margin-bottom: 0.5rem;
     font-size: 0.875rem;
-    color: #64748b;
+    color: var(--text-secondary);
 }
 
 .document-id-field input {

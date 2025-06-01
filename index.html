@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>easyelastic | Elasticsearch Cluster Monitoring</title>
-    <link rel="stylesheet" href="styles/main.css">
     <link rel="stylesheet" href="libs/fontawesome/css/fontawesome.min.css">
     <link rel="stylesheet" href="libs/fontawesome/css/solid.min.css">
     <link rel="stylesheet" href="libs/fontawesome/css/brands.min.css">
@@ -20,14 +19,14 @@
     <script src="libs/datatables/dataTables.responsive.min.js"></script>
     <script src="libs/datatables/dataTables.scroller.min.js"></script>
     <script src="libs/particles.min.js"></script>
-    <link rel="stylesheet" href="styles/components/search.css">
     <script src="libs/monaco-editor/min/vs/loader.js"></script>
+    
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/components/search.css">
     <link rel="stylesheet" href="styles/components/shards.css">
-    <link rel="stylesheet" href="styles/components/scroll-performance.css">
     <link rel="stylesheet" href="styles/base.css">
     <link rel="stylesheet" href="styles/layout.css">
     <link rel="stylesheet" href="styles/components/panels.css">
-    <link rel="stylesheet" href="styles/main.css">
 </head>
 <body>
     <div id="particles-js"></div>
@@ -42,15 +41,21 @@
                         </div>
                     </a>
                 </li>
-                <li><a href="#connection">Home</a></li>
-                <li><a href="#cluster-health">Cluster</a></li>
-                <li><a href="#indices">Indices</a></li>
-                <li><a href="#shards">Shards</a></li>
-                <li><a href="#search">Search</a></li>
-                <li><a href="#sample-data">Sample Data</a></li>
-                <li><a href="#quick-filter">Quick Filter</a></li>
+                <li><a href="#connection" data-translate="navbar.home">Home</a></li>
+                <li><a href="#cluster-health" data-translate="navbar.cluster">Cluster</a></li>
+                <li><a href="#indices" data-translate="navbar.indices">Indices</a></li>
+                <li><a href="#shards" data-translate="navbar.shards">Shards</a></li>
+                <li><a href="#search" data-translate="navbar.search">Search</a></li>
+                <li><a href="#sample-data" data-translate="navbar.sampleData">Sample Data</a></li>
+                <li><a href="#quick-filter" data-translate="navbar.quickFilter">Quick Filter</a></li>
             </ul>
             <div class="nav-actions">
+                <div class="language-selector">
+                    <button class="language-toggle" aria-label="Select language">
+                        <span class="current-lang">English</span>
+                        <i class="dropdown-arrow fas fa-chevron-down"></i>
+                    </button>
+                </div>
                 <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
                     <i class="fa-solid fa-sun light-icon"></i>
                     <i class="fa-solid fa-moon dark-icon"></i>
@@ -90,7 +95,7 @@
                 <div class="saved-connections">
                     <div class="connection-dropdown">
                         <button class="connection-select-btn" id="connectionSelectBtn">
-                            <span id="selectedConnectionText">Select a connection</span>
+                            <span id="selectedConnectionText" data-translate="connection.selectConnection">Select a connection</span>
                             <i class="fa-solid fa-chevron-down"></i>
                         </button>
                         <div class="connection-dropdown-menu" id="connectionDropdownMenu">
@@ -103,44 +108,51 @@
                 <div class="input-group">
                     <input type="text" 
                            id="connectionName" 
+                           data-translate-placeholder="connection.connectionName"
                            placeholder="Connection name (optional)"
                            spellcheck="false">
                     <i class="fa-solid fa-link"></i>
                     <input type="text" 
                            id="esUrl" 
+                           data-translate-placeholder="connection.esUrl"
                            placeholder="Elasticsearch URL (e.g. http://localhost:9200)"
                            spellcheck="false">
                 </div>
                 <div class="button-group">
                     <button id="saveConnectionBtn" class="secondary">
                         <i class="fa-solid fa-save"></i>
-                        Save
+                        <span data-translate="connection.save">Save</span>
                     </button>
                     <button id="testBtn" class="secondary">
                         <i class="fa-solid fa-vial"></i>
-                        Test
+                        <span data-translate="connection.test">Test</span>
                     </button>
                     <button id="connectBtn">
                         <i class="fa-solid fa-plug"></i>
-                        Connect
+                        <span data-translate="connection.connect">Connect</span>
                     </button>
                     <button id="disconnectBtn" class="danger">
                         <i class="fa-solid fa-power-off"></i>
-                        Disconnect
+                        <span data-translate="connection.disconnect">Disconnect</span>
                     </button>
                 </div>
                 <div class="auth-group">
                     <div class="auth-header">
-                        <span class="auth-label">Authentication <span class="auth-optional">(optional)</span></span>
+                        <span class="auth-label">
+                            <span data-translate="connection.authentication">Authentication</span> 
+                            <span class="auth-optional" data-translate="connection.optional">(optional)</span>
+                        </span>
                     </div>
                     <div class="auth-inputs">
                         <input type="text" 
                                id="esUsername" 
+                               data-translate-placeholder="connection.username"
                                placeholder="Username"
                                spellcheck="false">
                         <div class="password-input-wrapper">
                             <input type="password" 
                                    id="esPassword" 
+                                   data-translate-placeholder="connection.password"
                                    placeholder="Password"
                                    spellcheck="false">
                             <button type="button" class="password-toggle">
@@ -155,26 +167,26 @@
         <div class="dashboard hidden" id="dashboard">
             <div id="cluster-health" class="cluster-health-panel">
                 <div class="panel-header">
-                    <h2><i class="fa-solid fa-heartbeat"></i> Cluster</h2>
+                    <h2><i class="fa-solid fa-heartbeat"></i> <span data-translate="cluster.title">Cluster</span></h2>
                 </div>
                 <div class="panel-content">
                     <div class="cluster-overview">
                         <div class="cluster-details">
                             <div class="info-grid">
                                 <div class="info-item">
-                                    <span class="info-label">Cluster Name</span>
+                                    <span class="info-label" data-translate="cluster.clusterName">Cluster Name</span>
                                     <span class="info-value" id="clusterName">-</span>
                                 </div>
                                 <div class="info-item">
-                                    <span class="info-label">Node Name</span>
+                                    <span class="info-label" data-translate="cluster.nodeName">Node Name</span>
                                     <span class="info-value" id="nodeName">-</span>
                                 </div>
                                 <div class="info-item">
-                                    <span class="info-label">Elasticsearch Version</span>
+                                    <span class="info-label" data-translate="cluster.esVersion">Elasticsearch Version</span>
                                     <span class="info-value" id="esVersion">-</span>
                                 </div>
                                 <div class="info-item">
-                                    <span class="info-label">Lucene Version</span>
+                                    <span class="info-label" data-translate="cluster.luceneVersion">Lucene Version</span>
                                     <span class="info-value" id="luceneVersion">-</span>
                                 </div>
                             </div>
@@ -188,12 +200,12 @@
                                     <i class="fa-solid fa-database"></i>
                                 </div>
                                 <div class="stat-content">
-                                    <div class="stat-label">Indices & Documents</div>
+                                    <div class="stat-label" data-translate="cluster.indicesDocuments">Indices & Documents</div>
                                     <div class="stat-value" id="indicesCount">-</div>
                                     <div class="stat-details">
-                                        <span id="docCount">-</span> documents
+                                        <span id="docCount">-</span> <span data-translate="cluster.documents">documents</span>
                                         <br>
-                                        Storage: <span id="usedStorage">-</span> of <span id="totalStorage">-</span>
+                                        <span data-translate="cluster.storage">Storage</span>: <span id="usedStorage">-</span> <span data-translate="cluster.of">of</span> <span id="totalStorage">-</span>
                                         (<span id="storagePercent">-</span>)
                                     </div>
                                 </div>
@@ -203,11 +215,11 @@
                                     <i class="fa-solid fa-server"></i>
                                 </div>
                                 <div class="stat-content">
-                                    <div class="stat-label">Nodes</div>
+                                    <div class="stat-label" data-translate="cluster.nodes">Nodes</div>
                                     <div class="stat-value" id="nodeCount">-</div>
                                     <div class="stat-details">
-                                        <span id="masterNodes">-</span> master
-                                        · <span id="dataNodes">-</span> data
+                                        <span id="masterNodes">-</span> <span data-translate="cluster.master">master</span>
+                                        · <span id="dataNodes">-</span> <span data-translate="cluster.data">data</span>
                                     </div>
                                 </div>
                             </div>
@@ -216,11 +228,11 @@
                                     <i class="fa-solid fa-puzzle-piece"></i>
                                 </div>
                                 <div class="stat-content">
-                                    <div class="stat-label">Shards</div>
+                                    <div class="stat-label" data-translate="cluster.shards">Shards</div>
                                     <div class="stat-value" id="shardCount">-</div>
                                     <div class="stat-details">
-                                        <span id="activeShards">-</span> active
-                                        · <span id="relocatingShards">-</span> relocating
+                                        <span id="activeShards">-</span> <span data-translate="cluster.active">active</span>
+                                        · <span id="relocatingShards">-</span> <span data-translate="cluster.relocating">relocating</span>
                                     </div>
                                 </div>
                             </div>
@@ -229,12 +241,12 @@
                                     <i class="fa-solid fa-microchip"></i>
                                 </div>
                                 <div class="stat-content">
-                                    <div class="stat-label">System</div>
+                                    <div class="stat-label" data-translate="cluster.system">System</div>
                                     <div class="stat-value" id="cpuUsage">-</div>
                                     <div class="stat-details">
-                                        JVM: <span id="memoryUsage">-</span> of <span id="heapUsage">-</span>
+                                        <span data-translate="cluster.jvm">JVM</span>: <span id="memoryUsage">-</span> <span data-translate="cluster.of">of</span> <span id="heapUsage">-</span>
                                         <br>
-                                        System: <span id="systemMemoryUsed">-</span> of <span id="systemMemory">-</span>
+                                        <span data-translate="cluster.systemMemory">System</span>: <span id="systemMemoryUsed">-</span> <span data-translate="cluster.of">of</span> <span id="systemMemory">-</span>
                                         (<span id="systemMemoryPercent">-</span>)
                                     </div>
                                 </div>
@@ -246,22 +258,22 @@
 
             <div id="indices" class="indices-panel">
                 <div class="panel-header">
-                    <h2><i class="fa-solid fa-table"></i> Indices</h2>
+                    <h2><i class="fa-solid fa-table"></i> <span data-translate="indices.title">Indices</span></h2>
                     <button id="createIndexBtn" class="secondary">
-                        <i class="fa-solid fa-plus"></i> Create Index
+                        <i class="fa-solid fa-plus"></i> <span data-translate="indices.createIndex">Create Index</span>
                     </button>
                 </div>
                 <div class="indices-table-container">
                     <table id="indicesTable" class="indices-table">
                         <thead>
                             <tr>
-                                <th>Index Name</th>
-                                <th>Docs Count</th>
-                                <th>Size</th>
-                                <th>Aliases</th>
-                                <th>Health</th>
-                                <th>Created Date</th>
-                                <th>Actions</th>
+                                <th data-translate="indices.indexName">Index Name</th>
+                                <th data-translate="indices.docsCount">Docs Count</th>
+                                <th data-translate="indices.size">Size</th>
+                                <th data-translate="indices.aliases">Aliases</th>
+                                <th data-translate="indices.health">Health</th>
+                                <th data-translate="indices.createdDate">Created Date</th>
+                                <th data-translate="indices.actions">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -274,7 +286,7 @@
                 <div class="panel-header">
                     <h2>
                         <i class="fa-solid fa-puzzle-piece"></i>
-                        Shards Distribution
+                        <span data-translate="shards.title">Shards Distribution</span>
                     </h2>
                     <div class="shards-actions">
                         <div class="toggle-container">
@@ -282,7 +294,7 @@
                                 <input type="checkbox" id="toggleSystemIndices" checked>
                                 <span class="toggle-slider"></span>
                             </label>
-                            <span class="toggle-label">Hide system indices</span>
+                            <span class="toggle-label" data-translate="shards.hideSystemIndices">Hide system indices</span>
                         </div>
                     </div>
                 </div>
@@ -290,7 +302,7 @@
                     <table class="shards-table">
                         <thead>
                             <tr>
-                                <th class="node-column">Node</th>
+                                <th class="node-column" data-translate="shards.node">Node</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -303,21 +315,21 @@
                 <div class="panel-header">
                     <h2>
                         <i class="fa-solid fa-search"></i>
-                        Search
+                        <span data-translate="search.title">Search</span>
                     </h2>
                     <div class="search-actions">
                         <div class="popular-queries">
                             <button class="popular-queries-btn">
                                 <i class="fa-solid fa-star"></i>
-                                Popular Queries
+                                <span data-translate="search.popularQueries">Popular Queries</span>
                                 <i class="fa-solid fa-chevron-down"></i>
                             </button>
                             <div class="popular-queries-menu">
                                 <div class="query-category">
-                                    <span class="category-title">Index Operations</span>
+                                    <span class="category-title" data-translate="search.indexOperations">Index Operations</span>
                                     <button class="query-item" data-query="GET _cat/indices?v">
                                         <i class="fa-solid fa-list"></i>
-                                        List All Indices
+                                        <span data-translate="search.listAllIndices">List All Indices</span>
                                     </button>
                                     <button class="query-item" data-query="PUT my-index
 {
@@ -327,11 +339,11 @@
   }
 }">
                                         <i class="fa-solid fa-plus"></i>
-                                        Create Index
+                                        <span data-translate="search.createIndex">Create Index</span>
                                     </button>
                                 </div>
                                 <div class="query-category">
-                                    <span class="category-title">Alias Management</span>
+                                    <span class="category-title" data-translate="search.aliasManagement">Alias Management</span>
                                     <button class="query-item" data-query="POST _aliases
 {
   &quot;actions&quot;: [
@@ -350,7 +362,7 @@
   ]
 }">
                                         <i class="fa-solid fa-exchange-alt"></i>
-                                        Add/Remove Alias (Atomic)
+                                        <span data-translate="search.addRemoveAlias">Add/Remove Alias (Atomic)</span>
                                     </button>
                                     <button class="query-item" data-query="POST _aliases
 {
@@ -364,22 +376,22 @@
   ]
 }">
                                         <i class="fa-solid fa-tag"></i>
-                                        Add Alias
+                                        <span data-translate="search.addAlias">Add Alias</span>
                                     </button>
                                     <button class="query-item" data-query="GET _cat/aliases?v">
                                         <i class="fa-solid fa-tags"></i>
-                                        List All Aliases
+                                        <span data-translate="search.listAllAliases">List All Aliases</span>
                                     </button>
                                 </div>
                                 <div class="query-category">
-                                    <span class="category-title">Settings & Mapping</span>
+                                    <span class="category-title" data-translate="search.settingsMapping">Settings & Mapping</span>
                                     <button class="query-item" data-query="GET my-index/_settings">
                                         <i class="fa-solid fa-cog"></i>
-                                        Get Settings
+                                        <span data-translate="search.getSettings">Get Settings</span>
                                     </button>
                                     <button class="query-item" data-query="GET my-index/_mapping">
                                         <i class="fa-solid fa-project-diagram"></i>
-                                        Get Mapping
+                                        <span data-translate="search.getMapping">Get Mapping</span>
                                     </button>
                                 </div>
                             </div>
@@ -387,7 +399,7 @@
                         <div class="saved-queries">
                             <button class="saved-queries-btn">
                                 <i class="fa-solid fa-bookmark"></i>
-                                Saved Queries
+                                <span data-translate="search.savedQueries">Saved Queries</span>
                                 <i class="fa-solid fa-chevron-down"></i>
                             </button>
                             <div class="saved-queries-menu">
@@ -402,22 +414,22 @@
                     <div class="left-section">
                         <div class="query-box">
                             <div class="query-label">
-                                <span>Elasticsearch Query</span>
+                                <span data-translate="search.elasticsearchQuery">Elasticsearch Query</span>
                             </div>
                             <div id="queryInput" class="query-editor"></div>
                             <div class="query-actions">
                                 <button id="executeQuery">
                                     <i class="fa-solid fa-play"></i>
-                                    Execute
+                                    <span data-translate="search.execute">Execute</span>
                                 </button>
                                 <div class="editor-actions">
-                                    <button class="btn-icon" id="saveQueryIcon" title="Save Query">
+                                    <button class="btn-icon" id="saveQueryIcon" data-translate-title="messages.saveQuery" title="Save Query">
                                         <i class="fa-solid fa-save"></i>
                                     </button>
-                                    <button class="btn-icon" id="formatQuery" title="Format Query">
+                                    <button class="btn-icon" id="formatQuery" data-translate-title="messages.formatQuery" title="Format Query">
                                         <i class="fa-solid fa-code"></i>
                                     </button>
-                                    <button class="btn-icon" id="copyQuery" title="Copy Query">
+                                    <button class="btn-icon" id="copyQuery" data-translate-title="messages.copyQuery" title="Copy Query">
                                         <i class="fa-solid fa-copy"></i>
                                     </button>
                                 </div>
@@ -428,7 +440,7 @@
                     <div class="right-section">
                         <div class="results-container">
                             <div class="results-header">
-                                <span>Search Results</span>
+                                <span data-translate="search.searchResults">Search Results</span>
                                 <span class="results-count" id="searchResultsCount">0 results found</span>
                             </div>
                             <pre id="searchResults" class="results-preview"></pre>
@@ -441,7 +453,7 @@
                 <div class="panel-header">
                     <h2>
                         <i class="fa-solid fa-database"></i>
-                        Sample Data
+                        <span data-translate="sampleData.title">Sample Data</span>
                     </h2>
                     <div class="sample-actions">
                         <select id="indexSelector" class="secondary"></select>
@@ -463,12 +475,12 @@
                 <div class="panel-header" style="background: #f8fafc; padding: 1.25rem; border-bottom: 1px solid #e5e7eb; border-radius: 12px 12px 0 0;">
                     <h2>
                         <i class="fa-solid fa-filter"></i>
-                        Quick Filter
+                        <span data-translate="quickFilter.title">Quick Filter</span>
                     </h2>
                     <div class="quick-filter-actions">
                         <select id="quickFilterIndexSelector" class="secondary"></select>
                         <button id="addQuickFilterBtn" class="secondary" disabled>
-                            <i class="fa-solid fa-plus"></i> Add Filter
+                            <i class="fa-solid fa-plus"></i> <span data-translate="quickFilter.addFilter">Add Filter</span>
                         </button>
                     </div>
                 </div>
@@ -481,8 +493,8 @@
                         </div>
                         <div class="query-preview-box">
                             <div class="query-header">
-                                <span>Elasticsearch Query</span>
-                                <button class="btn-icon" id="copyQuickFilterQuery" title="Copy Query">
+                                <span data-translate="quickFilter.elasticsearchQuery">Elasticsearch Query</span>
+                                <button class="btn-icon" id="copyQuickFilterQuery" data-translate-title="messages.copyQuery" title="Copy Query">
                                     <i class="fa-solid fa-copy"></i>
                                 </button>
                             </div>
@@ -490,10 +502,9 @@
                         </div>
                     </div>
 
-                    <!-- Right Side: Results -->
                     <div class="results-container">
                         <div class="results-header">
-                            <span>Search Results</span>
+                            <span data-translate="quickFilter.searchResults">Search Results</span>
                             <span class="results-count" id="quickFilterResultsCount">0 results found</span>
                         </div>
                         <pre id="quickFilterResults" class="results-preview"></pre>
@@ -506,26 +517,26 @@
         <div id="createIndexModal" class="modal hidden">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3><i class="fa-solid fa-plus"></i> Create New Index</h3>
+                    <h3><i class="fa-solid fa-plus"></i> <span data-translate="modals.createNewIndex">Create New Index</span></h3>
                     <button class="close-modal">×</button>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="indexName">Index Name</label>
-                        <input type="text" id="indexName" placeholder="Enter index name">
+                        <label for="indexName" data-translate="modals.indexName">Index Name</label>
+                        <input type="text" id="indexName" data-translate-placeholder="modals.enterIndexName" placeholder="Enter index name">
                     </div>
                     <div class="form-group">
-                        <label for="shardCountInput">Number of Shards</label>
+                        <label for="shardCountInput" data-translate="modals.numberOfShards">Number of Shards</label>
                         <input type="number" id="shardCountInput" value="1" min="1">
                     </div>
                     <div class="form-group">
-                        <label for="replicaCountInput">Number of Replicas</label>
+                        <label for="replicaCountInput" data-translate="modals.numberOfReplicas">Number of Replicas</label>
                         <input type="number" id="replicaCountInput" value="1" min="0">
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button id="cancelCreateIndex" class="btn-secondary">Cancel</button>
-                    <button id="confirmCreateIndex" class="btn-primary">Create</button>
+                    <button id="cancelCreateIndex" class="btn-secondary" data-translate="modals.cancel">Cancel</button>
+                    <button id="confirmCreateIndex" class="btn-primary" data-translate="modals.create">Create</button>
                 </div>
             </div>
         </div>
@@ -533,16 +544,16 @@
         <div id="deleteConfirmationModal" class="modal hidden">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3><i class="fa-solid fa-trash-alt"></i> <span id="deleteConfirmationModalTitle">Delete</span></h3>
+                    <h3><i class="fa-solid fa-trash-alt"></i> <span id="deleteConfirmationModalTitle" data-translate="modals.delete">Delete</span></h3>
                     <button class="close-modal">×</button>
                 </div>
                 <div class="modal-body">
-                    <p>Are you sure you want to delete <span id="deleteConformationModalItemType"></span> "<span id="deleteConformationModalItemName"></span>"?</p>
-                    <p class="text-danger">This action cannot be undone!</p>
+                    <p><span data-translate="modals.deleteConfirmation">Are you sure you want to delete</span> <span id="deleteConformationModalItemType"></span> "<span id="deleteConformationModalItemName"></span>"?</p>
+                    <p class="text-danger" data-translate="modals.cannotBeUndone">This action cannot be undone!</p>
                 </div>
                 <div class="modal-footer">
-                    <button id="cancelDelete" class="btn-secondary">Cancel</button>
-                    <button id="confirmDelete" class="btn-danger">Delete</button>
+                    <button id="cancelDelete" class="btn-secondary" data-translate="modals.cancel">Cancel</button>
+                    <button id="confirmDelete" class="btn-danger" data-translate="modals.delete">Delete</button>
                 </div>
             </div>
         </div>
@@ -550,27 +561,27 @@
         <div id="aliasModal" class="modal hidden">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3><i class="fa-solid fa-tag"></i> Manage Aliases</h3>
+                    <h3><i class="fa-solid fa-tag"></i> <span data-translate="modals.manageAliases">Manage Aliases</span></h3>
                     <button class="close-modal">×</button>
                 </div>
                 <div class="modal-body">
-                    <p>Managing aliases for index "<span id="aliasIndexName"></span>"</p>
+                    <p><span data-translate="modals.managingAliasesFor">Managing aliases for index</span> "<span id="aliasIndexName"></span>"</p>
                     <div class="current-aliases">
-                        <label>Current Aliases</label>
+                        <label data-translate="modals.currentAliases">Current Aliases</label>
                         <div id="currentAliasesList" class="aliases-list"></div>
                     </div>
                     <div class="form-group">
-                        <label for="newAlias">Add New Alias</label>
+                        <label for="newAlias" data-translate="modals.addNewAlias">Add New Alias</label>
                         <div class="alias-input-group">
-                            <input type="text" id="newAlias" placeholder="Enter alias name">
+                            <input type="text" id="newAlias" data-translate-placeholder="modals.enterAliasName" placeholder="Enter alias name">
                             <button id="addAliasBtn" class="secondary">
-                                <i class="fa-solid fa-plus"></i> Add
+                                <i class="fa-solid fa-plus"></i> <span data-translate="modals.add">Add</span>
                             </button>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button id="closeAliasModal" class="secondary">Close</button>
+                    <button id="closeAliasModal" class="secondary" data-translate="modals.close">Close</button>
                 </div>
             </div>
         </div>
@@ -578,13 +589,13 @@
         <div id="indexDetailsModal" class="modal hidden">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3><i class="fa-solid fa-info-circle"></i> Index Details</h3>
+                    <h3><i class="fa-solid fa-info-circle"></i> <span data-translate="modals.indexDetails">Index Details</span></h3>
                     <button class="close-modal">×</button>
                 </div>
                 <div class="modal-body">
                     <div class="index-details-tabs">
-                        <button class="tab-button active" data-tab="settings">Settings</button>
-                        <button class="tab-button" data-tab="mapping">Mapping</button>
+                        <button class="tab-button active" data-tab="settings" data-translate="modals.settings">Settings</button>
+                        <button class="tab-button" data-tab="mapping" data-translate="modals.mapping">Mapping</button>
                     </div>
                     <div class="tab-content">
                         <div id="settingsTab" class="tab-pane active">
@@ -596,7 +607,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button id="closeIndexDetails" class="secondary">Close</button>
+                    <button id="closeIndexDetails" class="secondary" data-translate="modals.close">Close</button>
                 </div>
             </div>
         </div>
@@ -604,16 +615,16 @@
         <div id="deleteAliasModal" class="modal hidden">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3><i class="fa-solid fa-trash-alt"></i> Delete Alias</h3>
+                    <h3><i class="fa-solid fa-trash-alt"></i> <span data-translate="modals.deleteAlias">Delete Alias</span></h3>
                     <button class="close-modal">×</button>
                 </div>
                 <div class="modal-body">
-                    <p>Are you sure you want to delete alias "<span id="deleteAliasName"></span>" from index "<span id="deleteAliasIndexName"></span>"?</p>
-                    <p class="text-danger">This action cannot be undone!</p>
+                    <p><span data-translate="modals.deleteConfirmation">Are you sure you want to delete</span> alias "<span id="deleteAliasName"></span>" from index "<span id="deleteAliasIndexName"></span>"?</p>
+                    <p class="text-danger" data-translate="modals.cannotBeUndone">This action cannot be undone!</p>
                 </div>
                 <div class="modal-footer">
-                    <button id="cancelDeleteAlias" class="secondary">Cancel</button>
-                    <button id="confirmDeleteAlias" class="danger">Delete</button>
+                    <button id="cancelDeleteAlias" class="secondary" data-translate="modals.cancel">Cancel</button>
+                    <button id="confirmDeleteAlias" class="danger" data-translate="modals.delete">Delete</button>
                 </div>
             </div>
         </div>
@@ -621,19 +632,19 @@
         <div id="updateMappingModal" class="modal hidden">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3><i class="fa-solid fa-code"></i> Update Mapping</h3>
+                    <h3><i class="fa-solid fa-code"></i> <span data-translate="modals.updateMapping">Update Mapping</span></h3>
                     <button class="close-modal">×</button>
                 </div>
                 <div class="modal-body">
                     <div class="mapping-tabs">
                         <button class="tab-button active" data-tab="json">JSON</button>
-                        <button class="tab-button" data-tab="visual">Visual Editor</button>
+                        <button class="tab-button" data-tab="visual" data-translate="modals.visualEditor">Visual Editor</button>
                     </div>
                     
                     <!-- JSON Editor Tab -->
                     <div id="jsonMappingTab" class="tab-pane active">
                         <div class="form-group">
-                            <label for="mappingJson">Mapping JSON</label>
+                            <label for="mappingJson" data-translate="modals.mappingJson">Mapping JSON</label>
                             <textarea id="mappingJson" class="code-editor" placeholder="{&#10;  &quot;properties&quot;: {&#10;    &quot;field_name&quot;: {&#10;      &quot;type&quot;: &quot;text&quot;&#10;    }&#10;  }&#10;}"></textarea>
                         </div>
                     </div>
@@ -647,38 +658,38 @@
                             <div class="add-field-form">
                                 <div class="form-row">
                                     <div class="form-group">
-                                        <label for="fieldName">Field Name</label>
-                                        <input type="text" id="fieldName" placeholder="Enter field name">
+                                        <label for="fieldName" data-translate="modals.fieldName">Field Name</label>
+                                        <input type="text" id="fieldName" data-translate-placeholder="modals.enterFieldName" placeholder="Enter field name">
                                     </div>
                                     <div class="form-group">
-                                        <label for="fieldType">Field Type</label>
+                                        <label for="fieldType" data-translate="modals.fieldType">Field Type</label>
                                         <select id="fieldType">
-                                            <option value="text">Text</option>
-                                            <option value="keyword">Keyword</option>
-                                            <option value="long">Long</option>
-                                            <option value="integer">Integer</option>
-                                            <option value="short">Short</option>
-                                            <option value="byte">Byte</option>
-                                            <option value="double">Double</option>
-                                            <option value="float">Float</option>
-                                            <option value="date">Date</option>
-                                            <option value="boolean">Boolean</option>
-                                            <option value="binary">Binary</option>
-                                            <option value="object">Object</option>
-                                            <option value="nested">Nested</option>
+                                            <option value="text" data-translate="fieldTypes.text">Text</option>
+                                            <option value="keyword" data-translate="fieldTypes.keyword">Keyword</option>
+                                            <option value="long" data-translate="fieldTypes.long">Long</option>
+                                            <option value="integer" data-translate="fieldTypes.integer">Integer</option>
+                                            <option value="short" data-translate="fieldTypes.short">Short</option>
+                                            <option value="byte" data-translate="fieldTypes.byte">Byte</option>
+                                            <option value="double" data-translate="fieldTypes.double">Double</option>
+                                            <option value="float" data-translate="fieldTypes.float">Float</option>
+                                            <option value="date" data-translate="fieldTypes.date">Date</option>
+                                            <option value="boolean" data-translate="fieldTypes.boolean">Boolean</option>
+                                            <option value="binary" data-translate="fieldTypes.binary">Binary</option>
+                                            <option value="object" data-translate="fieldTypes.object">Object</option>
+                                            <option value="nested" data-translate="fieldTypes.nested">Nested</option>
                                         </select>
                                     </div>
                                 </div>
                                 <button id="addFieldBtn" class="secondary">
-                                    <i class="fa-solid fa-plus"></i> Add Field
+                                    <i class="fa-solid fa-plus"></i> <span data-translate="modals.addField">Add Field</span>
                                 </button>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button id="cancelUpdateMapping" class="secondary">Cancel</button>
-                    <button id="confirmUpdateMapping">Update</button>
+                    <button id="cancelUpdateMapping" class="secondary" data-translate="modals.cancel">Cancel</button>
+                    <button id="confirmUpdateMapping" data-translate="modals.update">Update</button>
                 </div>
             </div>
         </div>
@@ -686,16 +697,16 @@
         <div id="deleteFieldModal" class="modal hidden">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3><i class="fa-solid fa-trash-alt"></i> Delete Field</h3>
+                    <h3><i class="fa-solid fa-trash-alt"></i> <span data-translate="modals.deleteFieldTitle">Delete Field</span></h3>
                     <button class="close-modal">×</button>
                 </div>
                 <div class="modal-body">
-                    <p>Are you sure you want to delete field "<span id="deleteFieldName"></span>"?</p>
-                    <p class="text-danger">This action cannot be undone!</p>
+                    <p><span data-translate="modals.deleteFieldConfirmation">Are you sure you want to delete field</span> "<span id="deleteFieldName"></span>"?</p>
+                    <p class="text-danger" data-translate="modals.cannotBeUndone">This action cannot be undone!</p>
                 </div>
                 <div class="modal-footer">
-                    <button id="cancelDeleteField" class="secondary">Cancel</button>
-                    <button id="confirmDeleteField" class="danger">Delete</button>
+                    <button id="cancelDeleteField" class="secondary" data-translate="modals.cancel">Cancel</button>
+                    <button id="confirmDeleteField" class="danger" data-translate="modals.delete">Delete</button>
                 </div>
             </div>
         </div>
@@ -703,21 +714,21 @@
         <div id="addDocumentModal" class="modal hidden">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3><i class="fa-solid fa-file-plus"></i> Add Document</h3>
+                    <h3><i class="fa-solid fa-file-plus"></i> <span data-translate="modals.addDocument">Add Document</span></h3>
                     <button class="close-modal">×</button>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="documentId">Document ID (optional)</label>
-                        <input type="text" id="documentId" placeholder="Leave empty for auto-generated ID">
+                        <label for="documentId" data-translate="modals.documentId">Document ID (optional)</label>
+                        <input type="text" id="documentId" data-translate-placeholder="modals.documentIdPlaceholder" placeholder="Leave empty for auto-generated ID">
                     </div>
                     <div id="documentFields" class="document-fields">
                         <!-- Fields will be generated dynamically based on mapping -->
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button id="cancelAddDocument" class="secondary">Cancel</button>
-                    <button id="confirmAddDocument">Add</button>
+                    <button id="cancelAddDocument" class="secondary" data-translate="modals.cancel">Cancel</button>
+                    <button id="confirmAddDocument" data-translate="modals.add">Add</button>
                 </div>
             </div>
         </div>

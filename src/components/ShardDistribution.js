@@ -3,9 +3,20 @@ export default class ShardDistribution {
         this.container = document.getElementById(containerId);
         this.table = this.container.querySelector('.shards-table');
         this.hideSystemIndices = true;
+        this.languageManager = null;
         if (!this.table) {
             console.error('Shards table not found in container:', containerId);
         }
+    }
+    
+    setLanguageManager(languageManager) {
+        this.languageManager = languageManager;
+    }
+
+    getTranslation(key, fallback) {
+        return this.languageManager ? 
+            this.languageManager.getSafeTranslation(key, fallback) : 
+            fallback;
     }
     
     render(data) {
@@ -26,6 +37,7 @@ export default class ShardDistribution {
         sortedIndices.forEach(indexName => {
             const th = document.createElement('th');
             const count = this.getShardCount(data.distribution, indexName);
+            const shardsText = this.getTranslation('shards.shard', 'shards');
             
             let displayName = indexName;
             if (indexName.length > 10) {
@@ -35,7 +47,7 @@ export default class ShardDistribution {
             th.innerHTML = `
                 <div class="index-header">
                     <div class="index-name ${indexName.length > 10 ? 'has-tooltip' : ''}" data-tooltip="${indexName}">${displayName}</div>
-                    <div class="shard-count">${count} shards</div>
+                    <div class="shard-count">${count} ${shardsText}</div>
                 </div>
             `;
             thead.appendChild(th);
@@ -69,6 +81,8 @@ export default class ShardDistribution {
             
             tbody.appendChild(tr);
         });
+        
+        this.updateTranslations();
     }
     
     renderShards(shards) {
@@ -82,7 +96,14 @@ export default class ShardDistribution {
         return sortedShards.map(shard => {
             const type = shard.type === 'primary' ? 'p' : 'r';
             const stateClass = shard.state.toLowerCase();
-            const title = `${shard.type} shard ${shard.number} (${shard.state})`;
+            
+            const typeText = shard.type === 'primary' ? 
+                this.getTranslation('shards.primary', 'Primary') : 
+                this.getTranslation('shards.replica', 'Replica');
+            const shardText = this.getTranslation('shards.shard', 'shard');
+            const stateText = this.getTranslation(`shards.${shard.state.toLowerCase()}`, shard.state);
+            
+            const title = `${typeText} ${shardText} ${shard.number} (${stateText})`;
             
             return `<span class="shard-badge ${type} ${stateClass}" title="${title}">
                 ${type}${shard.number}
@@ -92,8 +113,9 @@ export default class ShardDistribution {
     
     formatNodeName(nodeId) {
         if (nodeId === 'unassigned') {
+            const unassignedText = this.getTranslation('shards.unassigned', 'Unassigned');
             return `<span class="node-name unassigned">
-                <i class="fas fa-exclamation-triangle"></i> Unassigned
+                <i class="fas fa-exclamation-triangle"></i> ${unassignedText}
             </span>`;
         }
         return `<span class="node-name" title="${nodeId}">
@@ -119,5 +141,13 @@ export default class ShardDistribution {
     toggleSystemIndices() {
         this.hideSystemIndices = !this.hideSystemIndices;
         return this.hideSystemIndices;
+    }
+
+    updateTranslations() {
+        if (this.languageManager) {
+            setTimeout(() => {
+                this.languageManager.updateUI();
+            }, 10);
+        }
     }
 } 

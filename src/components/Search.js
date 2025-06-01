@@ -177,12 +177,17 @@ export default class Search {
         try {
             const queryInputElement = document.getElementById('queryInput');
             
+            if (queryInputElement && queryInputElement.dataset.monacoInitialized === 'true') {
+                console.log('Monaco editor already initialized, skipping...');
+                return;
+            }
+            
             if (this.editor) {
                 this.editor.dispose();
                 this.editor = null;
             }
             
-            if (queryInputElement && queryInputElement.dataset.monacoInitialized === 'true') {
+            if (queryInputElement) {
                 queryInputElement.innerHTML = '';
                 queryInputElement.removeAttribute('data-monaco-initialized');
             }
@@ -207,6 +212,11 @@ export default class Search {
             
             require.config({ paths: { 'vs': 'libs/monaco-editor/min/vs' }});
             require(['vs/editor/editor.main'], () => {
+                if (queryInputElement.dataset.monacoInitialized === 'true') {
+                    console.log('Monaco editor already initialized in callback, skipping...');
+                    return;
+                }
+                
                 monaco.editor.defineTheme('es-dark', {
                     base: 'vs-dark',
                     inherit: true,

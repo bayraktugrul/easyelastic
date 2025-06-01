@@ -22,15 +22,11 @@
 @import 'responsive.css';
 @import 'components/background.css'; 
 
-body, html {
-    max-width: 100vw;
-    overflow-x: hidden;
-}
-
 .container, main, .wrapper, .dashboard, .content-wrapper {
     max-width: 100%;
     width: 100%;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: visible;
 }
 
 .indices-table-container,

@@ -3,23 +3,23 @@ class Toast {
         const config = {
             success: {
                 icon: '<i class="fas fa-check-circle"></i>',
-                color: '#2ecc71',
-                background: '#f0fff4'
+                color: '#ffffff',
+                background: '#1e7e34'
             },
             error: {
                 icon: '<i class="fas fa-times-circle"></i>',
-                color: '#e74c3c',
-                background: '#fff5f5'
+                color: '#ffffff',
+                background: '#dc3545'
             },
             warning: {
                 icon: '<i class="fas fa-exclamation-triangle"></i>',
-                color: '#f1c40f',
-                background: '#fffbeb'
+                color: '#ffffff',
+                background: '#fd7e14'
             },
             info: {
                 icon: '<i class="fas fa-info-circle"></i>',
-                color: '#3498db',
-                background: '#ebf8ff'
+                color: '#ffffff',
+                background: '#6c757d'
             }
         };
 
@@ -32,20 +32,20 @@ class Toast {
                     </span>
                     <span>${message}</span>
                    </div>`,
-            duration: 3000,
+            duration: 900,
             gravity: "top",
-            position: "right",
+            position: "center",
             stopOnFocus: true,
             escapeMarkup: false,
             className: "toastify-custom",
             close: true,
             style: {
                 background: style.background,
-                color: '#2d3436',
-                boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                color: '#ffffff',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
                 padding: '12px 24px',
                 borderRadius: '8px',
-                border: `1px solid ${style.color}20`,
+                border: 'none',
                 minWidth: '300px',
                 display: 'flex',
                 alignItems: 'center'

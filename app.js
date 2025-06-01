@@ -11,6 +11,7 @@ import { formatNumber } from './src/utils/formatters.js';
 import initParticles from './src/utils/background.js';
 import QuickFilter from './src/components/QuickFilter.js';
 import ThemeManager from './src/utils/ThemeManager.js';
+import LanguageManager from './src/utils/translations.js';
 import Search from './src/components/Search.js';
 import AutoRefresh from './src/components/AutoRefresh.js';
 import ShardDistribution from './src/components/ShardDistribution.js';
@@ -21,10 +22,18 @@ class ESMonitor {
         this.metricsService = new MetricsService();
         this.indicesRepository = null;
         this.eventBus = EventBus;
+        this.languageManager = new LanguageManager();
         this.components = {
             clusterHealth: new ClusterHealth('clusterHealth'),
             shardDistribution: new ShardDistribution('shards')
         };
+        
+        this.components.clusterHealth.setLanguageManager(this.languageManager);
+        this.components.shardDistribution.setLanguageManager(this.languageManager);
+        
+        document.addEventListener('languageChanged', (e) => {
+            this.onLanguageChanged(e.detail.language);
+        });
         
         this.initializeEventListeners();
         this.initializeModalHandlers();
@@ -34,8 +43,31 @@ class ESMonitor {
         this.loadSavedConnection();
         this.loadSavedConnections();
         this.initializeConnectionHandlers();
+        this.initializeLanguageToggle();
         this.search = null;
         this.autoRefresh = null;
+    }
+
+    getTranslationWithFallback(key, fallback) {
+        return this.languageManager ? 
+            this.languageManager.getSafeTranslation(key, fallback) : 
+            fallback;
+    }
+
+    createDataTablesLanguageConfig() {
+        return {
+            search: this.getTranslationWithFallback('dataTables.search', 'Search:'),
+            lengthMenu: this.getTranslationWithFallback('dataTables.lengthMenu', 'Show _MENU_ entries'),
+            info: this.getTranslationWithFallback('dataTables.info', 'Showing _START_ to _END_ of _TOTAL_ entries'),
+            infoEmpty: this.getTranslationWithFallback('dataTables.infoEmpty', 'No entries available'),
+            infoFiltered: this.getTranslationWithFallback('dataTables.infoFiltered', '(filtered from _MAX_ total entries)'),
+            paginate: {
+                first: this.getTranslationWithFallback('dataTables.paginate.first', 'First'),
+                last: this.getTranslationWithFallback('dataTables.paginate.last', 'Last'),
+                next: this.getTranslationWithFallback('dataTables.paginate.next', 'Next'),
+                previous: this.getTranslationWithFallback('dataTables.paginate.previous', 'Previous')
+            }
+        };
     }
 
     subscribeToEvents() {
@@ -264,7 +296,7 @@ class ESMonitor {
             } else {
                 document.querySelector('.sample-records').innerHTML = `
                     <div class="no-records">
-                        <p>Please select an index to view documents.</p>
+                        <p>${this.getTranslationWithFallback('common.pleaseSelectIndex', 'Please select an index to view documents.')}</p>
                     </div>
                 `;
                 document.querySelector('.record-count').textContent = 'No index selected';
@@ -408,6 +440,7 @@ class ESMonitor {
                     this.autoRefresh.destroy();
                 }
                 this.autoRefresh = new AutoRefresh(this);
+                this.initializeLanguageToggle();
 
                 Toast.show('Connected and data loaded successfully', 'success');
             } else {
@@ -456,7 +489,7 @@ class ESMonitor {
             const currentValue = indexSelector.value;
             
             indexSelector.innerHTML = `
-                <option value="">Select an index</option>
+                <option value="">${this.getTranslationWithFallback('common.selectIndex', 'Select Index')}</option>
                 ${indices.map(index => `
                     <option value="${index.index}" ${currentValue === index.index ? 'selected' : ''}>
                         ${index.index}
@@ -518,7 +551,7 @@ class ESMonitor {
                         data: 'aliases',
                         render: function(data) {
                             if (!data || data.length === 0) {
-                                return '<span class="no-aliases">No aliases</span>';
+                                return `<span class="no-aliases" data-translate="common.noAliases">No aliases</span>`;
                             }
                             return data.map(alias => `
                                 <span class="alias-badge">
@@ -529,14 +562,20 @@ class ESMonitor {
                     },
                     { 
                         data: 'health',
-                        render: function(data) {
+                        render: (data) => {
                             const healthClass = `health-badge ${data.toLowerCase()}`;
                             const icon = data === 'green' ? 'check-circle' : 
                                        data === 'yellow' ? 'exclamation-circle' : 'times-circle';
+                            
+                            const statusKey = `cluster.health${data.charAt(0).toUpperCase() + data.slice(1).toLowerCase()}`;
+                            const translatedStatus = this.languageManager ? 
+                                this.languageManager.getSafeTranslation(statusKey, data.toUpperCase()) : 
+                                data.toUpperCase();
+                            
                             return `
                                 <span class="${healthClass}">
                                     <i class="fas fa-${icon}"></i>
-                                    ${data}
+                                    ${translatedStatus}
                                 </span>`;
                         }
                     },
@@ -557,38 +596,26 @@ class ESMonitor {
                                     </button>
                                     <div class="dropdown-menu">
                                         <button class="dropdown-item show-details" data-index="${data.index}">
-                                            <i class="fas fa-info-circle"></i> Details
+                                            <i class="fas fa-info-circle"></i> <span data-translate="modals.details">Details</span>
                                         </button>
                                         <button class="dropdown-item manage-aliases" data-index="${data.index}">
-                                            <i class="fas fa-tags"></i> Manage Aliases
+                                            <i class="fas fa-tags"></i> <span data-translate="modals.manageAliases">Manage Aliases</span>
                                         </button>
                                         <button class="dropdown-item update-mapping" data-index="${data.index}">
-                                            <i class="fas fa-code"></i> Update Mapping
+                                            <i class="fas fa-code"></i> <span data-translate="modals.updateMapping">Update Mapping</span>
                                         </button>
                                         <button class="dropdown-item add-document" data-index="${data.index}">
-                                            <i class="fas fa-file-circle-plus"></i> Add Document
+                                            <i class="fas fa-file-circle-plus"></i> <span data-translate="modals.addDocument">Add Document</span>
                                         </button>
                                         <button class="dropdown-item delete-index" data-index="${data.index}">
-                                            <i class="fas fa-trash-alt"></i> Delete
+                                            <i class="fas fa-trash-alt"></i> <span data-translate="modals.delete">Delete</span>
                                         </button>
                                     </div>
                                 </div>`;
                         }
                     }
                 ],
-                language: {
-                    search: "Search:",
-                    lengthMenu: "Show _MENU_ entries",
-                    info: "Showing _START_ to _END_ of _TOTAL_ entries",
-                    infoEmpty: "No entries available",
-                    infoFiltered: "(filtered from _MAX_ total entries)",
-                    paginate: {
-                        first: "First",
-                        last: "Last",
-                        next: "Next",
-                        previous: "Previous"
-                    }
-                },
+                language: this.createDataTablesLanguageConfig(),
                 order: [[1, 'desc']],
                 dom: "<'dt-controls'<'dataTables_length'l><'dataTables_filter'f>>" +
                      "rt" +
@@ -598,6 +625,12 @@ class ESMonitor {
             const table = $('#indicesTable').DataTable();
             table.clear().rows.add(formattedIndices).draw();
         }
+        
+        setTimeout(() => {
+            if (this.languageManager) {
+                this.languageManager.updateUI();
+            }
+        }, 100);
     }
 
     showError(message) {
@@ -642,6 +675,8 @@ class ESMonitor {
                             this.autoRefresh.destroy();
                         }
                         this.autoRefresh = new AutoRefresh(this);
+                        
+                        this.initializeLanguageToggle();
                     }
                 }
             }
@@ -726,6 +761,12 @@ class ESMonitor {
         await this.refreshAliasesList(indexName);
         modal.classList.remove('hidden');
         
+        if (this.languageManager) {
+            setTimeout(() => {
+                this.languageManager.updateUI();
+            }, 50);
+        }
+        
         [newCloseBtn, newCloseModalBtn].forEach(btn => {
             btn.addEventListener('click', () => {
                 modal.classList.add('hidden');
@@ -741,7 +782,10 @@ class ESMonitor {
             const aliasesList = document.getElementById('currentAliasesList');
             
             if (aliases.length === 0) {
-                aliasesList.innerHTML = '<span class="no-aliases">No aliases defined</span>';
+                aliasesList.innerHTML = `<span class="no-aliases" data-translate="common.noAliasesDefined">${this.getTranslationWithFallback('common.noAliasesDefined', 'No aliases defined')}</span>`;
+                if (this.languageManager) {
+                    this.languageManager.updateUI();
+                }
                 return;
             }
 
@@ -1097,7 +1141,7 @@ class ESMonitor {
             if (!response.hits || !response.hits.hits || response.hits.total.value === 0) {
                 container.innerHTML = `
                     <div class="no-records">
-                        <p>${response.hits.total.value === 0 ? 'No documents found in this index.' : 'Error loading documents.'}</p>
+                        <p>${response.hits.total.value === 0 ? this.getTranslationWithFallback('common.noDocumentsFound', 'No documents found in this index.') : this.getTranslationWithFallback('common.errorLoadingDocuments', 'Error loading documents.')}</p>
                     </div>`;
                 return;
             }
@@ -1138,7 +1182,7 @@ class ESMonitor {
                     { 
                         data: 'id', 
                         title: `<div class="column-header">
-                                    <span>ID</span>
+                                    <span>${this.getTranslationWithFallback('common.id', 'ID')}</span>
                                     <span class="field-type" data-type="keyword">keyword</span>
                                 </div>`,
                         width: '280px'
@@ -1164,16 +1208,14 @@ class ESMonitor {
                 fixedHeader: false,
                 dom: "<'dt-controls'<'dataTables_filter'f>>" +
                      "<'dataTables_scroll't>",
-                language: {
-                    search: "Search:"
-                }
+                language: this.createDataTablesLanguageConfig()
             });
 
         } catch (error) {
             const container = document.querySelector('.sample-table-container');
             container.innerHTML = `
                 <div class="no-records error">
-                    <p>Error: ${error.message}</p>
+                    <p>${this.getTranslationWithFallback('common.error', 'Error')}: ${error.message}</p>
                 </div>`;
         }
     }
@@ -1488,6 +1530,290 @@ class ESMonitor {
             this.components.shardDistribution.render(shardDistribution);
         } catch (error) {
             Toast.show(`Failed to update shard distribution: ${error.message}`, 'error');
+        }
+    }
+
+    initializeLanguageToggle() {
+        const languageToggle = document.querySelector('.language-toggle');
+        const currentLangSpan = document.querySelector('.current-lang');
+  
+        if (!languageToggle || !currentLangSpan) {
+            console.error('❌ Language selector elements not found!');
+            return;
+        }
+        
+        const existingPortal = document.querySelector('.language-dropdown-portal');
+        if (existingPortal) {
+            existingPortal.remove();
+        }
+        
+        const newLanguageToggle = languageToggle.cloneNode(true);
+        languageToggle.parentNode.replaceChild(newLanguageToggle, languageToggle);
+        
+        const dropdownPortal = document.createElement('div');
+        dropdownPortal.className = 'language-dropdown-portal';
+        dropdownPortal.innerHTML = `
+            <div class="language-dropdown-content">
+                <button class="language-option active" data-lang="en">
+                    <span class="lang-name">English</span>
+                    <span class="lang-code">EN</span>
+                </button>
+                <button class="language-option" data-lang="zh">
+                    <span class="lang-name">中文</span>
+                    <span class="lang-code">ZH</span>
+                </button>
+            </div>
+        `;
+        
+        dropdownPortal.style.cssText = `
+            position: fixed;
+            background: var(--card-background);
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(12px);
+            min-width: 120px;
+            z-index: 999999;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.2s ease;
+            padding: 4px 0;
+        `;
+        
+        let existingStyle = document.querySelector('#language-dropdown-styles');
+        if (!existingStyle) {
+            const style = document.createElement('style');
+            style.id = 'language-dropdown-styles';
+            style.textContent = `
+                .language-dropdown-portal .language-option {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    padding: 10px 16px;
+                    color: var(--text-secondary);
+                    background: none;
+                    border: none;
+                    width: 100%;
+                    text-align: left;
+                    cursor: pointer;
+                    font-size: 13px;
+                    font-weight: 500;
+                    transition: all 0.2s ease;
+                }
+                
+                .language-dropdown-portal .language-option:hover {
+                    background: var(--info-bg);
+                    color: var(--primary-color);
+                }
+                
+                .language-dropdown-portal .language-option.active {
+                    background: var(--primary-color);
+                    color: white;
+                    font-weight: 600;
+                }
+                
+                .language-dropdown-portal .language-option.active:hover {
+                    background: var(--primary-hover);
+                }
+                
+                .language-dropdown-portal .lang-name {
+                    flex: 1;
+                }
+                
+                .language-dropdown-portal .lang-code {
+                    font-size: 11px;
+                    opacity: 0.7;
+                    font-weight: 400;
+                    text-transform: uppercase;
+                }
+                
+                .language-dropdown-portal .language-option.active .lang-code {
+                    opacity: 0.9;
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        document.body.appendChild(dropdownPortal);
+        
+        const languageNames = {
+            en: 'English',
+            zh: '中文'
+        };
+        
+        let isOpen = false;
+        
+        const updateCurrentLanguage = (langCode) => {
+            const currentLangSpan = document.querySelector('.current-lang');
+            if (currentLangSpan) {
+                currentLangSpan.textContent = languageNames[langCode];
+            }
+            
+            dropdownPortal.querySelectorAll('.language-option').forEach(option => {
+                option.classList.toggle('active', option.dataset.lang === langCode);
+                
+                const optionLang = option.dataset.lang;
+                const langNameElement = option.querySelector('.lang-name');
+                langNameElement.textContent = languageNames[optionLang];
+            });
+        };
+        
+        const showDropdown = () => {
+            const languageToggle = document.querySelector('.language-toggle');
+            if (!languageToggle) return;
+            
+            const rect = languageToggle.getBoundingClientRect();
+            
+            dropdownPortal.style.left = rect.left + 'px';
+            dropdownPortal.style.top = (rect.bottom + 4) + 'px';
+            dropdownPortal.style.opacity = '1';
+            dropdownPortal.style.visibility = 'visible';
+            dropdownPortal.style.transform = 'translateY(0)';
+            
+            isOpen = true;
+        };
+        
+        const hideDropdown = () => {
+            dropdownPortal.style.opacity = '0';
+            dropdownPortal.style.visibility = 'hidden';
+            dropdownPortal.style.transform = 'translateY(-10px)';
+            isOpen = false;
+        };
+        
+        const toggleDropdown = (e) => {
+            e.stopPropagation();
+            if (isOpen) {
+                hideDropdown();
+            } else {
+                showDropdown();
+            }
+        };
+        
+        const updatedLanguageToggle = document.querySelector('.language-toggle');
+        updatedLanguageToggle.addEventListener('click', toggleDropdown);
+        
+        dropdownPortal.querySelectorAll('.language-option').forEach((option, index) => {
+            option.addEventListener('click', (e) => {
+                e.stopPropagation();
+                
+                const newLang = option.dataset.lang;
+                const currentLang = this.languageManager.getCurrentLanguage();
+                
+                if (newLang === currentLang) {
+                    hideDropdown();
+                    return;
+                }
+                
+                setTimeout(() => {
+                    this.languageManager.setLanguage(newLang);
+                    updateCurrentLanguage(newLang);
+                    hideDropdown();
+                    
+                    const message = newLang === 'zh' 
+                        ? '语言已切换为中文 🇨🇳' 
+                        : 'Language switched to English 🇬🇧';
+                    Toast.show(message, 'success');
+                }, 100);
+            });
+        });
+        
+        if (this.languageGlobalClickListener) {
+            document.removeEventListener('click', this.languageGlobalClickListener);
+        }
+        
+        this.languageGlobalClickListener = (e) => {
+            const languageToggle = document.querySelector('.language-toggle');
+            if (languageToggle && !languageToggle.contains(e.target) && !dropdownPortal.contains(e.target)) {
+                hideDropdown();
+            }
+        };
+        
+        document.addEventListener('click', this.languageGlobalClickListener);
+        
+        const repositionHandler = () => {
+            if (isOpen) showDropdown();
+        };
+        
+        if (this.languageRepositionHandler) {
+            window.removeEventListener('scroll', this.languageRepositionHandler);
+            window.removeEventListener('resize', this.languageRepositionHandler);
+        }
+        
+        this.languageRepositionHandler = repositionHandler;
+        window.addEventListener('scroll', this.languageRepositionHandler);
+        window.addEventListener('resize', this.languageRepositionHandler);
+        
+        const currentLang = this.languageManager.getCurrentLanguage();
+        updateCurrentLanguage(currentLang);
+    }
+
+    refreshDataTablesLanguage() {
+        try {
+            if (!$ || !$.fn || !$.fn.DataTable) {
+                console.warn('DataTables library not loaded, skipping language refresh');
+                return;
+            }
+
+            const languageConfig = this.createDataTablesLanguageConfig();
+
+            this.updateDataTableLanguage('#indicesTable', languageConfig);
+            
+            if (this.sampleDataTable) {
+                this.updateDataTableLanguage(this.sampleDataTable, languageConfig);
+            }
+        } catch (error) {
+            console.warn('Failed to refresh DataTables language:', error);
+        }
+    }
+
+    updateDataTableLanguage(tableSelector, languageConfig) {
+        try {
+            const table = typeof tableSelector === 'string' ? 
+                ($.fn.DataTable.isDataTable(tableSelector) ? $(tableSelector).DataTable() : null) :
+                tableSelector;
+
+            if (!table || !table.settings || typeof table.settings !== 'function') {
+                return;
+            }
+
+            const settings = table.settings();
+            
+            if (settings && settings.length > 0 && settings[0] && settings[0].oLanguage) {
+                Object.assign(settings[0].oLanguage, languageConfig);
+                table.draw();
+            }
+        } catch (error) {
+            console.warn('Failed to update DataTable language:', error);
+        }
+    }
+
+    async onLanguageChanged(language) {
+        if (this.esService) {
+            try {
+                if (this.components.shardDistribution) {
+                    const shardDistribution = await this.esService.getShardDistribution();
+                    this.components.shardDistribution.render(shardDistribution);
+                }
+                
+                if (this.components.clusterHealth) {
+                    const health = await this.esService.getClusterHealth();
+                    this.components.clusterHealth.render(health);
+                }
+            } catch (error) {
+                console.warn('Failed to update components on language change:', error);
+            }
+        }
+        
+        setTimeout(() => {
+            this.updateIndicesTableLanguage();
+        }, 100);
+    }
+
+    updateIndicesTableLanguage() {
+        if ($.fn.DataTable.isDataTable('#indicesTable')) {
+            const table = $('#indicesTable').DataTable();
+            table.draw();
         }
     }
 }
