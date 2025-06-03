@@ -98,6 +98,13 @@ const translations = {
             searchResults: "Search Results",
             resultsFound: "results found"
         },
+        feedback: {
+            title: "Feedback & Support",
+            description: "Have a suggestion, found a bug, or need help? We'd love to hear from you!",
+            reportBug: "Report Bug",
+            requestFeature: "Request Feature",
+            viewIssues: "View Issues"
+        },
         modals: {
             createNewIndex: "Create New Index",
             indexName: "Index Name",
@@ -292,6 +299,13 @@ const translations = {
             elasticsearchQuery: "Elasticsearch 查询",
             searchResults: "搜索结果",
             resultsFound: "条结果"
+        },
+        feedback: {
+            title: "反馈与支持",
+            description: "有建议、发现问题或需要帮助吗？我们很乐意听到您的声音！",
+            reportBug: "报告错误",
+            requestFeature: "请求功能",
+            viewIssues: "查看问题"
         },
         modals: {
             createNewIndex: "创建新索引",
