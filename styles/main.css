@@ -20,7 +20,8 @@
 @import 'features/metrics.css';
 @import 'utilities.css';
 @import 'responsive.css';
-@import 'components/background.css'; 
+@import 'components/background.css';
+@import 'components/json-highlighter.css'; 
 
 .container, main, .wrapper, .dashboard, .content-wrapper {
     max-width: 100%;

@@ -109,6 +109,13 @@ body .search-panel .query-label {
     white-space: pre;
 }
 
+
+.results-preview.json-highlighted {
+    padding: 1rem;
+    border: none;
+    background: var(--panel-background);
+}
+
 #searchIndexSelector {
     min-width: 250px;
     padding: 0.75rem 2.5rem 0.75rem 1rem;

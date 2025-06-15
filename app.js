@@ -15,6 +15,7 @@ import LanguageManager from './src/utils/translations.js';
 import Search from './src/components/Search.js';
 import AutoRefresh from './src/components/AutoRefresh.js';
 import ShardDistribution from './src/components/ShardDistribution.js';
+import JsonHighlighter from './src/utils/JsonHighlighter.js';
 
 class ESMonitor {
     constructor() {
@@ -1214,7 +1215,22 @@ class ESMonitor {
                                     <span>${field}</span>
                                     <span class="field-type" data-type="${mapping[field]?.type || 'unknown'}">${mapping[field]?.type || 'unknown'}</span>
                                 </div>`,
-                        width: '220px'
+                        width: '220px',
+                        render: function(data, type, row) {
+                            if (type === 'display' && data) {
+                                if (typeof data === 'string' && (data.startsWith('{') || data.startsWith('['))) {
+                                    try {
+                                        const parsed = JSON.parse(data);
+                                        const highlighted = JsonHighlighter.highlight(JSON.stringify(parsed, null, 2));
+                                        return `<div class="json-cell">${highlighted}</div>`;
+                                    } catch (e) {
+                                        return data;
+                                    }
+                                }
+                                return data;
+                            }
+                            return data;
+                        }
                     }))
                 ],
                 scrollX: true,

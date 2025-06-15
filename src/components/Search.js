@@ -1,5 +1,6 @@
 import Toast from '../utils/Toast.js';
 import { httpMethods, queryDSL } from '../utils/ElasticsearchSuggestions.js';
+import JsonHighlighter from '../utils/JsonHighlighter.js';
 
 export default class Search {
     constructor(esService) {
@@ -506,16 +507,26 @@ export default class Search {
         
         if (results.result) {
             countElement.textContent = 'Query executed';
-            resultsElement.textContent = results.result;
+            if (typeof results.result === 'string') {
+                try {
+                    const parsed = JSON.parse(results.result);
+                    JsonHighlighter.highlightElement(resultsElement, parsed);
+                } catch (e) {
+                    resultsElement.textContent = results.result;
+                    resultsElement.classList.remove('json-highlighted');
+                }
+            } else {
+                JsonHighlighter.highlightElement(resultsElement, results.result);
+            }
         } else if (Array.isArray(results)) {
             countElement.textContent = `${results.length} results found`;
-            resultsElement.textContent = JSON.stringify(results, null, 2);
+            JsonHighlighter.highlightElement(resultsElement, results);
         } else if (results.hits?.total?.value !== undefined) {
             countElement.textContent = `${results.hits.total.value} results found`;
-            resultsElement.textContent = JSON.stringify(results, null, 2);
+            JsonHighlighter.highlightElement(resultsElement, results);
         } else {
             countElement.textContent = 'Query executed';
-            resultsElement.textContent = JSON.stringify(results, null, 2);
+            JsonHighlighter.highlightElement(resultsElement, results);
         }
     }
 } 
