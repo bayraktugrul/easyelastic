@@ -1,4 +1,5 @@
 import Toast from '../utils/Toast.js';
+import JsonHighlighter from '../utils/JsonHighlighter.js';
 
 export default class QuickFilter {
     constructor(esService) {
@@ -158,7 +159,7 @@ export default class QuickFilter {
     async updateQuery() {
         const query = await this.buildQuery();
         const queryPreview = document.getElementById('quickFilterQueryPreview');
-        queryPreview.textContent = JSON.stringify(query, null, 2);
+        JsonHighlighter.highlightElement(queryPreview, query);
 
         if (this.selectedIndex) {
             try {
@@ -175,7 +176,7 @@ export default class QuickFilter {
         const countElement = document.getElementById('quickFilterResultsCount');
         
         countElement.textContent = `${results.hits.total.value} results found`;
-        resultsElement.textContent = JSON.stringify(results, null, 2);
+        JsonHighlighter.highlightElement(resultsElement, results);
     }
 
     copyQuery() {

@@ -143,6 +143,14 @@
     background: var(--panel-background) !important;
 }
 
+
+.query-preview.json-highlighted,
+.results-preview.json-highlighted {
+    padding: 1rem;
+    border: none;
+    background: var(--panel-background) !important;
+}
+
 #quickFilterIndexSelector {
     min-width: 250px;
     padding: 0.75rem 2.5rem 0.75rem 1rem;
