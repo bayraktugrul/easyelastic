@@ -969,4 +969,172 @@ h2 i {
 .panel-toggle:hover {
     background: rgba(var(--primary-rgb), 0.05);
     border-color: var(--primary-color);
+}
+
+.index-name-container {
+    position: relative;
+}
+
+.index-name.clickable {
+    cursor: pointer;
+    color: var(--primary-color);
+    text-decoration: underline;
+    transition: color 0.2s ease;
+}
+
+.index-name.clickable:hover {
+    color: var(--primary-color-hover);
+}
+
+.sample-data-preview {
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin-top: 0.5rem;
+    padding: 1rem;
+    background: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: var(--shadow-sm);
+    max-height: 400px;
+    overflow-y: auto;
+    z-index: 10;
+}
+
+.sample-data-content {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.json-preview {
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--text-code);
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.loading {
+    text-align: center;
+    padding: 1rem;
+    color: var(--text-secondary);
+}
+
+.error-message {
+    color: var(--error-color);
+    padding: 1rem;
+    text-align: center;
+}
+
+.no-records {
+    text-align: center;
+    padding: 1rem;
+    color: var(--text-secondary);
+}
+
+.sample-data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+    background: var(--card-background);
+}
+
+.sample-data-table th,
+.sample-data-table td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.sample-data-table th {
+    background: var(--card-background);
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.sample-data-table td {
+    color: var(--text-primary);
+}
+
+.sample-data-table tbody tr:hover {
+    background: var(--hover-bg);
+}
+
+.sample-data-table .id-column {
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
+    color: var(--text-code);
+}
+
+.sample-data-table .data-column {
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.sample-data-table .column-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.sample-data-table .field-type {
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+    font-weight: normal;
+}
+
+.index-row {
+    position: relative;
+}
+
+.index-name-container {
+    position: relative;
+}
+
+.index-name.clickable {
+    cursor: pointer;
+    color: var(--primary-color);
+    text-decoration: underline;
+    transition: color 0.2s ease;
+}
+
+.index-name.clickable:hover {
+    color: var(--primary-color-hover);
+}
+
+.sample-data-preview {
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin-top: 0.5rem;
+    padding: 1rem;
+    background: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: var(--shadow-sm);
+    max-height: 400px;
+    overflow-y: auto;
+    z-index: 10;
+}
+
+.sample-data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+    background: var(--card-background);
+}
+
+.sample-data-scroll {
+    overflow-x: auto;
+    max-width: 100%;
+}
+
+.sample-data-scroll .sample-data-table {
+    min-width: max-content;
 } 
