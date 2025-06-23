@@ -18,6 +18,11 @@ services:
       - elasticsearch-data:/usr/share/elasticsearch/data
     networks:
       - elastic
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   elasticsearch-secure:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.12.1
@@ -43,6 +48,41 @@ services:
       - elasticsearch-secure-data:/usr/share/elasticsearch/data
     networks:
       - elastic
+
+  sample-data-loader:
+    image: curlimages/curl:latest
+    container_name: sample-data-loader
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    networks:
+      - elastic
+    volumes:
+      - ./sample-data:/scripts
+    command: >
+      sh -c "
+        echo 'Waiting for Elasticsearch to be ready...' &&
+        sleep 10 &&
+        echo 'Creating sample index with mapping...' &&
+        curl -X PUT 'elasticsearch:9200/sample-products' -H 'Content-Type: application/json' -d '{
+          \"mappings\": {
+            \"properties\": {
+              \"name\": { \"type\": \"text\", \"analyzer\": \"standard\" },
+              \"description\": { \"type\": \"text\", \"analyzer\": \"standard\" },
+              \"category\": { \"type\": \"keyword\" },
+              \"price\": { \"type\": \"float\" },
+              \"stock\": { \"type\": \"integer\" },
+              \"brand\": { \"type\": \"keyword\" },
+              \"rating\": { \"type\": \"float\" },
+              \"created_date\": { \"type\": \"date\" },
+              \"tags\": { \"type\": \"keyword\" },
+              \"is_active\": { \"type\": \"boolean\" }
+            }
+          }
+        }' &&
+        echo 'Index created successfully' &&
+        /scripts/load-sample-data.sh
+      "
 
 volumes:
   elasticsearch-data:
