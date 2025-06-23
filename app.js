@@ -47,6 +47,7 @@ class ESMonitor {
         this.initializeLanguageToggle();
         this.search = null;
         this.autoRefresh = null;
+        this.openIndexSampleData = null;
     }
 
     getTranslationWithFallback(key, fallback) {
@@ -82,6 +83,7 @@ class ESMonitor {
         document.getElementById('connectBtn').addEventListener('click', () => this.connect());
         document.getElementById('testBtn').addEventListener('click', () => this.testConnection());
         document.getElementById('disconnectBtn').addEventListener('click', () => this.clearConnection());
+        document.addEventListener('click', (e) => this.toggleIndexSampleData(e));
 
         const toggleSystemIndices = document.getElementById('toggleSystemIndices');
         if (toggleSystemIndices) {
@@ -553,8 +555,8 @@ class ESMonitor {
                 columns: [
                     { 
                         data: 'index',
-                        render: function(data) {
-                            return `<span class="font-medium">${data}</span>`;
+                        render: function(data, type, row) {
+                            return `<span class="index-name clickable" data-index="${data}">${data}</span>`;
                         }
                     },
                     { 
@@ -1535,6 +1537,10 @@ class ESMonitor {
                         if (panel.classList.contains('search-panel')) {
                             panel.classList.add('collapsed');
                         }
+                        // Close sample data if indices panel is collapsed
+                        if (panel.classList.contains('indices-panel')) {
+                            this.closeSampleDataRows();
+                        }
                     }
                     
                     toggleBtn.addEventListener('click', async (e) => {
@@ -1545,6 +1551,11 @@ class ESMonitor {
                         
                         if (panel.classList.contains('search-panel')) {
                             panel.classList.toggle('collapsed');
+                        }
+                        
+                        // Close sample data when indices panel is collapsed
+                        if (panel.classList.contains('indices-panel') && content.classList.contains('collapsed')) {
+                            this.closeSampleDataRows();
                         }
                         
                         const isNowCollapsed = content.classList.contains('collapsed');
@@ -1852,6 +1863,86 @@ class ESMonitor {
             const table = $('#indicesTable').DataTable();
             table.draw();
         }
+    }
+
+    async toggleIndexSampleData(e) {
+        if (e.target.classList.contains('index-name')) {
+            const indexName = e.target.dataset.index;
+            const table = document.getElementById('indicesTable');
+            const rowElem = e.target.closest('tr');
+            const openRow = table.querySelector('.sample-data-row');
+            if (this.openIndexSampleData === indexName && openRow) {
+                openRow.remove();
+                this.openIndexSampleData = null;
+                return;
+            }
+            if (openRow) openRow.remove();
+            this.openIndexSampleData = indexName;
+            const colCount = rowElem.children.length;
+            const newRow = document.createElement('tr');
+            newRow.className = 'sample-data-row';
+            const newCell = document.createElement('td');
+            newCell.colSpan = colCount;
+            newCell.innerHTML = `<div class="sample-data-preview loading">Loading sample data...</div>`;
+            newRow.appendChild(newCell);
+            rowElem.parentNode.insertBefore(newRow, rowElem.nextSibling);
+            try {
+                const indexDetails = await this.esService.getIndexMapping(indexName);
+                const mapping = indexDetails[indexName].mappings.properties || {};
+                const response = await this.esService.searchDocuments(indexName, {
+                    size: 10,
+                    sort: ['_doc']
+                });
+                if (!response.hits || !response.hits.hits || response.hits.total.value === 0) {
+                    newCell.innerHTML = `<div class="no-records"><p>No documents found in this index.</p></div>`;
+                    return;
+                }
+                const fieldArray = Object.keys(mapping);
+                const data = response.hits.hits.map(hit => {
+                    const row = {};
+                    row.id = hit._id;
+                    fieldArray.forEach(field => {
+                        row[field] = hit._source[field] !== undefined ?
+                            typeof hit._source[field] === 'object' ?
+                                JSON.stringify(hit._source[field]) :
+                                hit._source[field] : '';
+                    });
+                    return row;
+                });
+                newCell.innerHTML = `
+                    <div class="sample-data-scroll">
+                        <table class="sample-data-table">
+                            <thead>
+                                <tr>
+                                    <th><div class="column-header"><span>ID</span><span class="field-type" data-type="keyword">keyword</span></div></th>
+                                    ${fieldArray.map(field => `
+                                        <th><div class="column-header"><span>${field}</span><span class="field-type" data-type="${mapping[field]?.type || 'unknown'}">${mapping[field]?.type || 'unknown'}</span></div></th>
+                                    `).join('')}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${data.map(row => `
+                                    <tr>
+                                        <td class="id-column">${row.id}</td>
+                                        ${fieldArray.map(field => `<td class="data-column">${row[field]}</td>`).join('')}
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>`;
+            } catch (error) {
+                newCell.innerHTML = `<div class="error-message"><p>Error: ${error.message}</p></div>`;
+            }
+        }
+    }
+
+    closeSampleDataRows() {
+        const table = document.getElementById('indicesTable');
+        if (table) {
+            const openRows = table.querySelectorAll('.sample-data-row');
+            openRows.forEach(row => row.remove());
+        }
+        this.openIndexSampleData = null;
     }
 }
 
