@@ -392,13 +392,16 @@ class ESMonitor {
 
     async testConnection() {
         const url = document.getElementById('esUrl').value.trim();
+        const username = document.getElementById('esUsername').value.trim();
+        const password = document.getElementById('esPassword').value.trim();
         if (!url) {
             Toast.show('Please enter Elasticsearch URL', 'error');
             return;
         }
 
         try {
-            const service = new ElasticsearchService(url);
+            const auth = username && password ? { username, password } : null;
+            const service = new ElasticsearchService(url, auth);
             const isConnected = await service.checkConnection();
             
             if (isConnected) {
