@@ -18,6 +18,12 @@
     color: var(--text-primary);
 }
 
+.panel-header .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
 .indices-panel .panel-header button {
     padding: 0.625rem 1rem;
     border-radius: 6px;

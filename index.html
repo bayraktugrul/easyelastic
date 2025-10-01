@@ -260,9 +260,18 @@
             <div id="indices" class="indices-panel">
                 <div class="panel-header">
                     <h2><i class="fa-solid fa-table"></i> <span data-translate="indices.title">Indices</span></h2>
-                    <button id="createIndexBtn" class="secondary">
-                        <i class="fa-solid fa-plus"></i> <span data-translate="indices.createIndex">Create Index</span>
-                    </button>
+                    <div class="header-actions">
+                        <div class="toggle-container">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="toggleSystemIndicesTable" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <span class="toggle-label" data-translate="indices.hideSystemIndices">Hide System Indices</span>
+                        </div>
+                        <button id="createIndexBtn" class="secondary">
+                            <i class="fa-solid fa-plus"></i> <span data-translate="indices.createIndex">Create Index</span>
+                        </button>
+                    </div>
                 </div>
                 <div class="indices-table-container">
                     <table id="indicesTable" class="indices-table">
