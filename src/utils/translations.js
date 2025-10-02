@@ -49,6 +49,7 @@ const translations = {
         indices: {
             title: "Indices",
             createIndex: "Create Index",
+            hideSystemIndices: "Hide System Indices",
             indexName: "Index Name",
             docsCount: "Docs Count",
             size: "Size",
@@ -251,6 +252,7 @@ const translations = {
         indices: {
             title: "索引",
             createIndex: "创建索引",
+            hideSystemIndices: "隐藏系统索引",
             indexName: "索引名称",
             docsCount: "文档数量",
             size: "大小",

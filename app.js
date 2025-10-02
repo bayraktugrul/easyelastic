@@ -24,6 +24,9 @@ class ESMonitor {
         this.indicesRepository = null;
         this.eventBus = EventBus;
         this.languageManager = new LanguageManager();
+        this.hideSystemIndicesTable = true;
+        this.isUpdatingIndicesTable = false;
+        this.isUpdatingDashboard = false;
         this.components = {
             clusterHealth: new ClusterHealth('clusterHealth'),
             shardDistribution: new ShardDistribution('shards')
@@ -35,6 +38,13 @@ class ESMonitor {
         document.addEventListener('languageChanged', (e) => {
             this.onLanguageChanged(e.detail.language);
         });
+        
+        setTimeout(() => {
+            const checkbox = document.getElementById('toggleSystemIndicesTable');
+            if (checkbox) {
+                this.hideSystemIndicesTable = checkbox.checked;
+            }
+        }, 100);
         
         this.initializeEventListeners();
         this.initializeModalHandlers();
@@ -91,6 +101,14 @@ class ESMonitor {
                 const isHidden = this.components.shardDistribution.toggleSystemIndices();
                 toggleSystemIndices.checked = isHidden;
                 await this.updateShardDistribution();
+            });
+        }
+
+        const toggleSystemIndicesTable = document.getElementById('toggleSystemIndicesTable');
+        if (toggleSystemIndicesTable) {
+            toggleSystemIndicesTable.addEventListener('change', async () => {
+                this.hideSystemIndicesTable = toggleSystemIndicesTable.checked;
+                await this.updateDashboard();
             });
         }
 
@@ -454,6 +472,11 @@ class ESMonitor {
                 
                 document.getElementById('dashboard').classList.remove('hidden');
 
+                const checkbox = document.getElementById('toggleSystemIndicesTable');
+                if (checkbox) {
+                    this.hideSystemIndicesTable = checkbox.checked;
+                }
+
                 this.quickFilter = new QuickFilter(this.esService);
                 
                 if (this.search) {
@@ -489,6 +512,12 @@ class ESMonitor {
     }
 
     async updateDashboard() {
+        if (this.isUpdatingDashboard) {
+            return;
+        }
+        
+        this.isUpdatingDashboard = true;
+        
         try {
             const [clusterInfo, health, stats, indices, shardDistribution] = await Promise.all([
                 this.esService.getClusterInfo(),
@@ -535,11 +564,40 @@ class ESMonitor {
 
         } catch (error) {
             Toast.show(`Failed to update dashboard: ${error.message}`, 'error');
+        } finally {
+            this.isUpdatingDashboard = false;
         }
     }
 
     async updateIndicesTable(indices) {
-        const formattedIndices = await this.indicesRepository.getAllIndices();
+        if (this.isUpdatingIndicesTable) {
+            return;
+        }
+        
+        this.isUpdatingIndicesTable = true;
+        
+        try {
+            let formattedIndices = await this.indicesRepository.getAllIndices();
+            
+            const checkbox = document.getElementById('toggleSystemIndicesTable');
+            if (checkbox) {
+                this.hideSystemIndicesTable = checkbox.checked;
+            }
+            
+            if (this.hideSystemIndicesTable) {
+                formattedIndices = formattedIndices.filter(index => 
+                    !index.index.startsWith('.') && !index.index.startsWith('_')
+                );
+            }
+            
+            if (!Array.isArray(formattedIndices)) {
+                formattedIndices = [];
+            }
+            
+            if ($.fn.DataTable.isDataTable('#indicesTable')) {
+                $('#indicesTable').DataTable().destroy();
+                $('#indicesTable tbody').empty();
+            }
 
         if (!$.fn.DataTable.isDataTable('#indicesTable')) {
             $('#indicesTable').DataTable({
@@ -648,9 +706,6 @@ class ESMonitor {
                      "rt" +
                      "<'dt-bottom'<'dataTables_info'i><'dataTables_paginate'p>>"
             });
-        } else {
-            const table = $('#indicesTable').DataTable();
-            table.clear().rows.add(formattedIndices).draw();
         }
         
         setTimeout(() => {
@@ -658,6 +713,12 @@ class ESMonitor {
                 this.languageManager.updateUI();
             }
         }, 100);
+        } catch (error) {
+            console.error('Error updating indices table:', error);
+            Toast.show('Failed to update indices table', 'error');
+        } finally {
+            this.isUpdatingIndicesTable = false;
+        }
     }
 
     showError(message) {
@@ -689,6 +750,12 @@ class ESMonitor {
                     const isConnected = await this.esService.checkConnection();
                     if (isConnected) {
                         document.getElementById('dashboard').classList.remove('hidden');
+                        
+                        const checkbox = document.getElementById('toggleSystemIndicesTable');
+                        if (checkbox) {
+                            this.hideSystemIndicesTable = checkbox.checked;
+                        }
+                        
                         this.quickFilter = new QuickFilter(this.esService);
                         
                         if (this.search) {
