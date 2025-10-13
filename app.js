@@ -852,6 +852,8 @@ class ESMonitor {
         
         modal.dataset.indexName = indexName;
         
+        document.getElementById('aliasIndexName').textContent = indexName;
+        
         await this.refreshAliasesList(indexName);
         modal.classList.remove('hidden');
         
