@@ -421,40 +421,36 @@
                 </div>
 
                 <div class="search-content">
-                    <div class="left-section">
-                        <div class="query-box">
-                            <div class="query-label">
-                                <span data-translate="search.elasticsearchQuery">Elasticsearch Query</span>
-                            </div>
-                            <div id="queryInput" class="query-editor"></div>
-                            <div class="query-actions">
-                                <button id="executeQuery">
-                                    <i class="fa-solid fa-play"></i>
-                                    <span data-translate="search.execute">Execute</span>
+                    <div class="query-box">
+                        <div class="query-label">
+                            <span data-translate="search.elasticsearchQuery">Elasticsearch Query</span>
+                        </div>
+                        <div id="queryInput" class="query-editor"></div>
+                        <div class="query-actions">
+                            <button id="executeQuery">
+                                <i class="fa-solid fa-play"></i>
+                                <span data-translate="search.execute">Execute</span>
+                            </button>
+                            <div class="editor-actions">
+                                <button class="btn-icon" id="saveQueryIcon" data-translate-title="messages.saveQuery" title="Save Query">
+                                    <i class="fa-solid fa-save"></i>
                                 </button>
-                                <div class="editor-actions">
-                                    <button class="btn-icon" id="saveQueryIcon" data-translate-title="messages.saveQuery" title="Save Query">
-                                        <i class="fa-solid fa-save"></i>
-                                    </button>
-                                    <button class="btn-icon" id="formatQuery" data-translate-title="messages.formatQuery" title="Format Query">
-                                        <i class="fa-solid fa-code"></i>
-                                    </button>
-                                    <button class="btn-icon" id="copyQuery" data-translate-title="messages.copyQuery" title="Copy Query">
-                                        <i class="fa-solid fa-copy"></i>
-                                    </button>
-                                </div>
+                                <button class="btn-icon" id="formatQuery" data-translate-title="messages.formatQuery" title="Format Query">
+                                    <i class="fa-solid fa-code"></i>
+                                </button>
+                                <button class="btn-icon" id="copyQuery" data-translate-title="messages.copyQuery" title="Copy Query">
+                                    <i class="fa-solid fa-copy"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
 
-                    <div class="right-section">
-                        <div class="results-container">
-                            <div class="results-header">
-                                <span data-translate="search.searchResults">Search Results</span>
-                                <span class="results-count" id="searchResultsCount">0 results found</span>
-                            </div>
-                            <pre id="searchResults" class="results-preview"></pre>
+                    <div class="results-container">
+                        <div class="results-header">
+                            <span data-translate="search.searchResults">Search Results</span>
+                            <span class="results-count" id="searchResultsCount">0 results found</span>
                         </div>
+                        <pre id="searchResults" class="results-preview"></pre>
                     </div>
                 </div>
             </div>

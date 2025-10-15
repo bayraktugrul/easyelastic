@@ -28,25 +28,43 @@ body .search-panel .search-content {
     padding: 1.5rem;
     display: grid;
     grid-template-columns: 1fr 1fr;
+    grid-template-rows: minmax(0, 1fr);
     gap: 1.5rem;
     height: calc(100% - 70px);
     min-height: 0;
-    overflow: visible;
+    overflow: hidden;
     position: relative;
     flex: 1;
 }
 
-body .search-panel .query-box,
+body .search-panel .query-box {
+    background: var(--panel-background);
+    border: 1px solid var(--border-panel);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+    grid-column: 1;
+    grid-row: 1;
+}
+
 body .search-panel .results-container {
     background: var(--panel-background);
     border: 1px solid var(--border-panel);
     border-radius: 8px;
     display: flex;
     flex-direction: column;
+    min-height: 0;
     height: 100%;
-    min-height: 500px;
-    overflow: visible;
+    max-height: 100%;
+    overflow: hidden;
     position: relative;
+    padding: 0;
+    grid-column: 2;
+    grid-row: 1;
 }
 
 body .search-panel .query-label {
@@ -64,22 +82,12 @@ body .search-panel .query-label {
 .query-editor {
     flex: 1 1 auto;
     min-height: 350px;
-    max-height: calc(100% - 80px);
     border: none;
-    background-color: #1a1a1a !important;
+    background: var(--panel-background);
     position: relative;
     z-index: 10;
-    overflow: hidden !important;
-    margin-bottom: 0;
-    padding-bottom: 0;
-    border-bottom: none;
 }
 
-.results-container {
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-}
 
 .results-header {
     padding: 1rem;
@@ -95,8 +103,6 @@ body .search-panel .query-label {
 }
 
 .results-preview {
-    flex: 1;
-    min-height: 400px;
     margin: 0;
     padding: 1rem;
     font-family: 'Monaco', 'Menlo', monospace;
@@ -104,11 +110,37 @@ body .search-panel .query-label {
     line-height: 1.6;
     color: var(--text-code);
     background: var(--panel-background);
-    overflow-y: auto;
-    overflow-x: auto;
+    overflow-y: auto !important;
+    overflow-x: auto !important;
     white-space: pre;
+    box-sizing: border-box;
+    flex: 1;
+    min-height: 0;
+    min-width: 0;
+    align-self: stretch;
+    width: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-panel) transparent;
 }
 
+.results-preview::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.results-preview::-webkit-scrollbar-track {
+    background: var(--panel-background);
+    border-radius: 4px;
+}
+
+.results-preview::-webkit-scrollbar-thumb {
+    background: var(--border-panel);
+    border-radius: 4px;
+}
+
+.results-preview::-webkit-scrollbar-thumb:hover {
+    background: var(--text-secondary);
+}
 
 .results-preview.json-highlighted {
     padding: 1rem;
@@ -535,7 +567,7 @@ body .search-panel .query-label {
         min-height: 600px;
     }
     
-    .query-editor, .results-preview {
+    .query-editor {
         height: 350px !important;
         max-height: 350px !important;
     }
@@ -588,7 +620,7 @@ body .search-panel .query-label {
 }
 
 @media (max-width: 576px) {
-    .query-editor, .results-preview {
+    .query-editor {
         height: 250px !important;
         max-height: 250px !important;
     }
@@ -640,6 +672,15 @@ body .search-panel .query-label {
     }
 }
 
+#queryInput {
+    flex: 1;
+    min-height: 300px;
+    max-height: calc(100% - 80px);
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+}
+
 .monaco-editor .overflow-guard {
     overflow: hidden !important;
     max-height: 100% !important;
@@ -648,27 +689,31 @@ body .search-panel .query-label {
 .monaco-editor .monaco-scrollable-element {
     overflow: auto !important;
     max-height: 100% !important;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-panel) transparent;
 }
 
-body .search-panel .query-box {
-    padding-bottom: 0;
-    margin-bottom: 0;
-    border-bottom-left-radius: 8px;
-    border-bottom-right-radius: 8px;
-    display: flex;
-    flex-direction: column;
-    border-bottom: none;
+.monaco-editor .monaco-scrollable-element::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
 }
 
-#queryInput {
-    flex: 1;
-    position: relative;
-    min-height: 300px;
-    max-height: calc(100% - 80px);
-    z-index: 1;
-    overflow: hidden !important;
-    display: flex;
-    flex-direction: column;
+.monaco-editor .monaco-scrollable-element::-webkit-scrollbar-track {
+    background: var(--panel-background);
+    border-radius: 4px;
+}
+
+.monaco-editor .monaco-scrollable-element::-webkit-scrollbar-thumb {
+    background: var(--border-panel);
+    border-radius: 4px;
+}
+
+.monaco-editor .monaco-scrollable-element::-webkit-scrollbar-thumb:hover {
+    background: var(--text-secondary);
+}
+
+.monaco-editor .scrollbar {
+    display: none !important;
 }
 
 .query-editor .monaco-editor {
@@ -699,16 +744,4 @@ body .search-panel.collapsed .search-content {
     display: none;
     height: 0;
     overflow: hidden;
-}
-
-.monaco-editor .overflow-guard {
-    overflow: hidden !important;
-    max-height: 100% !important;
-    position: relative !important;
-}
-
-.monaco-editor .monaco-scrollable-element {
-    overflow: auto !important;
-    max-height: 100% !important;
-    position: relative !important;
 }
