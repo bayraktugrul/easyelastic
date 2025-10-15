@@ -1,11 +1,18 @@
-.indices-table-container,
 .shards-table-container,
 .sample-table-container,
-.dataTables_wrapper,
 .table-responsive {
     background: var(--card-background);
     border: 1px solid var(--border-color);
     border-radius: 8px;
+    overflow: hidden;
+    width: 100%;
+    max-width: 100%;
+    display: block;
+}
+
+.indices-table-container {
+    background: transparent;
+    border: none;
     overflow: hidden;
     width: 100%;
     max-width: 100%;
@@ -19,10 +26,10 @@ table {
 .dataTables_wrapper {
     background: var(--card-background) !important;
     border: 1px solid var(--border-color);
-    border-radius: 16px;
+    border-radius: 12px;
     padding: 1rem;
-    box-shadow: var(--shadow-sm);
-    margin-top: 1rem;
+    box-shadow: none;
+    margin-top: 0;
     overflow: hidden !important;
     position: relative;
 }
@@ -55,7 +62,7 @@ table {
     width: 100% !important;
     border-collapse: separate !important;
     border-spacing: 0 8px !important;
-    margin-top: 1rem !important;
+    margin-top: 0 !important;
     table-layout: fixed !important;
     background: var(--card-background) !important;
 }
@@ -397,29 +404,14 @@ table {
 
 #sampleDataTable {
     background: var(--card-background) !important;
-    border-color: var(--border-panel) !important;
-}
-
-#sampleDataTable thead th {
-    background: var(--table-header-bg) !important;
-    color: var(--text-secondary) !important;
-    border-bottom: 1px solid var(--border-panel) !important;
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-}
-
-#sampleDataTable thead th .column-type {
-    color: var(--text-muted) !important;
-    font-size: 0.7rem;
-    opacity: 0.8;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
 }
 
 #sampleDataTable th,
 #sampleDataTable td {
     background: var(--card-background) !important;
     color: var(--text-primary) !important;
-    border-right: 1px solid var(--border-panel) !important;
 }
 
 #sampleDataTable tbody tr:hover td {
@@ -428,19 +420,53 @@ table {
 
 .dataTables_scrollBody {
     background: var(--card-background) !important;
-    border: 1px solid var(--border-panel) !important;
+    border: none !important;
 }
 
 .sample-table-container {
-    border: 1px solid var(--border-panel) !important;
+    border: 1px solid var(--border-color) !important;
     background: var(--card-background) !important;
-    border-radius: 8px;
+    border-radius: 12px;
     overflow: hidden !important;
+    box-shadow: var(--shadow-sm);
 }
 
-.dataTables_wrapper {
+.sample-table-container .dataTables_wrapper {
     background: var(--card-background) !important;
     border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    margin-top: 0 !important;
+}
+
+.sample-table-container .dataTables_scroll {
+    border: none !important;
+    margin-bottom: 0 !important;
+}
+
+.sample-table-container .dataTables_scrollHead,
+.sample-table-container .dataTables_scrollBody {
+    border: none !important;
+}
+
+.sample-table-container .dataTables_scrollHead {
+    display: none !important;
+}
+
+.sample-table-container .dataTables_scrollBody {
+    border-top: none !important;
+}
+
+.sample-table-container .dataTables_scrollBody thead th {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 10 !important;
+}
+
+.sample-table-container .dataTables_scrollHead table,
+.sample-table-container .dataTables_scrollBody table {
+    table-layout: fixed !important;
+    width: 100% !important;
 }
 
 .dataTables_filter input {
@@ -456,34 +482,136 @@ table {
 
 #sampleDataTable thead th {
     background: var(--table-header-bg) !important;
-    border-bottom: 1px solid var(--border-panel) !important;
-    border-right: 1px solid var(--border-panel) !important;
-    padding: 12px 24px !important;
+    border-bottom: 1px solid var(--border-color) !important;
+    border-right: 1px solid var(--border-color) !important;
+    padding: 12px 16px !important;
     color: var(--text-primary) !important;
-    font-weight: 500 !important;
+    font-weight: 600 !important;
+    box-sizing: border-box !important;
+    height: auto !important;
+    min-height: 60px !important;
+    text-align: left !important;
 }
 
-#sampleDataTable thead th span {
-    display: block !important;
-    color: var(--primary-color) !important;
-    font-size: 0.7rem !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.05em !important;
-    opacity: 0.8 !important;
-    margin-top: 4px !important;
+#sampleDataTable thead th > div {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    height: 100% !important;
 }
 
-#sampleDataTable thead th div {
+#sampleDataTable thead th .column-header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 8px;
+    align-items: center;
+    justify-content: flex-start;
+    height: 100%;
+}
+
+#sampleDataTable thead th .column-header > span:first-child {
     color: var(--text-primary) !important;
     font-size: 0.875rem !important;
-    font-weight: 500 !important;
+    font-weight: 600 !important;
+    text-transform: none !important;
+    white-space: nowrap !important;
+}
+
+#sampleDataTable thead th .field-type {
+    display: inline-block !important;
+    padding: 2px 8px !important;
+    font-size: 0.65rem !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    border-radius: 4px !important;
+    opacity: 1 !important;
+    flex-shrink: 0 !important;
+    white-space: nowrap !important;
+}
+
+#sampleDataTable thead th .field-type[data-type="keyword"],
+#sampleDataTable thead th .field-type[data-type="text"] {
+    background: rgba(59, 130, 246, 0.15) !important;
+    color: #3b82f6 !important;
+    border: 1px solid #3b82f6 !important;
+}
+
+#sampleDataTable thead th .field-type[data-type="date"] {
+    background: rgba(239, 68, 68, 0.15) !important;
+    color: #ef4444 !important;
+    border: 1px solid #ef4444 !important;
+}
+
+#sampleDataTable thead th .field-type[data-type="boolean"] {
+    background: rgba(245, 158, 11, 0.15) !important;
+    color: #f59e0b !important;
+    border: 1px solid #f59e0b !important;
+}
+
+#sampleDataTable thead th .field-type[data-type="integer"],
+#sampleDataTable thead th .field-type[data-type="long"],
+#sampleDataTable thead th .field-type[data-type="short"],
+#sampleDataTable thead th .field-type[data-type="byte"] {
+    background: rgba(16, 185, 129, 0.15) !important;
+    color: #10b981 !important;
+    border: 1px solid #10b981 !important;
+}
+
+#sampleDataTable thead th .field-type[data-type="float"],
+#sampleDataTable thead th .field-type[data-type="double"] {
+    background: rgba(14, 165, 233, 0.15) !important;
+    color: #0ea5e9 !important;
+    border: 1px solid #0ea5e9 !important;
+}
+
+[data-theme="dark"] #sampleDataTable thead th .field-type[data-type="keyword"],
+[data-theme="dark"] #sampleDataTable thead th .field-type[data-type="text"] {
+    background: rgba(59, 130, 246, 0.2) !important;
+    color: #60a5fa !important;
+    border-color: #3b82f6 !important;
+}
+
+[data-theme="dark"] #sampleDataTable thead th .field-type[data-type="date"] {
+    background: rgba(239, 68, 68, 0.2) !important;
+    color: #f87171 !important;
+    border-color: #ef4444 !important;
+}
+
+[data-theme="dark"] #sampleDataTable thead th .field-type[data-type="boolean"] {
+    background: rgba(245, 158, 11, 0.2) !important;
+    color: #fbbf24 !important;
+    border-color: #f59e0b !important;
+}
+
+[data-theme="dark"] #sampleDataTable thead th .field-type[data-type="integer"],
+[data-theme="dark"] #sampleDataTable thead th .field-type[data-type="long"],
+[data-theme="dark"] #sampleDataTable thead th .field-type[data-type="short"],
+[data-theme="dark"] #sampleDataTable thead th .field-type[data-type="byte"] {
+    background: rgba(16, 185, 129, 0.2) !important;
+    color: #34d399 !important;
+    border-color: #10b981 !important;
+}
+
+[data-theme="dark"] #sampleDataTable thead th .field-type[data-type="float"],
+[data-theme="dark"] #sampleDataTable thead th .field-type[data-type="double"] {
+    background: rgba(14, 165, 233, 0.2) !important;
+    color: #38bdf8 !important;
+    border-color: #0ea5e9 !important;
 }
 
 #sampleDataTable td {
     background: var(--card-background) !important;
     color: var(--text-primary) !important;
-    border-right: 1px solid var(--border-panel) !important;
-    padding: 12px 24px !important;
+    border-right: 1px solid var(--border-color) !important;
+    border-bottom: 1px solid var(--border-color) !important;
+    padding: 16px !important;
+    font-size: 0.875rem !important;
+    box-sizing: border-box !important;
+    vertical-align: middle !important;
+    height: 60px !important;
+    text-align: left !important;
 }
 
 #sampleDataTable th:last-child,
@@ -504,15 +632,12 @@ table {
     color: var(--text-secondary) !important;
 }
 
-[data-theme="dark"] .column-header span {
-    color: #ffffff !important;
+[data-theme="dark"] #sampleDataTable thead th .column-header > span:first-child {
+    color: var(--text-primary) !important;
 }
 
-[data-theme="dark"] .dataTables_wrapper thead th {
-    color: #ffffff !important;
-}
-
-[data-theme="dark"] .field-type {
-    background: #2d333b !important;
-    color: #8b949e !important;
+[data-theme="dark"] #sampleDataTable thead th .field-type {
+    background: rgba(14, 165, 233, 0.2) !important;
+    color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
 }
