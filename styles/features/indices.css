@@ -105,9 +105,9 @@
 }
 
 .indices-table-container {
-    background: var(--card-background);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
+    background: transparent;
+    border: none;
+    border-radius: 0;
     overflow-x: auto;
     width: 100%;
     max-width: 100%;

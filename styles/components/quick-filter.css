@@ -109,16 +109,16 @@
     background: var(--error-bg);
 }
 
-.query-preview-box,
-.results-container {
+.quick-filter-content .query-preview-box,
+.quick-filter-content .results-container {
     background: var(--panel-background) !important;
     border-radius: 8px;
     border: 1px solid var(--border-panel);
     overflow: hidden;
 }
 
-.query-header,
-.results-header {
+.quick-filter-content .query-header,
+.quick-filter-content .results-header {
     padding: 1rem;
     background: var(--panel-header-background);
     border-bottom: 1px solid var(--border-panel);
@@ -130,8 +130,8 @@
     color: var(--text-primary);
 }
 
-.query-preview,
-.results-preview {
+.quick-filter-content .query-preview,
+.quick-filter-content .results-preview {
     margin: 0;
     padding: 1rem;
     font-family: 'Monaco', 'Menlo', monospace;
@@ -144,8 +144,8 @@
 }
 
 
-.query-preview.json-highlighted,
-.results-preview.json-highlighted {
+.quick-filter-content .query-preview.json-highlighted,
+.quick-filter-content .results-preview.json-highlighted {
     padding: 1rem;
     border: none;
     background: var(--panel-background) !important;
@@ -220,26 +220,26 @@
     appearance: none;
 }
 
-.query-preview::-webkit-scrollbar,
-.results-preview::-webkit-scrollbar {
+.quick-filter-content .query-preview::-webkit-scrollbar,
+.quick-filter-content .results-preview::-webkit-scrollbar {
     width: 8px;
     height: 8px;
 }
 
-.query-preview::-webkit-scrollbar-track,
-.results-preview::-webkit-scrollbar-track {
+.quick-filter-content .query-preview::-webkit-scrollbar-track,
+.quick-filter-content .results-preview::-webkit-scrollbar-track {
     background: var(--background-color);
     border-radius: 4px;
 }
 
-.query-preview::-webkit-scrollbar-thumb,
-.results-preview::-webkit-scrollbar-thumb {
+.quick-filter-content .query-preview::-webkit-scrollbar-thumb,
+.quick-filter-content .results-preview::-webkit-scrollbar-thumb {
     background: var(--border-color);
     border-radius: 4px;
 }
 
-.query-preview::-webkit-scrollbar-thumb:hover,
-.results-preview::-webkit-scrollbar-thumb:hover {
+.quick-filter-content .query-preview::-webkit-scrollbar-thumb:hover,
+.quick-filter-content .results-preview::-webkit-scrollbar-thumb:hover {
     background: var(--text-secondary);
 }
 

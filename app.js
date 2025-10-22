@@ -1280,8 +1280,7 @@ class ESMonitor {
                         title: `<div class="column-header">
                                     <span>${this.getTranslationWithFallback('common.id', 'ID')}</span>
                                     <span class="field-type" data-type="keyword">keyword</span>
-                                </div>`,
-                        width: '280px'
+                                </div>`
                     },
                     ...fieldArray.map(field => ({
                         data: field,
@@ -1289,7 +1288,6 @@ class ESMonitor {
                                     <span>${field}</span>
                                     <span class="field-type" data-type="${mapping[field]?.type || 'unknown'}">${mapping[field]?.type || 'unknown'}</span>
                                 </div>`,
-                        width: '220px',
                         render: function(data, type, row) {
                             if (type === 'display' && data) {
                                 if (typeof data === 'string' && (data.startsWith('{') || data.startsWith('['))) {
@@ -1306,6 +1304,10 @@ class ESMonitor {
                             return data;
                         }
                     }))
+                ],
+                columnDefs: [
+                    { width: '280px', targets: 0 },
+                    { width: '220px', targets: '_all' }
                 ],
                 scrollX: true,
                 scrollY: '400px',
