@@ -69,7 +69,7 @@ class ElasticsearchService {
             const [stats, health, nodes] = await Promise.all([
                 this.fetchWithOptions(`${this.baseUrl}/_cluster/stats`).then(r => r.json()),
                 this.fetchWithOptions(`${this.baseUrl}/_cluster/health`).then(r => r.json()),
-                this.fetchWithOptions(`${this.baseUrl}/_nodes/stats/os,jvm,fs`).then(r => r.json())
+                this.fetchWithOptions(`${this.baseUrl}/_nodes/stats/os,jvm,fs,process`).then(r => r.json())
             ]);
 
             return this.processClusterStats(stats, health, nodes);
@@ -89,7 +89,7 @@ class ElasticsearchService {
                 total: nodeMetrics.count,
                 master: stats.nodes.master,
                 data: stats.nodes.data,
-                cpu_percent: this.calculateAverageCpu(nodeMetrics),
+                cpu_percent: this.calculateAverageCpu(nodeMetrics, stats),
                 memory: this.calculateMemoryStats(nodeMetrics),
                 storage: this.calculateStorageStats(nodeMetrics)
             },
@@ -102,7 +102,10 @@ class ElasticsearchService {
             count: 0,
             totalMemory: 0,
             usedMemory: 0,
+            systemTotalMemory: 0,
+            systemUsedMemory: 0,
             cpuPercent: 0,
+            osCpuPercent: 0,
             totalDiskSpace: 0,
             usedDiskSpace: 0
         };
@@ -112,6 +115,12 @@ class ElasticsearchService {
             metrics.totalMemory += node.jvm.mem.heap_max_in_bytes;
             metrics.usedMemory += node.jvm.mem.heap_used_in_bytes;
             metrics.cpuPercent += node.process?.cpu?.percent || 0;
+            metrics.osCpuPercent += node.os?.cpu?.percent || 0;
+
+            if (node.os?.mem) {
+                metrics.systemTotalMemory += node.os.mem.total_in_bytes || 0;
+                metrics.systemUsedMemory += node.os.mem.used_in_bytes || 0;
+            }
             
             if (node.fs?.total) {
                 metrics.totalDiskSpace += node.fs.total.total_in_bytes || 0;
@@ -122,8 +131,15 @@ class ElasticsearchService {
         return metrics;
     }
 
-    calculateAverageCpu(metrics) {
-        return metrics.count ? (metrics.cpuPercent / metrics.count).toFixed(1) : "0.0";
+    calculateAverageCpu(metrics, clusterStats) {
+        if (metrics.count === 0) return "0.0";
+        const osCpu = metrics.osCpuPercent / metrics.count;
+        if (osCpu > 0) return osCpu.toFixed(1);
+        const processCpu = metrics.cpuPercent / metrics.count;
+        if (processCpu > 0) return processCpu.toFixed(1);
+        const clusterCpu = clusterStats?.nodes?.process?.cpu?.percent;
+        if (clusterCpu > 0) return (clusterCpu / metrics.count).toFixed(1);
+        return "0.0";
     }
 
     calculateMemoryStats(metrics) {
@@ -131,7 +147,11 @@ class ElasticsearchService {
             total_bytes: metrics.totalMemory,
             used_bytes: metrics.usedMemory,
             percent: metrics.totalMemory > 0 ? 
-                ((metrics.usedMemory / metrics.totalMemory) * 100).toFixed(1) : "0.0"
+                ((metrics.usedMemory / metrics.totalMemory) * 100).toFixed(1) : "0.0",
+            system_total_bytes: metrics.systemTotalMemory,
+            system_used_bytes: metrics.systemUsedMemory,
+            system_percent: metrics.systemTotalMemory > 0 ?
+                ((metrics.systemUsedMemory / metrics.systemTotalMemory) * 100).toFixed(1) : "0.0"
         };
     }
 

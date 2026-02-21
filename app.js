@@ -24,6 +24,7 @@ class ESMonitor {
         this.indicesRepository = null;
         this.eventBus = EventBus;
         this.languageManager = new LanguageManager();
+        this.themeManager = new ThemeManager();
         this.hideSystemIndicesTable = true;
         this.isUpdatingIndicesTable = false;
         this.isUpdatingDashboard = false;
@@ -38,13 +39,19 @@ class ESMonitor {
         document.addEventListener('languageChanged', (e) => {
             this.onLanguageChanged(e.detail.language);
         });
-        
-        setTimeout(() => {
-            const checkbox = document.getElementById('toggleSystemIndicesTable');
-            if (checkbox) {
-                this.hideSystemIndicesTable = checkbox.checked;
+
+        document.addEventListener('hideSystemIndicesChanged', async (e) => {
+            this.hideSystemIndicesTable = e.detail.hidden;
+            this.components.shardDistribution.hideSystemIndices = e.detail.hidden;
+            if (this.esService) {
+                await this.updateDashboard();
+                if (this.quickFilter) {
+                    await this.quickFilter.loadIndices();
+                }
             }
-        }, 100);
+        });
+
+        this.loadHideSystemIndicesSetting();
         
         this.initializeEventListeners();
         this.initializeModalHandlers();
@@ -64,6 +71,17 @@ class ESMonitor {
         return this.languageManager ? 
             this.languageManager.getSafeTranslation(key, fallback) : 
             fallback;
+    }
+
+    loadHideSystemIndicesSetting() {
+        try {
+            chrome.storage.local.get(['hideSystemIndices'], (result) => {
+                this.hideSystemIndicesTable = result.hideSystemIndices !== undefined ? result.hideSystemIndices : true;
+                this.components.shardDistribution.hideSystemIndices = this.hideSystemIndicesTable;
+            });
+        } catch (error) {
+            this.hideSystemIndicesTable = true;
+        }
     }
 
     createDataTablesLanguageConfig() {
@@ -95,22 +113,6 @@ class ESMonitor {
         document.getElementById('disconnectBtn').addEventListener('click', () => this.clearConnection());
         document.addEventListener('click', (e) => this.toggleIndexSampleData(e));
 
-        const toggleSystemIndices = document.getElementById('toggleSystemIndices');
-        if (toggleSystemIndices) {
-            toggleSystemIndices.addEventListener('change', async () => {
-                const isHidden = this.components.shardDistribution.toggleSystemIndices();
-                toggleSystemIndices.checked = isHidden;
-                await this.updateShardDistribution();
-            });
-        }
-
-        const toggleSystemIndicesTable = document.getElementById('toggleSystemIndicesTable');
-        if (toggleSystemIndicesTable) {
-            toggleSystemIndicesTable.addEventListener('change', async () => {
-                this.hideSystemIndicesTable = toggleSystemIndicesTable.checked;
-                await this.updateDashboard();
-            });
-        }
 
         const refreshBtn = document.getElementById('refreshIntervalBtn');
         const refreshMenu = document.getElementById('refreshDropdownMenu');
@@ -472,11 +474,6 @@ class ESMonitor {
                 
                 document.getElementById('dashboard').classList.remove('hidden');
 
-                const checkbox = document.getElementById('toggleSystemIndicesTable');
-                if (checkbox) {
-                    this.hideSystemIndicesTable = checkbox.checked;
-                }
-
                 this.quickFilter = new QuickFilter(this.esService);
                 
                 if (this.search) {
@@ -543,20 +540,27 @@ class ESMonitor {
             
             const indexSelector = document.getElementById('indexSelector');
             const currentValue = indexSelector.value;
+
+            let selectorIndices = indices;
+            if (this.hideSystemIndicesTable) {
+                selectorIndices = indices.filter(index =>
+                    !index.index.startsWith('.') && !index.index.startsWith('_')
+                );
+            }
             
             indexSelector.innerHTML = `
                 <option value="">${this.getTranslationWithFallback('common.selectIndex', 'Select Index')}</option>
-                ${indices.map(index => `
+                ${selectorIndices.map(index => `
                     <option value="${index.index}" ${currentValue === index.index ? 'selected' : ''}>
                         ${index.index}
                     </option>
                 `).join('')}
             `;
 
-            if (!currentValue && indices.length > 0) {
-                indexSelector.value = indices[0].index;
+            if (!currentValue && selectorIndices.length > 0) {
+                indexSelector.value = selectorIndices[0].index;
                 if (document.querySelector('#sample-data:not(.hidden)')) {
-                    await this.showSampleDataPreview(indices[0].index);
+                    await this.showSampleDataPreview(selectorIndices[0].index);
                 }
             }
 
@@ -578,12 +582,7 @@ class ESMonitor {
         
         try {
             let formattedIndices = await this.indicesRepository.getAllIndices();
-            
-            const checkbox = document.getElementById('toggleSystemIndicesTable');
-            if (checkbox) {
-                this.hideSystemIndicesTable = checkbox.checked;
-            }
-            
+
             if (this.hideSystemIndicesTable) {
                 formattedIndices = formattedIndices.filter(index => 
                     !index.index.startsWith('.') && !index.index.startsWith('_')
@@ -750,11 +749,6 @@ class ESMonitor {
                     const isConnected = await this.esService.checkConnection();
                     if (isConnected) {
                         document.getElementById('dashboard').classList.remove('hidden');
-                        
-                        const checkbox = document.getElementById('toggleSystemIndicesTable');
-                        if (checkbox) {
-                            this.hideSystemIndicesTable = checkbox.checked;
-                        }
                         
                         this.quickFilter = new QuickFilter(this.esService);
                         
@@ -2022,6 +2016,5 @@ class ESMonitor {
 
 document.addEventListener('DOMContentLoaded', () => {
     initParticles();
-    new ThemeManager();
     window.esMonitor = new ESMonitor();
 });

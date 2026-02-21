@@ -209,17 +209,17 @@ h2 i {
 }
 
 .dataTables_scroll::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: var(--card-background);
     border-radius: 4px;
 }
 
 .dataTables_scroll::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
+    background: var(--border-color);
     border-radius: 4px;
 }
 
 .dataTables_scroll::-webkit-scrollbar-thumb:hover {
-    background: #94a3b8;
+    background: var(--text-secondary);
 }
 
 #sampleDataTable td span {
@@ -265,17 +265,17 @@ h2 i {
 }
 
 .dataTables_scrollBody::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: var(--card-background);
     border-radius: 4px;
 }
 
 .dataTables_scrollBody::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
+    background: var(--border-color);
     border-radius: 4px;
 }
 
 .dataTables_scrollBody::-webkit-scrollbar-thumb:hover {
-    background: #94a3b8;
+    background: var(--text-secondary);
 }
 
 .dataTables_paginate {
@@ -321,17 +321,17 @@ h2 i {
 }
 
 .dataTables_scrollBody::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: var(--card-background);
     border-radius: 4px;
 }
 
 .dataTables_scrollBody::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
+    background: var(--border-color);
     border-radius: 4px;
 }
 
 .dataTables_scrollBody::-webkit-scrollbar-thumb:hover {
-    background: #94a3b8;
+    background: var(--text-secondary);
 }
 
 .dataTables_length select {
@@ -343,7 +343,7 @@ h2 i {
 
 .dataTables_scrollBody {
     scrollbar-width: thin;
-    scrollbar-color: #cbd5e1 #f1f1f1;
+    scrollbar-color: var(--border-color) var(--card-background);
 }
 
 .dataTables_scrollBody {

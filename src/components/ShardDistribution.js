@@ -138,11 +138,6 @@ export default class ShardDistribution {
                indexName.startsWith('_');
     }
     
-    toggleSystemIndices() {
-        this.hideSystemIndices = !this.hideSystemIndices;
-        return this.hideSystemIndices;
-    }
-
     updateTranslations() {
         if (this.languageManager) {
             setTimeout(() => {
