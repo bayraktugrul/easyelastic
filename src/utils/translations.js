@@ -1,5 +1,9 @@
 const translations = {
     en: {
+        settings: {
+            darkMode: "Dark Mode",
+            hideSystemIndices: "Hide System Indices"
+        },
         navbar: {
             home: "Home",
             cluster: "Cluster",
@@ -49,7 +53,6 @@ const translations = {
         indices: {
             title: "Indices",
             createIndex: "Create Index",
-            hideSystemIndices: "Hide System Indices",
             indexName: "Index Name",
             docsCount: "Docs Count",
             size: "Size",
@@ -60,7 +63,6 @@ const translations = {
         },
         shards: {
             title: "Shards Distribution",
-            hideSystemIndices: "Hide system indices",
             node: "Node",
             primary: "Primary",
             replica: "Replica",
@@ -141,7 +143,11 @@ const translations = {
             fieldType: "Field Type",
             enterFieldName: "Enter field name",
             addField: "Add Field",
-            update: "Update"
+            update: "Update",
+            saveQuery: "Save Query",
+            queryName: "Query Name",
+            enterQueryName: "Enter a name for this query",
+            save: "Save"
         },
         fieldTypes: {
             text: "Text",
@@ -203,6 +209,10 @@ const translations = {
         }
     },
     zh: {
+        settings: {
+            darkMode: "深色模式",
+            hideSystemIndices: "隐藏系统索引"
+        },
         navbar: {
             home: "首页",
             cluster: "集群",
@@ -252,7 +262,6 @@ const translations = {
         indices: {
             title: "索引",
             createIndex: "创建索引",
-            hideSystemIndices: "隐藏系统索引",
             indexName: "索引名称",
             docsCount: "文档数量",
             size: "大小",
@@ -263,7 +272,6 @@ const translations = {
         },
         shards: {
             title: "分片分布",
-            hideSystemIndices: "隐藏系统索引",
             node: "节点",
             primary: "主分片",
             replica: "副本分片",
@@ -344,7 +352,11 @@ const translations = {
             fieldType: "字段类型",
             enterFieldName: "输入字段名称",
             addField: "添加字段",
-            update: "更新"
+            update: "更新",
+            saveQuery: "保存查询",
+            queryName: "查询名称",
+            enterQueryName: "输入查询名称",
+            save: "保存"
         },
         fieldTypes: {
             text: "文本",

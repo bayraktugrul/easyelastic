@@ -43,12 +43,26 @@ export default class QuickFilter {
 
     async loadIndices() {
         try {
-            const indices = await this.esService.getIndicesInfo();
+            let indices = await this.esService.getIndicesInfo();
             const indexSelector = document.getElementById('quickFilterIndexSelector');
             
             if (!indexSelector) {
                 console.error('Index selector element not found');
                 return;
+            }
+
+            const hideSystemIndices = await new Promise(resolve => {
+                try {
+                    chrome.storage.local.get(['hideSystemIndices'], (result) => {
+                        resolve(result.hideSystemIndices !== undefined ? result.hideSystemIndices : true);
+                    });
+                } catch { resolve(true); }
+            });
+
+            if (hideSystemIndices && indices) {
+                indices = indices.filter(index =>
+                    !index.index.startsWith('.') && !index.index.startsWith('_')
+                );
             }
             
             indexSelector.innerHTML = '<option value="">Select an index</option>';

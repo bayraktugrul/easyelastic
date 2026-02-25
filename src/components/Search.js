@@ -165,6 +165,19 @@ export default class Search {
         Toast.show('Query saved successfully', 'success');
     }
 
+    showSaveQueryModal(queryText) {
+        const modal = document.getElementById('saveQueryModal');
+        const nameInput = document.getElementById('saveQueryName');
+        const firstLine = queryText.split('\n')[0].trim();
+        modal.dataset.queryText = queryText;
+        nameInput.value = firstLine;
+        modal.classList.remove('hidden');
+        setTimeout(() => {
+            nameInput.focus();
+            nameInput.select();
+        }, 100);
+    }
+
     escapeHtml(unsafe) {
         return unsafe
             .replace(/&/g, "&amp;")
@@ -364,8 +377,11 @@ export default class Search {
             saveBtn.addEventListener('click', () => {
                 try {
                     const queryText = this.editor.getValue();
-                    const firstLine = queryText.split('\n')[0].trim();
-                    this.quickSave(firstLine, queryText);
+                    if (!queryText.trim()) {
+                        Toast.show('Query is empty', 'error');
+                        return;
+                    }
+                    this.showSaveQueryModal(queryText);
                 } catch (error) {
                     Toast.show('Error saving query: ' + error.message, 'error');
                 }
@@ -412,6 +428,45 @@ export default class Search {
         deleteModal.querySelector('.close-modal').addEventListener('click', () => {
             deleteModal.classList.add('hidden');
         });
+
+        const saveQueryModal = document.getElementById('saveQueryModal');
+        const confirmSaveQuery = document.getElementById('confirmSaveQuery');
+        const cancelSaveQuery = document.getElementById('cancelSaveQuery');
+        const saveQueryNameInput = document.getElementById('saveQueryName');
+
+        if (confirmSaveQuery) {
+            confirmSaveQuery.addEventListener('click', () => {
+                const name = saveQueryNameInput.value.trim();
+                const queryText = saveQueryModal.dataset.queryText;
+                if (!name) {
+                    Toast.show('Please enter a query name', 'warning');
+                    return;
+                }
+                this.quickSave(name, queryText);
+                saveQueryModal.classList.add('hidden');
+                saveQueryNameInput.value = '';
+            });
+        }
+
+        if (cancelSaveQuery) {
+            cancelSaveQuery.addEventListener('click', () => {
+                saveQueryModal.classList.add('hidden');
+                saveQueryNameInput.value = '';
+            });
+        }
+
+        if (saveQueryModal) {
+            saveQueryModal.querySelector('.close-modal').addEventListener('click', () => {
+                saveQueryModal.classList.add('hidden');
+                saveQueryNameInput.value = '';
+            });
+
+            saveQueryNameInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    confirmSaveQuery.click();
+                }
+            });
+        }
     }
 
     async executeSearch() {

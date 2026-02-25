@@ -57,10 +57,11 @@
                         <i class="dropdown-arrow fas fa-chevron-down"></i>
                     </button>
                 </div>
-                <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
-                    <i class="fa-solid fa-sun light-icon"></i>
-                    <i class="fa-solid fa-moon dark-icon"></i>
-                </button>
+                <div class="settings-container">
+                    <button id="settingsToggle" class="settings-toggle" aria-label="Settings">
+                        <i class="fa-solid fa-gear"></i>
+                    </button>
+                </div>
                 <a href="https://github.com/bayraktugrul/easyelastic" 
                    target="_blank" 
                    rel="noopener noreferrer"
@@ -261,13 +262,6 @@
                 <div class="panel-header">
                     <h2><i class="fa-solid fa-table"></i> <span data-translate="indices.title">Indices</span></h2>
                     <div class="header-actions">
-                        <div class="toggle-container">
-                            <label class="toggle-switch">
-                                <input type="checkbox" id="toggleSystemIndicesTable" checked>
-                                <span class="toggle-slider"></span>
-                            </label>
-                            <span class="toggle-label" data-translate="indices.hideSystemIndices">Hide System Indices</span>
-                        </div>
                         <button id="createIndexBtn" class="secondary">
                             <i class="fa-solid fa-plus"></i> <span data-translate="indices.createIndex">Create Index</span>
                         </button>
@@ -298,15 +292,6 @@
                         <i class="fa-solid fa-puzzle-piece"></i>
                         <span data-translate="shards.title">Shards Distribution</span>
                     </h2>
-                    <div class="shards-actions">
-                        <div class="toggle-container">
-                            <label class="toggle-switch">
-                                <input type="checkbox" id="toggleSystemIndices" checked>
-                                <span class="toggle-slider"></span>
-                            </label>
-                            <span class="toggle-label" data-translate="shards.hideSystemIndices">Hide system indices</span>
-                        </div>
-                    </div>
                 </div>
                 <div class="shards-table-container">
                     <table class="shards-table">
@@ -796,8 +781,49 @@
                 </div>
             </div>
         </div>
+        <div id="saveQueryModal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fa-solid fa-bookmark"></i> <span data-translate="modals.saveQuery">Save Query</span></h3>
+                    <button class="close-modal">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="saveQueryName" data-translate="modals.queryName">Query Name</label>
+                        <input type="text" id="saveQueryName" data-translate-placeholder="modals.enterQueryName" placeholder="Enter a name for this query">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="cancelSaveQuery" class="btn-secondary" data-translate="modals.cancel">Cancel</button>
+                    <button id="confirmSaveQuery" class="btn-primary" data-translate="modals.save">Save</button>
+                </div>
+            </div>
+        </div>
     </div>
-    
+
+    <div class="settings-dropdown" id="settingsDropdown">
+        <div class="settings-item">
+            <div class="settings-item-info">
+                <i class="fa-solid fa-moon"></i>
+                <span data-translate="settings.darkMode">Dark Mode</span>
+            </div>
+            <label class="toggle-switch">
+                <input type="checkbox" id="settingsThemeToggle">
+                <span class="toggle-slider"></span>
+            </label>
+        </div>
+        <div class="settings-item">
+            <div class="settings-item-info">
+                <i class="fa-solid fa-eye-slash"></i>
+                <span data-translate="settings.hideSystemIndices">Hide System Indices</span>
+            </div>
+            <label class="toggle-switch">
+                <input type="checkbox" id="settingsHideSystemIndices" checked>
+                <span class="toggle-slider"></span>
+            </label>
+        </div>
+    </div>
+
     <script type="module" src="app.js"></script>
 </body>
 </html> 

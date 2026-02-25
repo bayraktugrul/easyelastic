@@ -343,6 +343,31 @@ body .search-panel .query-label {
 
 .saved-queries-menu {
     display: none;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-color) var(--card-background);
+}
+
+.saved-queries-menu::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.saved-queries-menu::-webkit-scrollbar-track {
+    background: var(--card-background);
+    border-radius: 4px;
+}
+
+.saved-queries-menu::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 4px;
+}
+
+.saved-queries-menu::-webkit-scrollbar-thumb:hover {
+    background: var(--text-secondary);
+}
+
+.saved-queries-menu::-webkit-scrollbar-corner {
+    background: var(--card-background);
 }
 
 .saved-queries-menu.show {
@@ -405,7 +430,32 @@ body .search-panel .query-label {
 
 .saved-queries-list {
     max-height: 300px;
-    overflow-y: auto;
+    overflow: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-color) var(--card-background);
+}
+
+.saved-queries-list::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.saved-queries-list::-webkit-scrollbar-track {
+    background: var(--card-background);
+    border-radius: 4px;
+}
+
+.saved-queries-list::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 4px;
+}
+
+.saved-queries-list::-webkit-scrollbar-thumb:hover {
+    background: var(--text-secondary);
+}
+
+.saved-queries-list::-webkit-scrollbar-corner {
+    background: var(--card-background);
 }
 
 .saved-query-item {
@@ -466,6 +516,7 @@ body .search-panel .query-label {
     padding: 0.25rem;
     border: 1px solid var(--primary-color);
     border-radius: 4px;
+    background: var(--input-background);
     background: var(--dropdown-bg);
     color: var(--text-primary);
     margin-right: 0.5rem;
